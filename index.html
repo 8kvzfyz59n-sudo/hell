@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>新文化式原型產生器|Bunka Pattern Generator</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>新文化式原型產生器</h1>
+  <p class="sub">依日本文化服裝學院「新文化式(2000年版)成人女子原型」製圖法,輸入胸圍、腰圍、背長即產生上半身原型與袖原型。<span id="ver">v2 內建PDF</span></p>
+</header>
+
+<main>
+  <section class="panel inputs">
+    <h2>輸入尺寸(cm)</h2>
+    <div class="field">
+      <label for="bust">胸圍 B</label>
+      <input type="number" id="bust" value="83" min="70" max="110" step="0.5">
+    </div>
+    <div class="field">
+      <label for="waist">腰圍 W</label>
+      <input type="number" id="waist" value="64" min="50" max="105" step="0.5">
+    </div>
+    <div class="field">
+      <label for="backlen">背長</label>
+      <input type="number" id="backlen" value="38" min="30" max="46" step="0.5">
+    </div>
+    <div class="field">
+      <label for="sleevelen">袖長(袖原型用)</label>
+      <input type="number" id="sleevelen" value="52" min="20" max="65" step="0.5">
+    </div>
+    <button id="btnDraw" class="primary">產生原型</button>
+    <div class="dl-group">
+      <button id="btnSvgBodice" disabled>下載 SVG(身片)</button>
+      <button id="btnSvgSleeve" disabled>下載 SVG(袖)</button>
+      <button id="btnPdf" disabled>下載 PDF(1:1 實寸)</button>
+    </div>
+    <p class="note" id="msg"></p>
+  </section>
+
+  <section class="panel">
+    <h2>計算結果</h2>
+    <div id="values" class="values"></div>
+  </section>
+
+  <section class="panel">
+    <h2>上半身原型(身片)</h2>
+    <div id="bodiceBox" class="svgbox"></div>
+  </section>
+
+  <section class="panel">
+    <h2>袖原型</h2>
+    <div id="sleeveBox" class="svgbox"></div>
+  </section>
+
+  <section class="panel refs">
+    <h2>製圖法來源</h2>
+    <ul>
+      <li>文化服裝學院《文化ファッション大系 服飾造形講座① 服飾造形の基礎》(文化出版局)—新文化式原型官方教材</li>
+      <li>文化學園購買事業部原型解說:<a href="https://www.bunka-koubai.com/shop/useinfomore.php?d=153" target="_blank" rel="noopener">bunka-koubai.com</a></li>
+      <li>製圖步驟參考:<a href="https://maisondeas.com/pattern-block-new-bunka/" target="_blank" rel="noopener">MAISON DE AS-【原型製図】レディース原型作り(新文化式)</a></li>
+    </ul>
+    <p class="note">袖山與領口弧線之導引點依上述教材標準值繪製;實際縫製前建議先做胚布(トワル)確認並補正。</p>
+  </section>
+</main>
+
+<footer>
+  <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考。</p>
+</footer>
+
+<script src="app.js?v=2"></script>
+</body>
+</html>
