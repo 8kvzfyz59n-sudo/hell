@@ -327,20 +327,36 @@ function svgToPdfPage(svgStr) {
     return s;
   }
 
-  for (const m of svgStr.matchAll(/<line x1="([-\d.]+)" y1="([-\d.]+)" x2="([-\d.]+)" y2="([-\d.]+)" ([^/]*)\/>/g)) {
-    ops.push(strokeStyle(m[5]) + `${X(+m[1])} ${Y(+m[2])} m ${X(+m[3])} ${Y(+m[4])} l S`);
+  // 屬性取值(不依賴屬性順序;同時支援 <line .../> 與瀏覽器序列化的 <line ...></line>)
+  const attrNum = (attrs, name) => {
+    const r = attrs.match(new RegExp(name + '="([-\\d.]+)"'));
+    return r ? +r[1] : null;
+  };
+
+  for (const m of svgStr.matchAll(/<line\b([^>]*?)\/?>/g)) {
+    const at = m[1];
+    const x1 = attrNum(at, 'x1'), y1 = attrNum(at, 'y1'),
+          x2 = attrNum(at, 'x2'), y2 = attrNum(at, 'y2');
+    if (x1 === null || y1 === null || x2 === null || y2 === null) continue;
+    ops.push(strokeStyle(at) + `${X(x1)} ${Y(y1)} m ${X(x2)} ${Y(y2)} l S`);
   }
 
-  for (const m of svgStr.matchAll(/<path d="([^"]+)" ([^/]*)\/>/g)) {
-    const nums = m[1].replace(/[MC,]/g, ' ').trim().split(/\s+/).map(Number);
-    let s = strokeStyle(m[2]) + `${X(nums[0])} ${Y(nums[1])} m `;
+  for (const m of svgStr.matchAll(/<path\b([^>]*?)\/?>/g)) {
+    const at = m[1];
+    const dm = at.match(/ d="([^"]+)"/);
+    if (!dm) continue;
+    const nums = dm[1].replace(/[MC,]/g, ' ').trim().split(/\s+/).map(Number);
+    let s = strokeStyle(at) + `${X(nums[0])} ${Y(nums[1])} m `;
     for (let i = 2; i + 5 < nums.length; i += 6)
       s += `${X(nums[i])} ${Y(nums[i + 1])} ${X(nums[i + 2])} ${Y(nums[i + 3])} ${X(nums[i + 4])} ${Y(nums[i + 5])} c `;
     ops.push(s + 'S');
   }
 
-  for (const m of svgStr.matchAll(/<circle cx="([-\d.]+)" cy="([-\d.]+)" r="([\d.]+)"[^/]*\/>/g)) {
-    const px = (+m[1] - minX) * PT, py = (h - (+m[2] - minY)) * PT, r = +m[3] * PT, k = 0.5523 * r;
+  for (const m of svgStr.matchAll(/<circle\b([^>]*?)\/?>/g)) {
+    const at = m[1];
+    const cx = attrNum(at, 'cx'), cy = attrNum(at, 'cy'), rr = attrNum(at, 'r');
+    if (cx === null || cy === null || rr === null) continue;
+    const px = (cx - minX) * PT, py = (h - (cy - minY)) * PT, r = rr * PT, k = 0.5523 * r;
     const f = n => n.toFixed(2);
     ops.push(
       `0 0 0 rg ${f(px + r)} ${f(py)} m ` +
@@ -428,9 +444,10 @@ if (typeof document !== 'undefined') {
     }
     const b = draftBodice(B, W, L);
     const sl = draftSleeve(b, SL);
-    cur = { b, sl };
-    $('bodiceBox').innerHTML = bodiceSVG(b);
-    $('sleeveBox').innerHTML = sleeveSVG(sl);
+    const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl);
+    cur = { b, sl, bodSvg, slvSvg };
+    $('bodiceBox').innerHTML = bodSvg;
+    $('sleeveBox').innerHTML = slvSvg;
     renderValues(b, sl);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,教材建議手動修順袖窿線。';
     ['btnSvgBodice', 'btnSvgSleeve', 'btnPdf'].forEach(id => $(id).disabled = false);
@@ -446,24 +463,22 @@ if (typeof document !== 'undefined') {
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   }
 
-  function dlSVG(boxId, name) {
-    const el = $(boxId).querySelector('svg');
-    if (!el) return;
-    dlBlob(new Blob([el.outerHTML], { type: 'image/svg+xml' }), name);
+  function dlSVG(svgStr, name) {
+    if (!svgStr) return;
+    dlBlob(new Blob([svgStr], { type: 'image/svg+xml' }), name);
   }
 
   function dlPDF() {
     if (!cur) return;
-    const pages = ['bodiceBox', 'sleeveBox'].map(id =>
-      svgToPdfPage($(id).querySelector('svg').outerHTML));
+    const pages = [cur.bodSvg, cur.slvSvg].map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `bunka_pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
   }
 
   $('btnDraw').addEventListener('click', draw);
-  $('btnSvgBodice').addEventListener('click', () => dlSVG('bodiceBox', `bunka_bodice_B${cur.b.B}.svg`));
-  $('btnSvgSleeve').addEventListener('click', () => dlSVG('sleeveBox', `bunka_sleeve_B${cur.b.B}.svg`));
+  $('btnSvgBodice').addEventListener('click', () => dlSVG(cur.bodSvg, `bunka_bodice_B${cur.b.B}.svg`));
+  $('btnSvgSleeve').addEventListener('click', () => dlSVG(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.svg`));
   $('btnPdf').addEventListener('click', () => {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });
