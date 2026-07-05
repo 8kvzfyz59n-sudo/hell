@@ -294,6 +294,166 @@ function sleeveSVG(sl) {
   return s;
 }
 
+/* ---------- 圓裙製圖(圓周率法) ----------
+ * n/4 圓裙:腰圍半徑 r = 2W/(nπ),下襬半徑 R = r + 裙長
+ * 版片畫半件(前/後各一片,對摺裁或裁2片),圓心角 = n×45°
+ * 來源:https://maisondeas.com/circle-skirt-pattern/           */
+function draftSkirt(W, skirtLen, n) {
+  const r = 2 * W / (n * Math.PI);
+  const R = r + skirtLen;
+  const thetaDeg = n * 45;                       // 半件圓心角
+  const hemFull = (n / 4) * 2 * Math.PI * R;     // 整件下襬總長
+  return { W, skirtLen, n, r, R, thetaDeg, hemFull };
+}
+
+// 圓弧(圓心o、半徑r、起訖角rad)轉三次貝茲 C 段(y向下座標直接適用)
+function arcC(o, r, a1, a2) {
+  const f = v => +v.toFixed(3);
+  const segs = Math.max(1, Math.ceil(Math.abs(a2 - a1) / (Math.PI / 2)));
+  const d = (a2 - a1) / segs;
+  let s = '';
+  for (let i = 0; i < segs; i++) {
+    const t1 = a1 + i * d, t2 = t1 + d;
+    const k = 4 / 3 * Math.tan(d / 4);
+    const p3 = [o[0] + r * Math.cos(t2), o[1] + r * Math.sin(t2)];
+    const c1 = [o[0] + r * (Math.cos(t1) - k * Math.sin(t1)), o[1] + r * (Math.sin(t1) + k * Math.cos(t1))];
+    const c2 = [p3[0] + r * k * Math.sin(t2), p3[1] - r * k * Math.cos(t2)];
+    s += ` C ${f(c1[0])} ${f(c1[1])}, ${f(c2[0])} ${f(c2[1])}, ${f(p3[0])} ${f(p3[1])}`;
+  }
+  return s;
+}
+// 直線寫成退化貝茲(讓 PDF 轉換器只需處理 M+C)
+function lineC(a, b) {
+  const f = v => +v.toFixed(3);
+  const c1 = [a[0] + (b[0] - a[0]) / 3, a[1] + (b[1] - a[1]) / 3];
+  const c2 = [a[0] + 2 * (b[0] - a[0]) / 3, a[1] + 2 * (b[1] - a[1]) / 3];
+  return ` C ${f(c1[0])} ${f(c1[1])}, ${f(c2[0])} ${f(c2[1])}, ${f(b[0])} ${f(b[1])}`;
+}
+
+function skirtSVG(sk) {
+  const m = 3;
+  const th = sk.thetaDeg * Math.PI / 180;
+  const a1 = Math.PI / 2 - th / 2, a2 = Math.PI / 2 + th / 2;  // 對稱於正下方
+  const O = [0, 0];
+  const pt = (rr, a) => [rr * Math.cos(a), rr * Math.sin(a)];
+  const P1 = pt(sk.r, a1), P2 = pt(sk.r, a2);
+  const H1 = pt(sk.R, a1), H2 = pt(sk.R, a2);
+  const xmax = sk.R * Math.max(Math.abs(Math.cos(a1)), Math.sin(a1) < 0 ? 1 : 0, 0.0001);
+  const w = 2 * (xmax + m), minX = -(xmax + m);
+  const minY = Math.min(0, P1[1]) - m - 1.5, h = sk.R + m - minY + 1.5;
+  const f = v => +v.toFixed(3);
+  let s = svgOpen(minX, minY, w, h);
+
+  // 導引線:圓心到腰線兩側
+  s += line(O, P1, S.guide) + line(O, P2, S.guide);
+  // 布紋線(沿中分線)
+  s += line([0, sk.r + 3], [0, sk.R - 3], S.guide);
+  // 輪廓:腰弧 → 側邊 → 下襬弧 → 側邊
+  let d = `M ${f(P1[0])} ${f(P1[1])}`;
+  d += arcC(O, sk.r, a1, a2);        // 腰線弧
+  d += lineC(P2, H2);                // 側邊
+  d += arcC(O, sk.R, a2, a1);        // 下襬弧(反向)
+  d += lineC(H1, P1);                // 側邊
+  s += path(d, S.outline);
+
+  // 記號
+  s += dot(O) + text([0.3, -0.4], 'O');
+  s += text([P1[0] * 0.5 + 0.3, P1[1] * 0.5 - 0.3], 'r=' + (Math.round(sk.r * 10) / 10));
+  s += text([0.3, (sk.r + sk.R) / 2], 'L=' + sk.skirtLen);
+  s += text([0.3, sk.r - 0.5], 'W/2', S.small);
+  s += text([0.3, sk.R - 1], 'GRAIN', S.small);
+  s += text([0, minY + m], sk.n + '/4 CIRCLE SKIRT (HALF)', S.small, 'middle');
+  s += `</svg>`;
+  return s;
+}
+
+/* ---------- 直筒裙(タイトスカート)製圖 ----------
+ * 簡化文化式:H鬆份+4、W鬆份+2(整圈)、前後差2
+ * 脇線=HL中點往後移1cm;脇收D/2、其餘2省各D/4
+ * 後中心隱形拉鍊(開口=腰長+1)、後開衩=裙長/3、腰頭W+3×3cm
+ * 來源:https://maisondeas.com/pencil-skirt-pattern/            */
+function draftTightSkirt(W, H, waistLen, L) {
+  const width = H / 2 + 2;            // 半身寬(前+後)
+  const sideX = width / 2 - 1;        // 脇線(2等分往後1cm)
+  const backHipW = sideX, frontHipW = width - sideX;
+  const backWT = W / 4, frontWT = W / 4 + 1;      // 腰目標(含鬆份與前後差)
+  const Db = backHipW - backWT, Df = frontHipW - frontWT;
+  const xb = sideX - Db / 2;          // 後腰脇點 x
+  const xf = sideX + Df / 2;          // 前腰脇點 x
+  const dartB = Db / 4, dartF = Df / 4;
+  const zipLen = waistLen + 1;
+  const ventLen = Math.round(L / 3);
+  const beltL = W + 3, beltW = 3;
+  return { W, H, waistLen, L, width, sideX, backHipW, frontHipW, backWT, frontWT,
+           Db, Df, xb, xf, dartB, dartF, zipLen, ventLen, beltL, beltW };
+}
+
+function tightSkirtSVG(t) {
+  const m = 2.5;
+  const xmax = Math.max(t.width, t.beltL);
+  const minX = -m, minY = -m - 1.5;
+  const w = xmax + 2 * m, h = t.L + t.beltW + 4 + m - minY;
+  let s = svgOpen(minX, minY, w, h);
+  const wl = 0, hl = t.waistLen, hem = t.L;
+
+  // 導引線
+  s += line([0, wl], [t.width, wl], S.guide);                    // WL
+  s += line([0, hl], [t.width, hl], S.guide);                    // HL
+  s += line([t.sideX, wl - 1.2], [t.sideX, hem], S.guide);       // 脇基準
+  s += line([t.xb / 2, hl + 4], [t.xb / 2, hem - 4], S.guide);   // 後布紋
+  s += line([(t.xf + t.width) / 2, hl + 4], [(t.xf + t.width) / 2, hem - 4], S.guide); // 前布紋
+
+  // 後片輪廓(左=後中心)
+  s += line([0, 0.5], [0, hem], S.outline);                      // 後中心
+  s += line([0, hem], [t.sideX, hem], S.outline);                // 後裾
+  s += path(crPathD([[0, 0.5], [t.xb * 0.55, 0], [t.xb, -1]]), S.outline);          // 後腰線
+  s += path(crPathD([[t.xb, -1], [t.sideX - (t.sideX - t.xb) * 0.3, hl * 0.45], [t.sideX, hl]]), S.outline); // 後脇曲線
+  s += line([t.sideX, hl], [t.sideX, hem], S.outline);           // 脇直線(HL以下)
+
+  // 前片輪廓(右=前中心)
+  s += line([t.width, 0], [t.width, hem], S.outline);            // 前中心
+  s += line([t.width, hem], [t.sideX, hem], S.outline);          // 前裾
+  s += path(crPathD([[t.width, 0], [t.width - (t.width - t.xf) * 0.45, -0.6], [t.xf, -1]]), S.outline); // 前腰線
+  s += path(crPathD([[t.xf, -1], [t.sideX + (t.xf - t.sideX) * 0.3, hl * 0.45], [t.sideX, hl]]), S.outline); // 前脇曲線
+
+  // 腰省:WL三等分,後13/12、前9/10
+  const yTopB = x => 0.5 + (-1 - 0.5) * (x / t.xb);
+  const yTopF = x => 0 + (-1 - 0) * ((t.width - x) / (t.width - t.xf));
+  const dartsT = [
+    { cx: t.xb / 3,                          w: t.dartB, len: 13, yf: yTopB },
+    { cx: t.xb * 2 / 3,                      w: t.dartB, len: 12, yf: yTopB },
+    { cx: t.xf + (t.width - t.xf) / 3,       w: t.dartF, len: 10, yf: yTopF },
+    { cx: t.xf + (t.width - t.xf) * 2 / 3,   w: t.dartF, len: 9,  yf: yTopF }
+  ];
+  for (const d of dartsT) {
+    const y0 = d.yf(d.cx), len = Math.min(d.len, hl - 3);
+    s += line([d.cx - d.w / 2, y0], [d.cx, y0 + len], S.dart);
+    s += line([d.cx + d.w / 2, y0], [d.cx, y0 + len], S.dart);
+  }
+
+  // 隱形拉鍊記號(後中心)與開衩
+  s += line([0.3, 0.6], [0.3, t.zipLen], S.dart);
+  s += text([0.6, t.zipLen - 0.5], 'ZIP ' + (Math.round(t.zipLen * 10) / 10), S.small);
+  s += line([0, hem - t.ventLen], [4, hem - t.ventLen], S.dart);
+  s += line([4, hem - t.ventLen], [4, hem], S.dart);
+  s += text([0.6, hem - t.ventLen - 0.5], 'VENT ' + t.ventLen, S.small);
+
+  // 腰頭版片
+  const by = hem + 4;
+  s += line([0, by], [t.beltL, by], S.outline) + line([t.beltL, by], [t.beltL, by + t.beltW], S.outline);
+  s += line([t.beltL, by + t.beltW], [0, by + t.beltW], S.outline) + line([0, by + t.beltW], [0, by], S.outline);
+  s += text([t.beltL / 2, by - 0.6], 'BELT ' + (Math.round(t.beltL * 10) / 10) + ' x ' + t.beltW + ' (x2)', S.small, 'middle');
+
+  // 記號
+  s += text([-1.9, 0.3], 'WL') + text([-1.9, hl + 0.3], 'HL') + text([-1.9, hem + 0.3], 'HEM');
+  s += text([t.xb / 2, hl - 1], 'BACK', S.small, 'middle');
+  s += text([(t.xf + t.width) / 2, hl - 1], 'FRONT', S.small, 'middle');
+  s += text([t.xb / 2, hem - 2], 'GRAIN', S.small, 'middle');
+  s += text([(t.xf + t.width) / 2, hem - 2], 'GRAIN', S.small, 'middle');
+  s += `</svg>`;
+  return s;
+}
+
 /* =========================================================
  * 極簡向量 PDF 產生器(免外部函式庫,離線可用)
  * 直接把本站產生的 SVG 轉為 PDF 繪圖指令,1cm = 28.3465pt
@@ -414,8 +574,14 @@ if (typeof document !== 'undefined') {
 
   function r1(n) { return Math.round(n * 10) / 10; }
 
-  function renderValues(b, sl) {
-    const rows = [
+  function rowsTable(rows) {
+    return '<table><tbody>' +
+      rows.map(([k, v]) => `<tr><th>${k}</th><td>${typeof v === 'number' ? r1(v) + ' cm' : v}</td></tr>`).join('') +
+      '</tbody></table>';
+  }
+
+  function renderValues(b, sl, t, sk) {
+    $('valuesTop').innerHTML = rowsTable([
       ['身幅 B/2+6', b.bw], ['A~BL B/12+13.7', b.blY], ['背幅 B/8+7.4', b.backW],
       ['胸幅 B/8+6.2', b.chestW], ['BL~B點 B/5+8.3', b.blY - b.frontTopY],
       ['前領口幅 ◎=B/24+3.4', b.neckW], ['前領口深 ◎+0.5', b.fNeckD],
@@ -427,30 +593,53 @@ if (typeof document !== 'undefined') {
       ['袖山高 (SP平均高~BL)×5/6', sl.capH], ['前袖幅斜線 前AH', sl.slantF],
       ['後袖幅斜線 後AH+1+★', sl.slantB], ['袖幅', sl.wf + sl.wb],
       ['袖山縮縫份(いせ)', sl.ease]
-    ];
-    $('values').innerHTML = '<table><tbody>' +
-      rows.map(([k, v]) => `<tr><th>${k}</th><td>${typeof v === 'number' ? r1(v) + ' cm' : v}</td></tr>`).join('') +
-      '</tbody></table>';
+    ]);
+    $('valuesTight').innerHTML = rowsTable([
+      ['半身寬 H/2+2', t.width], ['後片寬/前片寬', r1(t.backHipW) + ' / ' + r1(t.frontHipW) + ' cm'],
+      ['後腰目標 W/4 / 前腰目標 W/4+1', r1(t.backWT) + ' / ' + r1(t.frontWT) + ' cm'],
+      ['後縮減量D / 前縮減量D', r1(t.Db) + ' / ' + r1(t.Df) + ' cm'],
+      ['後省×2 / 前省×2(各)', r1(t.dartB) + ' / ' + r1(t.dartF) + ' cm'],
+      ['隱形拉鍊開口(腰長+1)', t.zipLen], ['後開衩長(裙長/3)', t.ventLen],
+      ['腰頭 W+3 × 3cm(對摺)', r1(t.beltL) + ' × ' + t.beltW + ' cm']
+    ]);
+    $('valuesCircle').innerHTML = rowsTable([
+      ['型式', sk.n + '/4 圓'],
+      ['腰半徑 r=2W/(nπ)', sk.r], ['下襬半徑 r+裙長', sk.R],
+      ['半件圓心角', sk.thetaDeg + '°'], ['整件下襬總長', sk.hemFull]
+    ]);
   }
 
   function draw() {
     const B = +$('bust').value, W = +$('waist').value,
-          L = +$('backlen').value, SL = +$('sleevelen').value;
+          L = +$('backlen').value, SL = +$('sleevelen').value,
+          Hip = +$('hip').value, WLen = +$('waistlen').value,
+          TLen = +$('tightlen').value, CLen = +$('circlelen').value,
+          CN = +$('circletype').value;
     const msg = $('msg');
     msg.textContent = '';
     if (!(B >= 70 && B <= 110) || !(W >= 50 && W <= 105) || !(L >= 30 && L <= 46)) {
       msg.textContent = '請確認輸入範圍:B 70–110、W 50–105、背長 30–46 cm。';
       return;
     }
+    if (!(Hip >= 70 && Hip <= 130) || !(WLen >= 15 && WLen <= 25)) {
+      msg.textContent = '請確認輸入範圍:臀圍 70–130、腰長 15–25 cm。';
+      return;
+    }
     const b = draftBodice(B, W, L);
     const sl = draftSleeve(b, SL);
-    const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl);
-    cur = { b, sl, bodSvg, slvSvg };
+    const t = draftTightSkirt(W, Hip, WLen, TLen);
+    const sk = draftSkirt(W, CLen, CN);
+    const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
+          tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk);
+    cur = { b, sl, t, sk, bodSvg, slvSvg, tgtSvg, sktSvg };
     $('bodiceBox').innerHTML = bodSvg;
     $('sleeveBox').innerHTML = slvSvg;
-    renderValues(b, sl);
+    $('tightBox').innerHTML = tgtSvg;
+    $('skirtBox').innerHTML = sktSvg;
+    renderValues(b, sl, t, sk);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,教材建議手動修順袖窿線。';
-    ['btnSvgBodice', 'btnSvgSleeve', 'btnPdf'].forEach(id => $(id).disabled = false);
+    ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnPdf',
+     'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt'].forEach(id => $(id).disabled = false);
   }
 
   function dlBlob(blob, name) {
@@ -470,21 +659,45 @@ if (typeof document !== 'undefined') {
 
   function dlPDF() {
     if (!cur) return;
-    const pages = [cur.bodSvg, cur.slvSvg].map(svgToPdfPage);
+    const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg].map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `bunka_pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
   }
 
+  function dlOnePdf(svgStr, name) {
+    if (!svgStr) return;
+    const pdf = buildPdf([svgToPdfPage(svgStr)]);
+    dlBlob(new Blob([pdf], { type: 'application/pdf' }), name);
+  }
+
   $('btnDraw').addEventListener('click', draw);
   $('btnSvgBodice').addEventListener('click', () => dlSVG(cur.bodSvg, `bunka_bodice_B${cur.b.B}.svg`));
   $('btnSvgSleeve').addEventListener('click', () => dlSVG(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.svg`));
+  $('btnSvgTight').addEventListener('click', () => dlSVG(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.svg`));
+  $('btnSvgSkirt').addEventListener('click', () => dlSVG(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.svg`));
+  $('btnPdfBodice').addEventListener('click', () => dlOnePdf(cur.bodSvg, `bunka_bodice_B${cur.b.B}.pdf`));
+  $('btnPdfSleeve').addEventListener('click', () => dlOnePdf(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.pdf`));
+  $('btnPdfTight').addEventListener('click', () => dlOnePdf(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.pdf`));
+  $('btnPdfSkirt').addEventListener('click', () => dlOnePdf(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.pdf`));
   $('btnPdf').addEventListener('click', () => {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });
+
+  // 分頁切換
+  document.querySelectorAll('.tabbtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tabbtn').forEach(x => x.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+      btn.classList.add('active');
+      $(btn.dataset.tab).classList.add('active');
+    });
+  });
+
   draw();
 }
 
 /* Node 測試用 */
 if (typeof module !== 'undefined')
-  module.exports = { draftBodice, draftSleeve, crLen, bodiceSVG, sleeveSVG, svgToPdfPage, buildPdf };
+  module.exports = { draftBodice, draftSleeve, draftTightSkirt, draftSkirt, crLen,
+                     bodiceSVG, sleeveSVG, tightSkirtSVG, skirtSVG, svgToPdfPage, buildPdf };
