@@ -15,6 +15,18 @@ css/style.css   樣式
 js/app.js       製圖計算 + SVG 繪製 + 下載(可獨立以 Node 測試)
 ```
 
+## 功能(v4)
+
+上半身原型、袖原型、直筒裙(含隱形拉鍊/開衩/腰頭記號)、圓裙(1/4~全圓)四種版型 + 各版型教學區塊。PDF 一次輸出 4 頁 1:1 實寸。
+
+## 直筒裙公式(簡化文化式)
+
+半身寬 H/2+2、脇線=HL中點後移1cm、後腰目標 W/4、前腰目標 W/4+1;縮減量一半收脇邊、一半做兩個腰省;拉鍊開口=腰長+1、後開衩=裙長/3、腰頭 W+3×3cm。
+
+## 圓裙公式(圓周率法)
+
+n/4 圓裙腰半徑 r=2W/(nπ),下襬半徑=r+裙長;版片畫半件(圓心角 n×45°)。
+
 ## 採用公式(新文化式)
 
 | 部位 | 公式 |
@@ -50,3 +62,5 @@ js/app.js       製圖計算 + SVG 繪製 + 下載(可獨立以 Node 測試)
 - 文化服裝學院《文化ファッション大系 服飾造形講座① 服飾造形の基礎》文化出版局(官方教材)
 - 文化學園購買事業部原型解說:https://www.bunka-koubai.com/shop/useinfomore.php?d=153
 - 製圖步驟整理:MAISON DE AS https://maisondeas.com/pattern-block-new-bunka/
+- 直筒裙:MAISON DE AS https://maisondeas.com/pencil-skirt-pattern/
+- 圓裙:MAISON DE AS https://maisondeas.com/circle-skirt-pattern/
