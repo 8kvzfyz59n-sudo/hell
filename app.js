@@ -580,7 +580,23 @@ if (typeof document !== 'undefined') {
       '</tbody></table>';
   }
 
-  function renderValues(b, sl, t, sk) {
+  function renderValues(b, sl, t, sk, pt) {
+    const typeName = pt.lenType === 'full' ? '長褲' : pt.lenType === 'half' ? '5分褲' : '3分熱褲';
+    $('valuesPants').innerHTML = rowsTable([
+      ['型式', typeName + (pt.elastic ? '(鬆緊帶腰)' : '(拉鍊+腰頭/貼邊)')],
+      ['前片臀寬 H/4+2', pt.fw], ['前襠寬 前片寬/4−1.5', pt.cf], ['後襠寬 前襠+(前片寬/4−1)', pt.cb],
+      ['股上 / 股下', r1(pt.rise) + ' / ' + r1(pt.inseam) + ' cm'],
+      ['膝線 KL(股上+股下/2−7)', pt.KLy],
+      ['成品長(WL起)', pt.hemY],
+      ['前褲口寬 / 後褲口寬', r1(pt.hwF * 2) + ' / ' + r1(pt.hwB * 2) + ' cm'],
+      ['前腰省 / 後腰省 總量', pt.elastic ? '無(鬆緊帶)' : r1(pt.dartF) + ' / ' + r1(pt.dartB) + ' cm'],
+      pt.elastic ? ['鬆緊帶長 0.9W(腰口折入3.5)', pt.elasticLen]
+                 : ['側開隱形拉鍊開口', pt.zipLen]
+    ]);
+    renderValues0(b, sl, t, sk);
+  }
+
+  function renderValues0(b, sl, t, sk) {
     $('valuesTop').innerHTML = rowsTable([
       ['身幅 B/2+6', b.bw], ['A~BL B/12+13.7', b.blY], ['背幅 B/8+7.4', b.backW],
       ['胸幅 B/8+6.2', b.chestW], ['BL~B點 B/5+8.3', b.blY - b.frontTopY],
@@ -629,17 +645,26 @@ if (typeof document !== 'undefined') {
     const sl = draftSleeve(b, SL);
     const t = draftTightSkirt(W, Hip, WLen, TLen);
     const sk = draftSkirt(W, CLen, CN);
+    const Rise = +$('rise').value, PLen = +$('pantslen').value;
+    if (!(Rise >= 20 && Rise <= 35) || !(PLen >= 50 && PLen <= 115)) {
+      msg.textContent = '請確認輸入範圍:股上 20–35、褲長 50–115 cm。';
+      return;
+    }
+    const pt = draftPants(W, Hip, Rise, WLen, PLen,
+      $('pantstype').value, $('pantswaist').value === 'elastic');
     const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
-          tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk);
-    cur = { b, sl, t, sk, bodSvg, slvSvg, tgtSvg, sktSvg };
+          tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk),
+          pntSvg = pantsSVG(pt);
+    cur = { b, sl, t, sk, pt, bodSvg, slvSvg, tgtSvg, sktSvg, pntSvg };
     $('bodiceBox').innerHTML = bodSvg;
     $('sleeveBox').innerHTML = slvSvg;
     $('tightBox').innerHTML = tgtSvg;
     $('skirtBox').innerHTML = sktSvg;
-    renderValues(b, sl, t, sk);
+    $('pantsBox').innerHTML = pntSvg;
+    renderValues(b, sl, t, sk, pt);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,教材建議手動修順袖窿線。';
-    ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnPdf',
-     'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt'].forEach(id => $(id).disabled = false);
+    ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnSvgPants', 'btnPdf',
+     'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt', 'btnPdfPants'].forEach(id => $(id).disabled = false);
   }
 
   function dlBlob(blob, name) {
@@ -659,7 +684,7 @@ if (typeof document !== 'undefined') {
 
   function dlPDF() {
     if (!cur) return;
-    const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg].map(svgToPdfPage);
+    const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg, cur.pntSvg].map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `bunka_pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
@@ -680,6 +705,8 @@ if (typeof document !== 'undefined') {
   $('btnPdfSleeve').addEventListener('click', () => dlOnePdf(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.pdf`));
   $('btnPdfTight').addEventListener('click', () => dlOnePdf(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.pdf`));
   $('btnPdfSkirt').addEventListener('click', () => dlOnePdf(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.pdf`));
+  $('btnSvgPants').addEventListener('click', () => dlSVG(cur.pntSvg, `pants_${cur.pt.lenType}_W${cur.pt.W}_H${cur.pt.H}.svg`));
+  $('btnPdfPants').addEventListener('click', () => dlOnePdf(cur.pntSvg, `pants_${cur.pt.lenType}_W${cur.pt.W}_H${cur.pt.H}.pdf`));
   $('btnPdf').addEventListener('click', () => {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });

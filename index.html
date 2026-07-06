@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>新文化式原型產生器</h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v6</span></p>
+  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v7</span></p>
 </header>
 
 <main>
@@ -56,6 +56,29 @@
         <option value="4" selected>全圓(4/4)</option>
       </select>
     </div>
+    <div class="field">
+      <label for="rise">股上(WL~股)</label>
+      <input type="number" id="rise" value="26" min="20" max="35" step="0.5">
+    </div>
+    <div class="field">
+      <label for="pantslen">褲長(長褲)</label>
+      <input type="number" id="pantslen" value="95" min="50" max="115" step="0.5">
+    </div>
+    <div class="field">
+      <label for="pantstype">褲長度型式</label>
+      <select id="pantstype">
+        <option value="full" selected>長褲</option>
+        <option value="half">5分褲</option>
+        <option value="hot">3分熱褲</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="pantswaist">褲腰處理</label>
+      <select id="pantswaist">
+        <option value="zip" selected>拉鍊+腰頭/貼邊</option>
+        <option value="elastic">鬆緊帶</option>
+      </select>
+    </div>
     <button id="btnDraw" class="primary">產生版型</button>
     <div class="dl-group">
       <button id="btnPdf" disabled>下載全部 PDF(4頁,1:1)</button>
@@ -67,6 +90,7 @@
     <button class="tabbtn active" data-tab="tabTop">1|上半身原型</button>
     <button class="tabbtn" data-tab="tabTight">2|直筒裙</button>
     <button class="tabbtn" data-tab="tabCircle">3|圓裙</button>
+    <button class="tabbtn" data-tab="tabPants">4|褲子</button>
   </nav>
 
   <div class="tab active" id="tabTop">
@@ -183,6 +207,49 @@
     </section>
   </div>
 
+  <div class="tab" id="tabPants">
+    <section class="panel">
+      <h2>直筒褲原型(前片+後片)</h2>
+      <div id="pantsBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgPants" disabled>下載 SVG</button>
+        <button id="btnPdfPants" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>計算結果</h2>
+      <div id="valuesPants" class="values"></div>
+    </section>
+
+    <section class="panel">
+      <h2>教學</h2>
+      <details>
+        <summary>直筒褲:製圖邏輯</summary>
+        <ol>
+          <li>前片基礎長方形:寬=H/4+2(鬆份)、縱向取股上與腰長(HL);前襠寬=前片寬/4−1.5。</li>
+          <li>摺山線(燙線)=脇到襠尖的中點垂直線;股下=褲長−股上;膝線 KL=股上+股下/2−7。</li>
+          <li>褲口與 KL 以摺山線左右對稱,前褲口半寬=摺山−3.5;後片 KL 與褲口每側比前片加1.5。</li>
+          <li>後襠寬=前襠寬+(前片寬/4−1);後中心腰點上抬2.5、內收2(配合坐姿活動量)。</li>
+          <li>腰:前=W/4+1、後=W/4;脇收2.5並上抬1.2;剩餘做腰省(超過3cm自動分兩支,前9/7.5、後12/10cm)。</li>
+          <li>前襠彎經對角導引點2/3處畫順、後襠彎更深;縫合後前後襠必須成一條連續順滑曲線,拿曲線尺對圖確認。</li>
+          <li>長度選擇:長褲=褲長設定值;5分褲=股上+股下/2;3分熱褲=股上+10cm。短褲版本襠彎與臀圍完全相同,只是提前落褲口。</li>
+          <li>拉鍊版收腰:左脇隱形拉鍊(開口=腰長+2),腰頭或貼邊做法同直筒裙分頁。</li>
+        </ol>
+      </details>
+      <details>
+        <summary>鬆緊帶版:差異與做法</summary>
+        <ol>
+          <li>版型差異:無腰省、無脇收、後中心不上抬——腰口=臀圍寬直上,才能套過臀部穿脫,免拉鍊。</li>
+          <li>腰口處理:上緣外加7cm縫份(3.5cm×2)向內折兩次車縫,留3cm返口穿鬆緊帶。</li>
+          <li>鬆緊帶長≈腰圍×0.9(織帶彈性不同,實穿微調);穿入後頭尾重疊2cm車Z字固定,再車合返口。</li>
+          <li>建議兩道車線把鬆緊帶分上下兩格,不易翻捲。</li>
+          <li>適合針織或有垂墜感的梭織布;硬挺布做鬆緊腰會蓬起,打樣時注意。</li>
+        </ol>
+      </details>
+    </section>
+  </div>
+
   <section class="panel refs">
     <h2>製圖法來源</h2>
     <ul>
@@ -191,6 +258,8 @@
       <li>原型:<a href="https://maisondeas.com/pattern-block-new-bunka/" target="_blank" rel="noopener">MAISON DE AS-レディース原型作り(新文化式)</a></li>
       <li>直筒裙:<a href="https://maisondeas.com/pencil-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-タイトスカートの製図方法</a></li>
       <li>圓裙:<a href="https://maisondeas.com/circle-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-円周率を使ったフレアスカートの製図方法</a></li>
+      <li>褲子:<a href="https://maisondeas.com/straight-pants-pattern/" target="_blank" rel="noopener">MAISON DE AS-ストレートパンツの製図方法</a></li>
+      <li>鬆緊帶腰:<a href="https://maisondeas.com/an-elastic-waistband/" target="_blank" rel="noopener">MAISON DE AS-ウエストがゴムのパンツ、スカート等の縫い方</a></li>
     </ul>
     <p class="note">弧線之導引點依教材標準值繪製;實際縫製前建議先做胚布(トワル)確認並補正。</p>
   </section>
@@ -200,6 +269,7 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考。</p>
 </footer>
 
-<script src="app.js?v=6"></script>
+<script src="pants.js?v=7"></script>
+<script src="app.js?v=7"></script>
 </body>
 </html>
