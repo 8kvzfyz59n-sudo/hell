@@ -719,17 +719,19 @@ if (typeof document !== 'undefined') {
     });
   }
 
-  // 分頁切換
-  document.querySelectorAll('.tabbtn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.tabbtn').forEach(x => x.classList.remove('active'));
-      document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-      btn.classList.add('active');
-      $(btn.dataset.tab).classList.add('active');
-      syncFields(btn.dataset.tab);
-    });
+  // 分頁切換(支援 #top/#tight/#circle/#pants 錨點直達)
+  function activateTab(tabId) {
+    document.querySelectorAll('.tabbtn').forEach(x => x.classList.toggle('active', x.dataset.tab === tabId));
+    document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.id === tabId));
+    syncFields(tabId);
+  }
+  document.querySelectorAll('.tabbtn').forEach(btn =>
+    btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
+  const hashMap = { '#top': 'tabTop', '#tight': 'tabTight', '#circle': 'tabCircle', '#pants': 'tabPants' };
+  activateTab(hashMap[location.hash] || 'tabTop');
+  window.addEventListener('hashchange', () => {
+    if (hashMap[location.hash]) activateTab(hashMap[location.hash]);
   });
-  syncFields('tabTop');
 
   draw();
 }

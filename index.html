@@ -4,272 +4,277 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>新文化式原型產生器|Bunka Pattern Generator</title>
-<link rel="stylesheet" href="style.css">
+<style>
+:root{--ink:#2b2622;--accent:#8a5a3b;--bg:#faf7f2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  color:var(--ink);
+  background:radial-gradient(ellipse 90% 70% at 50% 32%, #ffffff 0%, var(--bg) 55%, #efe7db 100%);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  overflow-x:hidden;
+}
+header{text-align:center;padding:56px 20px 6px}
+h1{font-size:2rem;font-weight:600;letter-spacing:.14em}
+.sub{margin-top:10px;color:#8d8377;font-size:.95rem;letter-spacing:.28em}
+#stage{
+  width:min(92vw,560px);height:min(64vh,560px);
+  position:relative;
+}
+#stage canvas{display:block;width:100%;height:100%}
+.cta{
+  margin:4px 0 60px;text-align:center;
+}
+.cta a{
+  display:inline-block;
+  padding:14px 52px;
+  border:1px solid var(--accent);
+  border-radius:999px;
+  color:var(--accent);
+  text-decoration:none;
+  font-size:1.05rem;
+  letter-spacing:.35em;
+  text-indent:.35em;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(2px);
+  transition:all .25s;
+}
+.cta a:hover{background:var(--accent);color:#fff}
+.cta p{margin-top:14px;color:#a89c8d;font-size:.78rem;letter-spacing:.1em}
+footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacing:.15em}
+.picker{
+  position:absolute;top:50%;right:0;transform:translate(105%,-50%);
+  min-width:170px;
+  background:rgba(255,255,255,.92);
+  border:1px solid #e2d8c9;border-radius:12px;
+  padding:14px 16px;
+  box-shadow:0 8px 28px rgba(90,70,50,.12);
+  opacity:0;pointer-events:none;transition:opacity .2s;
+}
+.picker.show{opacity:1;pointer-events:auto}
+.picker h3{font-size:.82rem;color:#a08c74;font-weight:600;letter-spacing:.15em;margin-bottom:8px}
+.picker a{
+  display:block;padding:8px 12px;margin:6px 0;
+  border:1px solid var(--accent);border-radius:8px;
+  color:var(--accent);text-decoration:none;font-size:.92rem;
+  text-align:center;letter-spacing:.1em;transition:all .2s;
+}
+.picker a:hover{background:var(--accent);color:#fff}
+@media (max-width:760px){
+  .picker{right:50%;top:100%;transform:translate(50%,8px)}
+}
+</style>
 </head>
 <body>
 <header>
   <h1>新文化式原型產生器</h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v8</span></p>
+  <p class="sub">BUNKA PATTERN GENERATOR</p>
 </header>
 
-<main>
-  <section class="panel inputs">
-    <h2>輸入尺寸(cm)</h2>
-    <div class="field" data-tabs="tabTop">
-      <label for="bust">胸圍 B</label>
-      <input type="number" id="bust" value="83" min="70" max="110" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTop tabTight tabCircle tabPants">
-      <label for="waist">腰圍 W</label>
-      <input type="number" id="waist" value="64" min="50" max="105" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTop">
-      <label for="backlen">背長</label>
-      <input type="number" id="backlen" value="38" min="30" max="46" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTop">
-      <label for="sleevelen">袖長</label>
-      <input type="number" id="sleevelen" value="52" min="20" max="65" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTight tabPants">
-      <label for="hip">臀圍 H</label>
-      <input type="number" id="hip" value="91" min="70" max="130" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTight tabPants">
-      <label for="waistlen">腰長(WL~HL)</label>
-      <input type="number" id="waistlen" value="18" min="15" max="25" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabTight">
-      <label for="tightlen">直筒裙長</label>
-      <input type="number" id="tightlen" value="60" min="30" max="100" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabCircle">
-      <label for="circlelen">圓裙長</label>
-      <input type="number" id="circlelen" value="65" min="30" max="110" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabCircle">
-      <label for="circletype">圓裙型式</label>
-      <select id="circletype">
-        <option value="1">1/4 圓</option>
-        <option value="2">半圓(2/4)</option>
-        <option value="3">3/4 圓</option>
-        <option value="4" selected>全圓(4/4)</option>
-      </select>
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="rise">股上(WL~股)</label>
-      <input type="number" id="rise" value="26" min="20" max="35" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantslen">褲長(長褲)</label>
-      <input type="number" id="pantslen" value="95" min="50" max="115" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantstype">褲長度型式</label>
-      <select id="pantstype">
-        <option value="full" selected>長褲</option>
-        <option value="half">5分褲</option>
-        <option value="hot">3分熱褲</option>
-      </select>
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantswaist">褲腰處理</label>
-      <select id="pantswaist">
-        <option value="zip" selected>拉鍊+腰頭/貼邊</option>
-        <option value="elastic">鬆緊帶</option>
-      </select>
-    </div>
-    <button id="btnDraw" class="primary">產生版型</button>
-    <div class="dl-group">
-      <button id="btnPdf" disabled>下載全部 PDF(4頁,1:1)</button>
-    </div>
-    <p class="note" id="msg"></p>
-  </section>
-
-  <nav class="tabs">
-    <button class="tabbtn active" data-tab="tabTop">1|上半身原型</button>
-    <button class="tabbtn" data-tab="tabTight">2|直筒裙</button>
-    <button class="tabbtn" data-tab="tabCircle">3|圓裙</button>
-    <button class="tabbtn" data-tab="tabPants">4|褲子</button>
-  </nav>
-
-  <div class="tab active" id="tabTop">
-    <section class="panel">
-      <h2>上半身原型(身片)</h2>
-      <div id="bodiceBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgBodice" disabled>下載 SVG</button>
-        <button id="btnPdfBodice" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>袖原型</h2>
-      <div id="sleeveBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgSleeve" disabled>下載 SVG</button>
-        <button id="btnPdfSleeve" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>計算結果</h2>
-      <div id="valuesTop" class="values"></div>
-    </section>
-
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>上半身原型:製圖邏輯</summary>
-        <ol>
-          <li>畫基礎長方形:寬=身幅(B/2+6)、高=背長;從上端(A點)往下 B/12+13.7 畫出胸圍線 BL。</li>
-          <li>BL 上取背幅(B/8+7.4)與胸幅(B/8+6.2),中間即袖窿範圍;F 與 C 的中點垂直向下為脇線。</li>
-          <li>領口:前領寬◎=B/24+3.4、前領深◎+0.5、後領寬◎+0.2;肩斜前22°、後18°。</li>
-          <li>胸省角度=(B/4−2.5)°,從 BP 往袖窿方向打開;後肩省=B/32−0.8,指向 E 點。</li>
-          <li>總腰省=身幅−(W/2+3),按 a14%/b15%/c11%/d35%/e18%/f7% 分配到六個位置。</li>
-          <li>製作前先以胚布試穿,依體型補正後再作為打版母型。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>袖原型:製圖邏輯</summary>
-        <ol>
-          <li>袖山高=(前後肩點平均高度到 BL 距離)×5/6,袖山越高袖越合身、活動量越小。</li>
-          <li>前袖斜線長=前AH、後袖斜線長=後AH+1(B≥85 再加 0.1~0.3),由此定出袖幅。</li>
-          <li>袖山弧線縮縫份(いせ)約為 AH 的 5~8%,縫製時用兩道疏縫抽縮、以熨斗歸攏。</li>
-          <li>合印:前袖對前身、後袖對後身,袖山點對肩線。</li>
-        </ol>
-      </details>
-    </section>
+<div id="stage">
+  <div class="picker" id="picker">
+    <h3 id="pickerTitle">上半身</h3>
+    <div id="pickerLinks"></div>
   </div>
+</div>
 
-  <div class="tab" id="tabTight">
-    <section class="panel">
-      <h2>直筒裙(含腰頭、隱形拉鍊與開衩記號)</h2>
-      <div id="tightBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgTight" disabled>下載 SVG</button>
-        <button id="btnPdfTight" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
+<div class="cta">
+  <a href="tool.html">進入打版工具</a>
+  <p>上半身原型・袖・直筒裙・圓裙・褲子|SVG / 1:1 PDF</p>
+</div>
 
-    <section class="panel">
-      <h2>計算結果</h2>
-      <div id="valuesTight" class="values"></div>
-    </section>
+<footer>依日本文化服裝學院製圖法|僅供打版參考</footer>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>直筒裙:製圖邏輯與工法(隱形拉鍊+貼邊/腰頭)</summary>
-        <ol>
-          <li>基礎長方形:寬=H/2+2(臀鬆份整圈4cm)、長=裙長;WL 下腰長處畫 HL。</li>
-          <li>脇線取 HL 中點往後移 1cm(前片較寬,符合體型)。</li>
-          <li>腰目標:後=W/4、前=W/4+1(含鬆份與前後差);與臀寬的差=縮減量D。</li>
-          <li>D 的一半在脇邊收(脇腰點上抬1cm畫順),另一半做2個腰省(WL三等分處,後省13/12cm、前省9/10cm)。</li>
-          <li>隱形拉鍊:開在後中心,開口=腰長+1cm(過 HL 才穿得進去);先縫拉鍊再縫剩餘後中心線,齒務必燙開再車。</li>
-          <li>腰部收邊二選一:<br>
-              ①腰頭:版片 W+3 × 3cm(對摺+燙襯),3cm 是疊份鈕釦位。<br>
-              ②內貼邊:複製版型腰線下7cm、把腰省合併後的形狀,燙襯後與腰線正面相對車縫翻入。</li>
-          <li>後開衩=裙長/3(裙長60→衩20),走路才有活動量;衩持出約4cm。</li>
-          <li>縫份建議:腰1、脇/後中心1.5、下襬4(直筒裙下襬用千鳥縫或奇縫固定)。</li>
-        </ol>
-      </details>
-    </section>
-  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  if (typeof THREE === 'undefined') return;   // CDN 失敗:保留靜態首頁
 
-  <div class="tab" id="tabCircle">
-    <section class="panel">
-      <h2>圓裙(版片=半件,對摺裁或裁2片)</h2>
-      <div id="skirtBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgSkirt" disabled>下載 SVG</button>
-        <button id="btnPdfSkirt" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
+  const stage = document.getElementById('stage');
+  const W = stage.clientWidth, H = stage.clientHeight;
 
-    <section class="panel">
-      <h2>計算結果</h2>
-      <div id="valuesCircle" class="values"></div>
-    </section>
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(W, H);
+  stage.appendChild(renderer.domElement);
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>圓裙:製圖邏輯</summary>
-        <ol>
-          <li>原理:讓腰線弧長=腰圍。n/4 圓裙的腰半徑 r=2W/(nπ);全圓 r≈W/6.28、半圓 r≈W/3.14。</li>
-          <li>下襬半徑=r+裙長,兩弧之間就是裙片;本站畫「半件」(圓心角=n×45°),對摺裁或裁2片。</li>
-          <li>圓越大裙襬越澎、用布越多;全圓裙下襬總長=2π(r+裙長)。</li>
-          <li>斜布方向會鬆垂:裁好先吊掛一天,再把下襬修齊。</li>
-          <li>腰部處理與直筒裙相同(腰頭或貼邊+隱形拉鍊);半圓以下也可改鬆緊帶腰。</li>
-        </ol>
-      </details>
-    </section>
-  </div>
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 50);
+  camera.position.set(0, 1.05, 3.6);
+  camera.lookAt(0, 0.55, 0);
 
-  <div class="tab" id="tabPants">
-    <section class="panel">
-      <h2>直筒褲原型(前片+後片)</h2>
-      <div id="pantsBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgPants" disabled>下載 SVG</button>
-        <button id="btnPdfPants" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
+  // 燈光:柔和攝影棚
+  scene.add(new THREE.HemisphereLight(0xfffaf2, 0xcbbfae, 0.85));
+  const key = new THREE.DirectionalLight(0xffffff, 0.75);
+  key.position.set(2.5, 4, 3);
+  scene.add(key);
+  const rim = new THREE.DirectionalLight(0xf2e2cf, 0.45);
+  rim.position.set(-3, 2, -2.5);
+  scene.add(rim);
 
-    <section class="panel">
-      <h2>計算結果</h2>
-      <div id="valuesPants" class="values"></div>
-    </section>
+  // ---- 陶瓷人台軀幹:橢圓斷面堆疊 ----
+  // 每列:[y, 半寬, 後半深, 前半深]
+  const rows = [
+    [1.52, 0.115, 0.115, 0.115],
+    [1.44, 0.135, 0.125, 0.125],
+    [1.30, 0.375, 0.205, 0.205],
+    [1.16, 0.395, 0.235, 0.275],
+    [1.04, 0.385, 0.235, 0.335],
+    [0.94, 0.325, 0.225, 0.265],
+    [0.78, 0.272, 0.195, 0.205],
+    [0.62, 0.318, 0.235, 0.225],
+    [0.44, 0.408, 0.300, 0.255],
+    [0.26, 0.398, 0.295, 0.245],
+    [0.06, 0.330, 0.245, 0.215],
+    [0.00, 0.310, 0.230, 0.205]
+  ];
+  // Catmull-Rom 平滑取樣
+  function cr(vals, t) {
+    const n = vals.length - 1, f = t * n, i = Math.floor(f), u = f - i;
+    const p0 = vals[Math.max(0, i - 1)], p1 = vals[i],
+          p2 = vals[Math.min(n, i + 1)], p3 = vals[Math.min(n, i + 2)];
+    return 0.5 * ((2 * p1) + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u +
+           (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
+  }
+  const col = k => rows.map(r => r[k]);
+  const V = 64, R = 56;                     // 縱向/環向解析度
+  const pos = [], idx = [];
+  for (let i = 0; i <= V; i++) {
+    const t = i / V;
+    const y = cr(col(0), t), w = cr(col(1), t),
+          db = cr(col(2), t), df = cr(col(3), t);
+    for (let j = 0; j <= R; j++) {
+      const a = j / R * Math.PI * 2;
+      const s = Math.sin(a);
+      const d = s > 0 ? df : db;            // 前/後深度(胸型)
+      pos.push(w * Math.cos(a), y, d * s);
+    }
+  }
+  for (let i = 0; i < V; i++)
+    for (let j = 0; j < R; j++) {
+      const a = i * (R + 1) + j, b = a + R + 1;
+      idx.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  geo.setIndex(idx);
+  geo.computeVertexNormals();
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>直筒褲:製圖邏輯</summary>
-        <ol>
-          <li>前片基礎長方形:寬=H/4+2(鬆份)、縱向取股上與腰長(HL);前襠寬=前片寬/4−1.5。</li>
-          <li>摺山線(燙線)=脇到襠尖的中點垂直線;股下=褲長−股上;膝線 KL=股上+股下/2−7。</li>
-          <li>褲口與 KL 以摺山線左右對稱,前褲口半寬=摺山−3.5;後片 KL 與褲口每側比前片加1.5。</li>
-          <li>後襠寬=前襠寬+(前片寬/4−1);後中心腰點上抬2.5、內收2(配合坐姿活動量)。</li>
-          <li>腰:前=W/4+1、後=W/4;脇收2.5並上抬1.2;剩餘做腰省(超過3cm自動分兩支,前9/7.5、後12/10cm)。</li>
-          <li>前襠彎經對角導引點2/3處畫順、後襠彎更深;縫合後前後襠必須成一條連續順滑曲線,拿曲線尺對圖確認。</li>
-          <li>長度選擇:長褲=褲長設定值;5分褲=股上+股下/2;3分熱褲=股上+10cm。短褲版本襠彎與臀圍完全相同,只是提前落褲口。</li>
-          <li>拉鍊版收腰:左脇隱形拉鍊(開口=腰長+2),腰頭或貼邊做法同直筒裙分頁。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>鬆緊帶版:差異與做法</summary>
-        <ol>
-          <li>版型差異:無腰省、無脇收、後中心不上抬——腰口=臀圍寬直上,才能套過臀部穿脫,免拉鍊。</li>
-          <li>腰口處理:上緣外加7cm縫份(3.5cm×2)向內折兩次車縫,留3cm返口穿鬆緊帶。</li>
-          <li>鬆緊帶長≈腰圍×0.9(織帶彈性不同,實穿微調);穿入後頭尾重疊2cm車Z字固定,再車合返口。</li>
-          <li>建議兩道車線把鬆緊帶分上下兩格,不易翻捲。</li>
-          <li>適合針織或有垂墜感的梭織布;硬挺布做鬆緊腰會蓬起,打樣時注意。</li>
-        </ol>
-      </details>
-    </section>
-  </div>
+  const ceramic = new THREE.MeshPhysicalMaterial({
+    color: 0xfdfdfd, roughness: 0.16, metalness: 0.0,
+    clearcoat: 0.65, clearcoatRoughness: 0.22
+  });
+  const figure = new THREE.Group();
+  figure.add(new THREE.Mesh(geo, ceramic));
 
-  <section class="panel refs">
-    <h2>製圖法來源</h2>
-    <ul>
-      <li>文化服裝學院《文化ファッション大系 服飾造形講座① 服飾造形の基礎》(文化出版局)—新文化式原型官方教材</li>
-      <li>文化學園購買事業部原型解說:<a href="https://www.bunka-koubai.com/shop/useinfomore.php?d=153" target="_blank" rel="noopener">bunka-koubai.com</a></li>
-      <li>原型:<a href="https://maisondeas.com/pattern-block-new-bunka/" target="_blank" rel="noopener">MAISON DE AS-レディース原型作り(新文化式)</a></li>
-      <li>直筒裙:<a href="https://maisondeas.com/pencil-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-タイトスカートの製図方法</a></li>
-      <li>圓裙:<a href="https://maisondeas.com/circle-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-円周率を使ったフレアスカートの製図方法</a></li>
-      <li>褲子:<a href="https://maisondeas.com/straight-pants-pattern/" target="_blank" rel="noopener">MAISON DE AS-ストレートパンツの製図方法</a></li>
-      <li>鬆緊帶腰:<a href="https://maisondeas.com/an-elastic-waistband/" target="_blank" rel="noopener">MAISON DE AS-ウエストがゴムのパンツ、スカート等の縫い方</a></li>
-    </ul>
-    <p class="note">弧線之導引點依教材標準值繪製;實際縫製前建議先做胚布(トワル)確認並補正。</p>
-  </section>
-</main>
+  // 頸頂圓鈕
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.115, 24, 16), ceramic);
+  knob.position.y = 1.54;
+  figure.add(knob);
+  // 底蓋
+  const cap = new THREE.Mesh(new THREE.CircleGeometry(0.31, 48), ceramic);
+  cap.rotation.x = Math.PI / 2;
+  cap.scale.set(1, 0.68, 1);
+  figure.add(cap);
 
-<footer>
-  <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考。</p>
-</footer>
+  // 立座:金屬桿+圓盤底
+  const metal = new THREE.MeshStandardMaterial({ color: 0x7a6a58, roughness: 0.35, metalness: 0.8 });
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.85, 20), metal);
+  pole.position.y = -0.43;
+  figure.add(pole);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 0.05, 48), metal);
+  base.position.y = -0.86;
+  figure.add(base);
 
-<script src="pants.js?v=8"></script>
-<script src="app.js?v=8"></script>
+  figure.position.y = -0.28;
+  scene.add(figure);
+
+  // 地面柔影
+  const shCanvas = document.createElement('canvas');
+  shCanvas.width = shCanvas.height = 128;
+  const g = shCanvas.getContext('2d');
+  const grd = g.createRadialGradient(64, 64, 8, 64, 64, 64);
+  grd.addColorStop(0, 'rgba(80,64,48,0.35)');
+  grd.addColorStop(1, 'rgba(80,64,48,0)');
+  g.fillStyle = grd;
+  g.fillRect(0, 0, 128, 128);
+  const shadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(1.6, 1.6),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shCanvas), transparent: true, depthWrite: false })
+  );
+  shadow.rotation.x = -Math.PI / 2;
+  shadow.position.y = -1.155;
+  scene.add(shadow);
+
+  function onResize() {
+    const w2 = stage.clientWidth, h2 = stage.clientHeight;
+    camera.aspect = w2 / h2;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w2, h2);
+  }
+  window.addEventListener('resize', onResize);
+
+  // ---- 滑鼠懸停:上半身/下半身 顯示對應選項 ----
+  const picker = document.getElementById('picker');
+  const pickerTitle = document.getElementById('pickerTitle');
+  const pickerLinks = document.getElementById('pickerLinks');
+  const OPTIONS = {
+    upper: { title: '上半身', links: [['上半身原型(身片+袖)', 'tool.html#top']] },
+    lower: { title: '下半身', links: [
+      ['直筒裙', 'tool.html#tight'],
+      ['圓裙', 'tool.html#circle'],
+      ['褲子', 'tool.html#pants']
+    ] }
+  };
+  let curZone = '', overPicker = false, hideTimer = null;
+  picker.addEventListener('pointerenter', () => { overPicker = true; });
+  picker.addEventListener('pointerleave', () => { overPicker = false; scheduleHide(); });
+  function showZone(zone) {
+    if (zone !== curZone) {
+      curZone = zone;
+      const o = OPTIONS[zone];
+      pickerTitle.textContent = o.title;
+      pickerLinks.innerHTML = o.links.map(([t, u]) => `<a href="${u}">${t}</a>`).join('');
+    }
+    clearTimeout(hideTimer);
+    picker.classList.add('show');
+  }
+  function scheduleHide() {
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(() => { if (!overPicker) { picker.classList.remove('show'); curZone = ''; } }, 350);
+  }
+  const raycaster = new THREE.Raycaster();
+  const mouse = new THREE.Vector2();
+  const bodyMeshes = [figure.children[0], knob];
+  const WAIST_LOCAL_Y = 0.72;
+  renderer.domElement.addEventListener('pointermove', e => {
+    const r = renderer.domElement.getBoundingClientRect();
+    mouse.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    mouse.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera);
+    const hit = raycaster.intersectObjects(bodyMeshes, false)[0];
+    if (hit) {
+      const localY = hit.point.y - figure.position.y;
+      showZone(localY >= WAIST_LOCAL_Y ? 'upper' : 'lower');
+      renderer.domElement.style.cursor = 'pointer';
+    } else {
+      renderer.domElement.style.cursor = '';
+      scheduleHide();
+    }
+  });
+  renderer.domElement.addEventListener('pointerleave', scheduleHide);
+  // 點擊人台直接前往(上半身→原型;下半身→保留讓使用者選)
+  renderer.domElement.addEventListener('click', () => {
+    if (curZone === 'upper') location.href = 'tool.html#top';
+  });
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    figure.rotation.y += 0.0045;
+    renderer.render(scene, camera);
+  })();
+})();
+</script>
 </body>
 </html>
