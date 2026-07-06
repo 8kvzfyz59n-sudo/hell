@@ -9,45 +9,45 @@
 <body>
 <header>
   <h1>新文化式原型產生器</h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v7</span></p>
+  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v8</span></p>
 </header>
 
 <main>
   <section class="panel inputs">
     <h2>輸入尺寸(cm)</h2>
-    <div class="field">
+    <div class="field" data-tabs="tabTop">
       <label for="bust">胸圍 B</label>
       <input type="number" id="bust" value="83" min="70" max="110" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTop tabTight tabCircle tabPants">
       <label for="waist">腰圍 W</label>
       <input type="number" id="waist" value="64" min="50" max="105" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTop">
       <label for="backlen">背長</label>
       <input type="number" id="backlen" value="38" min="30" max="46" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTop">
       <label for="sleevelen">袖長</label>
       <input type="number" id="sleevelen" value="52" min="20" max="65" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTight tabPants">
       <label for="hip">臀圍 H</label>
       <input type="number" id="hip" value="91" min="70" max="130" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTight tabPants">
       <label for="waistlen">腰長(WL~HL)</label>
       <input type="number" id="waistlen" value="18" min="15" max="25" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabTight">
       <label for="tightlen">直筒裙長</label>
       <input type="number" id="tightlen" value="60" min="30" max="100" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabCircle">
       <label for="circlelen">圓裙長</label>
       <input type="number" id="circlelen" value="65" min="30" max="110" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabCircle">
       <label for="circletype">圓裙型式</label>
       <select id="circletype">
         <option value="1">1/4 圓</option>
@@ -56,15 +56,15 @@
         <option value="4" selected>全圓(4/4)</option>
       </select>
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabPants">
       <label for="rise">股上(WL~股)</label>
       <input type="number" id="rise" value="26" min="20" max="35" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabPants">
       <label for="pantslen">褲長(長褲)</label>
       <input type="number" id="pantslen" value="95" min="50" max="115" step="0.5">
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabPants">
       <label for="pantstype">褲長度型式</label>
       <select id="pantstype">
         <option value="full" selected>長褲</option>
@@ -72,7 +72,7 @@
         <option value="hot">3分熱褲</option>
       </select>
     </div>
-    <div class="field">
+    <div class="field" data-tabs="tabPants">
       <label for="pantswaist">褲腰處理</label>
       <select id="pantswaist">
         <option value="zip" selected>拉鍊+腰頭/貼邊</option>
@@ -269,7 +269,7 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考。</p>
 </footer>
 
-<script src="pants.js?v=7"></script>
-<script src="app.js?v=7"></script>
+<script src="pants.js?v=8"></script>
+<script src="app.js?v=8"></script>
 </body>
 </html>

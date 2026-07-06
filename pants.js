@@ -66,24 +66,28 @@ function pantsSVG(p) {
     g += line([o, yR], [tip[0], yR], S.guide);                     // 股線
     g += line([o + crease, yR - 3], [o + crease, yL - 2], S.guide);// 摺山
     if (showKL) g += line([taper(o, sideKL, yK), yK], [taper(tip[0], inKL, yK), yK], S.guide); // KL
-    // 脇線
+    // 脇線(KL處以垂直切線接順)
     g += path(crPathD([sTop, [o, yH], [o, yR]]), S.outline);
     if (yL > yK) {
-      g += line([o, yR], [sideKL, yK], S.outline);
-      g += line([sideKL, yK], [sideKL, yL], S.outline);
+      const yv = Math.min(yK + 8, yL);
+      g += path(crPathD([[o, yR], [(o + sideKL) / 2 + 0.3, (yR + yK) / 2], [sideKL, yK], [sideKL, yv]]), S.outline);
+      if (yL > yv) g += line([sideKL, yv], [sideKL, yL], S.outline);
     } else {
-      g += line([o, yR], [taper(o, sideKL, yL), yL], S.outline);
+      const ex = taper(o, sideKL, yL);
+      g += path(crPathD([[o, yR], [(o + ex) / 2 + 0.2, (yR + yL) / 2], [ex, yL]]), S.outline);
     }
     // 中心線+襠彎
     if (p.elastic) g += line(ctrTop, [o + pw, yR - 6], S.outline);
     else g += path(crPathD([ctrTop, [o + pw, yH], [o + pw, yR - 6]]), S.outline);
     g += path(crPathD([[o + pw, yR - 6], [o + pw + cw * (isBack ? 0.35 : 0.3), yR - (isBack ? 0.8 : 1.2)], tip]), S.outline);
-    // 股下線
+    // 股下線(內彎曲線,KL處以垂直切線接順)
     if (yL > yK) {
-      g += line(tip, [inKL, yK], S.outline);
-      g += line([inKL, yK], [inKL, yL], S.outline);
+      const yv = Math.min(yK + 8, yL);
+      g += path(crPathD([tip, [(tip[0] + inKL) / 2 - 0.8, (yR + yK) / 2], [inKL, yK], [inKL, yv]]), S.outline);
+      if (yL > yv) g += line([inKL, yv], [inKL, yL], S.outline);
     } else {
-      g += line(tip, [taper(tip[0], inKL, yL), yL], S.outline);
+      const ex = taper(tip[0], inKL, yL);
+      g += path(crPathD([tip, [(tip[0] + ex) / 2 - 0.5, (yR + yL) / 2], [ex, yL]]), S.outline);
     }
     // 褲口
     g += line([taper(o, sideKL, yL), yL], [taper(tip[0], inKL, yL), yL], S.outline);

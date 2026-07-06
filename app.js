@@ -711,6 +711,14 @@ if (typeof document !== 'undefined') {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });
 
+  // 依分頁顯示對應輸入欄
+  function syncFields(tabId) {
+    document.querySelectorAll('.inputs .field').forEach(f => {
+      const tabs = (f.dataset.tabs || '').split(/\s+/);
+      f.style.display = tabs.includes(tabId) ? '' : 'none';
+    });
+  }
+
   // 分頁切換
   document.querySelectorAll('.tabbtn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -718,8 +726,10 @@ if (typeof document !== 'undefined') {
       document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
       btn.classList.add('active');
       $(btn.dataset.tab).classList.add('active');
+      syncFields(btn.dataset.tab);
     });
   });
+  syncFields('tabTop');
 
   draw();
 }
