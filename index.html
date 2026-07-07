@@ -250,16 +250,16 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
       ['褲子', 'tool.html#pants'],
       ['百褶裙用布量', 'tool.html#pleat']
     ] },
-    upperM: { title: '男裝・上半身', links: [['男裝上衣原型(身片+袖)', 'tool.html#mtop']] },
-    lowerM: { title: '男裝・下半身', links: [['男裝西裝褲', 'tool.html#mpants']] }
+    upperM: { title: '男裝・上半身', links: [['男裝上衣原型(身片+袖)', 'tool.html#mtop']] }
   };
   let curZone = '', overPicker = false, hideTimer = null;
   picker.addEventListener('pointerenter', () => { overPicker = true; });
   picker.addEventListener('pointerleave', () => { overPicker = false; scheduleHide(); });
   function showZone(zone) {
+    const o = OPTIONS[zone];
+    if (!o) { scheduleHide(); return; }
     if (zone !== curZone) {
       curZone = zone;
-      const o = OPTIONS[zone];
       pickerTitle.textContent = o.title;
       pickerLinks.innerHTML = o.links.map(([t, u]) => `<a href="${u}">${t}</a>`).join('');
     }

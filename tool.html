@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>新文化式原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v17</span></p>
+  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v20</span></p>
 </header>
 
 <main>
@@ -19,7 +19,7 @@
       <label for="bust">胸圍 B</label>
       <input type="number" id="bust" value="83" min="70" max="110" step="0.5">
     </div>
-    <div class="field" data-tabs="tabTop tabTight tabCircle tabPants">
+    <div class="field" data-tabs="tabTop tabTight tabCircle">
       <label for="waist">腰圍 W</label>
       <input type="number" id="waist" value="64" min="50" max="105" step="0.5">
     </div>
@@ -31,11 +31,11 @@
       <label for="sleevelen">袖長</label>
       <input type="number" id="sleevelen" value="52" min="20" max="65" step="0.5">
     </div>
-    <div class="field" data-tabs="tabTight tabPants">
+    <div class="field" data-tabs="tabTight">
       <label for="hip">臀圍 H</label>
       <input type="number" id="hip" value="91" min="70" max="130" step="0.5">
     </div>
-    <div class="field" data-tabs="tabTight tabPants">
+    <div class="field" data-tabs="tabTight">
       <label for="waistlen">腰長(WL~HL)</label>
       <input type="number" id="waistlen" value="18" min="15" max="25" step="0.5">
     </div>
@@ -54,29 +54,6 @@
         <option value="2">半圓(2/4)</option>
         <option value="3">3/4 圓</option>
         <option value="4" selected>全圓(4/4)</option>
-      </select>
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="rise">股上(WL~股)</label>
-      <input type="number" id="rise" value="26" min="20" max="35" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantslen">褲長(長褲)</label>
-      <input type="number" id="pantslen" value="95" min="50" max="115" step="0.5">
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantstype">褲長度型式</label>
-      <select id="pantstype">
-        <option value="full" selected>長褲</option>
-        <option value="half">5分褲</option>
-        <option value="hot">3分熱褲</option>
-      </select>
-    </div>
-    <div class="field" data-tabs="tabPants">
-      <label for="pantswaist">褲腰處理</label>
-      <select id="pantswaist">
-        <option value="zip" selected>拉鍊+腰頭/貼邊</option>
-        <option value="elastic">鬆緊帶</option>
       </select>
     </div>
     <div class="field" data-tabs="tabPleat">
@@ -135,21 +112,29 @@
       <label for="mSleeveLen">男・袖長</label>
       <input type="number" id="mSleeveLen" value="60" min="40" max="70" step="0.5">
     </div>
-    <div class="field" data-tabs="tabMenPants">
-      <label for="mpW">男・淨腰圍(實際量到的腰圍)</label>
-      <input type="number" id="mpW" value="76" min="55" max="120" step="0.5">
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpW">女・腰圍 W(實際量到的腰圍)</label>
+      <input type="number" id="wpW" value="64" min="50" max="105" step="0.5">
     </div>
-    <div class="field" data-tabs="tabMenPants">
-      <label for="mpH">男・淨臀圍(實際量到的臀圍)</label>
-      <input type="number" id="mpH" value="94" min="75" max="130" step="0.5">
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpH">女・臀圍 H(實際量到的臀圍)</label>
+      <input type="number" id="wpH" value="92" min="70" max="130" step="0.5">
     </div>
-    <div class="field" data-tabs="tabMenPants">
-      <label for="mpRise">男・股上長(腰到胯下,含腰頭3cm)</label>
-      <input type="number" id="mpRise" value="27" min="22" max="35" step="0.5">
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpHL">腰長 HL(腰往下到臀圍線的高度)</label>
+      <input type="number" id="wpHL" value="19" min="15" max="25" step="0.5">
     </div>
-    <div class="field" data-tabs="tabMenPants">
-      <label for="mpInseam">男・股下長(胯下到褲腳)</label>
-      <input type="number" id="mpInseam" value="75" min="55" max="95" step="0.5">
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpBR">股上 BR(腰到胯下的深度)</label>
+      <input type="number" id="wpBR" value="26" min="20" max="35" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpTL">褲長 TL(腰到褲腳)</label>
+      <input type="number" id="wpTL" value="95" min="60" max="120" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabWPants">
+      <label for="wpHem">褲口半寬(褲腳寬的一半,書例10,可調)</label>
+      <input type="number" id="wpHem" value="10" min="7" max="20" step="0.5">
     </div>
     <button id="btnDraw" class="primary">產生版型</button>
     <div class="dl-group">
@@ -162,10 +147,9 @@
     <button class="tabbtn active" data-tab="tabTop">1|上半身原型</button>
     <button class="tabbtn" data-tab="tabTight">2|直筒裙</button>
     <button class="tabbtn" data-tab="tabCircle">3|圓裙</button>
-    <button class="tabbtn" data-tab="tabPants">4|褲子</button>
+    <button class="tabbtn" data-tab="tabWPants">4|褲子</button>
     <button class="tabbtn" data-tab="tabPleat">5|百褶裙用布量</button>
     <button class="tabbtn" data-tab="tabMenTop">6|男裝上衣</button>
-    <button class="tabbtn" data-tab="tabMenPants">7|男裝褲子</button>
   </nav>
 
   <div class="tab active" id="tabTop">
@@ -282,49 +266,6 @@
     </section>
   </div>
 
-  <div class="tab" id="tabPants">
-    <section class="panel">
-      <h2>直筒褲原型(前片+後片)</h2>
-      <div id="pantsBox" class="svgbox"></div>
-      <div class="dl-group">
-        <button id="btnSvgPants" disabled>下載 SVG</button>
-        <button id="btnPdfPants" disabled>下載 PDF(1:1)</button>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2>計算結果</h2>
-      <div id="valuesPants" class="values"></div>
-    </section>
-
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>直筒褲:製圖邏輯</summary>
-        <ol>
-          <li>前片基礎長方形:寬=H/4+2(鬆份)、縱向取股上與腰長(HL);前襠寬=前片寬/4−1.5。</li>
-          <li>摺山線(燙線)=脇到襠尖的中點垂直線;股下=褲長−股上;膝線 KL=股上+股下/2−7。</li>
-          <li>褲口與 KL 以摺山線左右對稱,前褲口半寬=摺山−3.5;後片 KL 與褲口每側比前片加1.5。</li>
-          <li>後襠寬=前襠寬+(前片寬/4−1);後中心腰點上抬2.5、內收2(配合坐姿活動量)。</li>
-          <li>腰:前=W/4+1、後=W/4;脇收2.5並上抬1.2;剩餘做腰省(超過3cm自動分兩支,前9/7.5、後12/10cm)。</li>
-          <li>前襠彎經對角導引點2/3處畫順、後襠彎更深;縫合後前後襠必須成一條連續順滑曲線,拿曲線尺對圖確認。</li>
-          <li>長度選擇:長褲=褲長設定值;5分褲=股上+股下/2;3分熱褲=股上+10cm。短褲版本襠彎與臀圍完全相同,只是提前落褲口。</li>
-          <li>拉鍊版收腰:左脇隱形拉鍊(開口=腰長+2),腰頭或貼邊做法同直筒裙分頁。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>鬆緊帶版:差異與做法</summary>
-        <ol>
-          <li>版型差異:無腰省、無脇收、後中心不上抬——腰口=臀圍寬直上,才能套過臀部穿脫,免拉鍊。</li>
-          <li>腰口處理:上緣外加7cm縫份(3.5cm×2)向內折兩次車縫,留3cm返口穿鬆緊帶。</li>
-          <li>鬆緊帶長≈腰圍×0.9(織帶彈性不同,實穿微調);穿入後頭尾重疊2cm車Z字固定,再車合返口。</li>
-          <li>建議兩道車線把鬆緊帶分上下兩格,不易翻捲。</li>
-          <li>適合針織或有垂墜感的梭織布;硬挺布做鬆緊腰會蓬起,打樣時注意。</li>
-        </ol>
-      </details>
-    </section>
-  </div>
-
   <div class="tab" id="tabPleat">
     <section class="panel">
       <h2>A4 試摺紙型(印出來先摺摺看)</h2>
@@ -417,34 +358,47 @@
     </section>
   </div>
 
-  <div class="tab" id="tabMenPants">
+  <div class="tab" id="tabWPants">
     <section class="panel">
-      <h2>男裝西裝褲(前片+後片)</h2>
-      <div id="menPantsBox" class="svgbox"></div>
+      <h2>褲子・基本型長褲(後片 B+前片 F)</h2>
+      <div id="womenPantsBox" class="svgbox"></div>
       <div class="dl-group">
-        <button id="btnSvgMenPants" disabled>下載 SVG</button>
-        <button id="btnPdfMenPants" disabled>下載 PDF(1:1)</button>
+        <button id="btnSvgWomenPants" disabled>下載 SVG</button>
+        <button id="btnPdfWomenPants" disabled>下載 PDF(1:1)</button>
       </div>
     </section>
 
     <section class="panel">
       <h2>計算結果</h2>
-      <div id="valuesMenPants" class="values"></div>
+      <div id="valuesWomenPants" class="values"></div>
     </section>
 
     <section class="panel">
       <h2>教學</h2>
       <details>
-        <summary>男裝西裝褲(單褶):怎麼畫出來的(白話版)</summary>
+        <summary>基本型長褲・前片:怎麼畫出來的(白話版,照教科書步驟)</summary>
         <ol>
-          <li>輸入都填實際量到的尺寸就好:公式裡已經幫你加了活動需要的鬆量(例如臀圍那條 H/4+2.5,那個 2.5 就是鬆量)。</li>
-          <li>長度:股上長=腰到胯下(含 3cm 腰頭,身片實際畫股上長−3);股下長=胯下到褲腳;褲長=兩者相加。膝蓋位置(中檔線)取股下的一半再往上 5cm。</li>
-          <li>整套圖用一個基準值 ☆=臀圍÷12:臀圍線在橫檔線(胯下那條水平線)上方 ☆;前片褲襠尖端往外伸 ☆×2/3;後片再多伸 ☆/2,並往下落 1cm(坐下才有空間)。</li>
-          <li>前片有一個「褶」壓在挺縫線(褲管燙出來那條直線)上:褶寬不是固定值,是腰口剩多少收多少(前片寬−前中心收 0.7−側縫收 1.5−腰圍÷4)。</li>
-          <li>後片腰口多出來的量改用兩個「省」收掉(一大一小差 0.6),省尖指向後口袋;後中心腰點往上翹 1cm(后翘),彎腰坐下才不會扯。</li>
-          <li>褲腳:前片=前片寬−3.5、後片比前片寬 1;膝蓋處各再寬 1,自然直筒(H 型)。</li>
-          <li>腰頭另外裁:寬 3cm,左片=腰圍/2+3、右片=腰圍/2+6(多的 3cm 是扣子搭份),圖下方兩條就是。</li>
-          <li>紅線是記號不是裁切線:PLEAT=褶、DART=省、POCKET=口袋位置、FLY=前門襟(拉鍊開口)、CREASE=挺縫線。</li>
+          <li>先畫骨架長方形:寬=臀圍÷4+1(那個 +1 是前片鬆份)、往下量腰長(臀圍線 HL)和股上(股上線 BR,胯下高度)。</li>
+          <li>把臀圍線均分成 4 等份;褲襠尖端=前中心底角再往外延伸一等份。</li>
+          <li>折山線(褲管正中央燙出來的那條直線):取「褲襠尖端到脇邊底角」的正中間,從腰往下量褲長。</li>
+          <li>膝線 KL=股下的一半再往上 4 公分;褲口以折山線左右各取 10 公分(可調)。</li>
+          <li>股下線:褲襠尖端直線連到褲口內側,在膝線處往內彎 0.7~1 公分,得到的寬度◎再對稱畫出脇邊那一側。</li>
+          <li>腰口:脇邊往內收 2 公分並往上翹 1~1.2 公分;前中心往內收 0.5 公分直線連到臀圍線。</li>
+          <li>褲襠彎:從前中底角往「襠尖~臀圍線點」的斜線畫垂直線,取 2/3 處當導引點,弧線畫順。</li>
+          <li>腰圍目標=(腰圍+1)÷4+1;腰線多出來的量均分成兩根褶(第一根壓在折山線上、第二根在它與脇邊的正中間),褶長都是 9 公分。剩餘量不到 3 公分時,書上說打一根就好(程式會自動判斷)。</li>
+          <li>紅線是記號不是裁切線:PLEAT=褶、POCKET=脇邊口袋(臀圍線往上 15 公分)、FLY=前開拉鍊(止點=臀圍線下 1 公分、裝飾寬 3 公分)。</li>
+        </ol>
+      </details>
+      <details>
+        <summary>基本型長褲・後片:怎麼畫出來的(白話版,照教科書步驟)</summary>
+        <ol>
+          <li>後片是「描一份前片」改出來的:股上線(胯下那條線)以上照直線骨架描,以下照前片完成線描。</li>
+          <li>後中心斜線:前中心腰點 W 往脇邊移 2.5 公分得 W1,取中點 W2;把 W2 和前中底角 a 連成直線、往上多畫 2 公分——這就是後翹(彎腰、坐下才不會扯)。</li>
+          <li>後臀圍:斜線和臀圍線的交點往上 2 公分(H1),從 H1「垂直於斜線」量臀圍÷4+1 到 H2,H2 處畫垂直輔助線。</li>
+          <li>褲襠尖端:比前片再往外 4 公分、往下落 0.5~1 公分(屁股比前面厚,後襠要更深)——後襠彎從 H1 經導引點連到這裡。</li>
+          <li>膝線和褲口都比前片每側寬 1 公分;脇邊腰點一樣內收 2、起翹 1~1.2。</li>
+          <li>腰圍目標=(腰圍+1)÷4−1;腰線多出來的量均分成兩根褶:第一根在腰線 1/3 處(靠後中心)褶長 11,第二根在 2/3 處褶長 9~10,褶尖都往脇邊偏 0.5~0.7 公分。</li>
+          <li>前後腰目標相加=(腰圍+1)÷2,剛好是半件褲子的腰;+1 是整圈腰的鬆份。</li>
         </ol>
       </details>
     </section>
@@ -456,10 +410,9 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考,實際縫製前建議先做胚布(トワル)確認並補正。</p>
 </footer>
 
-<script src="pants.js?v=17"></script>
-<script src="pleat.js?v=17"></script>
-<script src="men.js?v=17"></script>
-<script src="menpants.js?v=17"></script>
-<script src="app.js?v=17"></script>
+<script src="pleat.js?v=20"></script>
+<script src="men.js?v=20"></script>
+<script src="womenpants.js?v=20"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>

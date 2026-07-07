@@ -580,22 +580,6 @@ if (typeof document !== 'undefined') {
       '</tbody></table>';
   }
 
-  function renderValues(b, sl, t, sk, pt) {
-    const typeName = pt.lenType === 'full' ? '長褲' : pt.lenType === 'half' ? '5分褲' : '3分熱褲';
-    $('valuesPants').innerHTML = rowsTable([
-      ['型式', typeName + (pt.elastic ? '(鬆緊帶腰)' : '(拉鍊+腰頭/貼邊)')],
-      ['前片臀寬 H/4+2', pt.fw], ['前襠寬 前片寬/4−1.5', pt.cf], ['後襠寬 前襠+(前片寬/4−1)', pt.cb],
-      ['股上 / 股下', r1(pt.rise) + ' / ' + r1(pt.inseam) + ' cm'],
-      ['膝線 KL(股上+股下/2−7)', pt.KLy],
-      ['成品長(WL起)', pt.hemY],
-      ['前褲口寬 / 後褲口寬', r1(pt.hwF * 2) + ' / ' + r1(pt.hwB * 2) + ' cm'],
-      ['前腰省 / 後腰省 總量', pt.elastic ? '無(鬆緊帶)' : r1(pt.dartF) + ' / ' + r1(pt.dartB) + ' cm'],
-      pt.elastic ? ['鬆緊帶長 0.9W(腰口折入3.5)', pt.elasticLen]
-                 : ['側開隱形拉鍊開口', pt.zipLen]
-    ]);
-    renderValues0(b, sl, t, sk);
-  }
-
   function renderValuesPleat(p) {
     const typeName = p.type === 'box' ? '箱褶(工字褶)' : p.type === 'accordion' ? '手風琴褶' : '刀褶';
     const unitFormula = p.type === 'box' ? '陽+4×陰' : p.type === 'accordion' ? '陽+陰' : '陽+2×陰';
@@ -633,22 +617,27 @@ if (typeof document !== 'undefined') {
     ]);
   }
 
-  function renderValuesMenPants(p) {
-    $('valuesMenPants').innerHTML = rowsTable([
-      ['褲長(股上+股下)', p.pantsLen],
-      ['基準值 ☆(臀圍÷12)', p.star],
-      ['前/後片基礎寬(H/4+2.5)', p.delta],
-      ['前褲襠伸出(☆×2/3)', p.extF],
-      ['後褲襠總伸出(前小裆+☆/2,並下落1)', p.extB],
-      ['后翘高(腰點沿後中斜線上抬☆/2)', p.backRise],
-      ['後中斜線(腰=中線與後中線的中點;橫檔內縮1)', '斜率 ' + r1(p.slantK * 100) / 100],
-      ['前片褶寬(腰口剩多少收多少)', p.pleatW],
-      ['後腰兩個省(大/小)', r1(p.dart1) + ' / ' + r1(p.dart2) + ' cm'],
-      ['前褲腳寬 / 後褲腳寬(全寬)', r1(p.hemF) + ' / ' + r1(p.hemB) + ' cm'],
-      ['膝蓋(中檔)寬 前/後', r1(p.kneeF) + ' / ' + r1(p.kneeB) + ' cm'],
-      ['腰頭 左/右(寬3)', r1(p.beltLL) + ' / ' + r1(p.beltLR) + ' cm'],
-      ['臀圍線位置(橫檔上方☆)', p.hlY],
-      ['膝線位置(股下一半再上提5)', p.klY]
+  function renderValuesWomenPants(p) {
+    $('valuesWomenPants').innerHTML = rowsTable([
+      ['前片寬(H/4+1,+1為鬆份)', p.w],
+      ['等份(前片寬/4)=前裆伸出', p.q],
+      ['折山線位置(裆尖~脇邊的中點,自脇邊量)', p.crease],
+      ['股下 / 膝線KL(股上+股下/2−4)', r1(p.inseam) + ' / ' + r1(p.klY) + ' cm'],
+      ['膝寬◎(距折山線;KL內彎取0.85,書0.7~1)', p.dia],
+      ['脇邊腰:內縮2、起翹1.1(書1~1.2)', '—'],
+      ['前中腰:內縮0.5', '—'],
+      ['前腰目標((W+1)/4+1)', p.target],
+      ['前腰線長(實測)', p.waistLen],
+      ['腰口剩餘量(=褶份合計)', p.pleatTotal],
+      ['褶寬◎ ' + (p.single ? '×1(剩餘<3cm,書POINT只打一根)' : '×2(等寬,褶長9)'), p.pleatW],
+      ['褲口全寬 前/後(後片每側+1)', r1(p.hemHalf * 2) + ' / ' + r1(p.hemHalf * 2 + 2) + ' cm'],
+      ['口袋(HL上15,裝飾0.5)/ 拉鍊(止點HL下1,寬3)', '—'],
+      ['後中斜線(W→W1=2.5取中點W2連a,超過WL 2)', '後翹頂點高 ' + r1(-p.bkWt[1]) + ' cm'],
+      ['後臀圍寬(H1垂直後中斜線量H/4+1)', p.w],
+      ['後裆尖(b外移4、下落0.75;書0.5~1)', '—'],
+      ['後腰目標((W+1)/4−1)', p.targetB],
+      ['後腰線長(實測)/ 剩餘量', r1(p.waistLenB) + ' / ' + r1(p.dartTotal) + ' cm'],
+      ['後褶寬● ×2(1/3處長11、2/3處長' + p.dartLen2 + ',尖偏脇邊0.6)', p.dartW]
     ]);
   }
 
@@ -701,14 +690,6 @@ if (typeof document !== 'undefined') {
     const sl = draftSleeve(b, SL);
     const t = draftTightSkirt(W, Hip, WLen, TLen);
     const sk = draftSkirt(W, CLen, CN);
-    const Rise = +$('rise').value, PLen = +$('pantslen').value;
-    if (!(Rise >= 20 && Rise <= 35) || !(PLen >= 50 && PLen <= 115)) {
-      msg.textContent = '請確認輸入範圍:股上 20–35、褲長 50–115 cm。';
-      return;
-    }
-    const pt = draftPants(W, Hip, Rise, WLen, PLen,
-      $('pantstype').value, $('pantswaist').value === 'elastic');
-
     const plWaist = +$('plWaist').value, plEase = +$('plEase').value,
           plYang = +$('plYang').value, plYin = +$('plYin').value,
           plLen = +$('plLen').value, plBelt = +$('plBelt').value,
@@ -728,43 +709,43 @@ if (typeof document !== 'undefined') {
     const mb = draftMenBodice(mC, mW, mBL);
     const msl = draftMenSleeve(mb, mSL);
 
-    const mpW = +$('mpW').value, mpH = +$('mpH').value,
-          mpRise = +$('mpRise').value, mpInseam = +$('mpInseam').value;
-    if (!(mpW >= 55 && mpW <= 120) || !(mpH >= 75 && mpH <= 130) ||
-        !(mpRise >= 22 && mpRise <= 35) || !(mpInseam >= 55 && mpInseam <= 95)) {
-      msg.textContent = '請確認男褲輸入範圍:腰 55–120、臀 75–130、股上 22–35、股下 55–95 cm。';
+    const wpW = +$('wpW').value, wpH = +$('wpH').value, wpHL = +$('wpHL').value,
+          wpBR = +$('wpBR').value, wpTL = +$('wpTL').value, wpHem = +$('wpHem').value;
+    if (!(wpW >= 50 && wpW <= 105) || !(wpH >= 70 && wpH <= 130) ||
+        !(wpHL >= 15 && wpHL <= 25) || !(wpBR >= 20 && wpBR <= 35) ||
+        !(wpTL >= 60 && wpTL <= 120) || !(wpHem >= 7 && wpHem <= 20)) {
+      msg.textContent = '請確認女裝褲子輸入範圍:腰 50–105、臀 70–130、腰長 15–25、股上 20–35、褲長 60–120、褲口半寬 7–20 cm。';
       return;
     }
-    const mp = draftMenPants(mpW, mpH, mpRise, mpInseam);
+    const wp = draftWomenPants(wpW, wpH, wpHL, wpBR, wpTL, wpHem);
 
     const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
           tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk),
-          pntSvg = pantsSVG(pt), plSheetSvg = pleatSheetSVG(pl),
+          plSheetSvg = pleatSheetSVG(pl),
           menBodSvg = menBodiceSVG(mb), menSlvSvg = sleeveSVG(msl),
-          menPntSvg = menPantsSVG(mp);
-    cur = { b, sl, t, sk, pt, pl, mb, msl, mp,
-            bodSvg, slvSvg, tgtSvg, sktSvg, pntSvg, plSheetSvg, menBodSvg, menSlvSvg, menPntSvg };
+          wpSvg = womenPantsSVG(wp);
+    cur = { b, sl, t, sk, pl, mb, msl, wp,
+            bodSvg, slvSvg, tgtSvg, sktSvg, plSheetSvg, menBodSvg, menSlvSvg, wpSvg };
     $('bodiceBox').innerHTML = bodSvg;
     $('sleeveBox').innerHTML = slvSvg;
     $('tightBox').innerHTML = tgtSvg;
     $('skirtBox').innerHTML = sktSvg;
-    $('pantsBox').innerHTML = pntSvg;
     $('pleatSheetBox').innerHTML = plSheetSvg || '<p class="note">褶單元太寬,無法放入 A4(直式19cm/橫式27.7cm),請縮小陽折或陰折。</p>';
     $('menBodiceBox').innerHTML = menBodSvg;
     $('menSleeveBox').innerHTML = menSlvSvg;
-    $('menPantsBox').innerHTML = menPntSvg;
-    renderValues(b, sl, t, sk, pt);
+    $('womenPantsBox').innerHTML = wpSvg;
+    renderValues0(b, sl, t, sk);
     renderValuesPleat(pl);
     renderValuesMenTop(mb, msl);
-    renderValuesMenPants(mp);
+    renderValuesWomenPants(wp);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,教材建議手動修順袖窿線。';
     if (pl.waistOK && !pl.fitsOneWidth) msg.textContent += (msg.textContent ? ' ' : '') + '百褶裙:裙長方向超過布幅,需接布或改直裁方向。';
     if (!pl.waistOK) msg.textContent += (msg.textContent ? ' ' : '') + '手風琴褶「表面看得到的摺寬(陽)」必須大於「藏起來的深度(陰)」,不然摺完圍不住腰;兩者一樣寬就是純手風琴褶,要靠鬆緊帶或讓裙襬自然張開。';
-    if (mp.pleatW < 0.5 || mp.dart2 < 0.1) msg.textContent += (msg.textContent ? ' ' : '') + '男褲:腰圍相對臀圍偏大,褶/省收不出來,此版型不適用(可考慮增加臀圍或改鬆緊帶款)。';
-    ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnSvgPants', 'btnSvgPleatSheet', 'btnPdf',
-     'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt', 'btnPdfPants', 'btnPdfPleatSheet',
+    if (wp.pleatTotal < 0.3) msg.textContent += (msg.textContent ? ' ' : '') + '褲子:腰圍相對臀圍偏大,腰口收不出褶,此版型不適用(可考慮增加臀圍)。';
+    ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnSvgPleatSheet', 'btnPdf',
+     'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt', 'btnPdfPleatSheet',
      'btnSvgMenBodice', 'btnPdfMenBodice', 'btnSvgMenSleeve', 'btnPdfMenSleeve',
-     'btnSvgMenPants', 'btnPdfMenPants'].forEach(id => $(id).disabled = false);
+     'btnSvgWomenPants', 'btnPdfWomenPants'].forEach(id => $(id).disabled = false);
   }
 
   function dlBlob(blob, name) {
@@ -784,8 +765,8 @@ if (typeof document !== 'undefined') {
 
   function dlPDF() {
     if (!cur) return;
-    const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg, cur.pntSvg, cur.plSheetSvg,
-                   cur.menBodSvg, cur.menSlvSvg, cur.menPntSvg].filter(Boolean).map(svgToPdfPage);
+    const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg, cur.wpSvg, cur.plSheetSvg,
+                   cur.menBodSvg, cur.menSlvSvg].filter(Boolean).map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `bunka_pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
@@ -806,16 +787,14 @@ if (typeof document !== 'undefined') {
   $('btnPdfSleeve').addEventListener('click', () => dlOnePdf(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.pdf`));
   $('btnPdfTight').addEventListener('click', () => dlOnePdf(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.pdf`));
   $('btnPdfSkirt').addEventListener('click', () => dlOnePdf(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.pdf`));
-  $('btnSvgPants').addEventListener('click', () => dlSVG(cur.pntSvg, `pants_${cur.pt.lenType}_W${cur.pt.W}_H${cur.pt.H}.svg`));
-  $('btnPdfPants').addEventListener('click', () => dlOnePdf(cur.pntSvg, `pants_${cur.pt.lenType}_W${cur.pt.W}_H${cur.pt.H}.pdf`));
   $('btnSvgPleatSheet').addEventListener('click', () => dlSVG(cur.plSheetSvg, `pleat_test_sheet_${cur.pl.type}.svg`));
   $('btnPdfPleatSheet').addEventListener('click', () => dlOnePdf(cur.plSheetSvg, `pleat_test_sheet_${cur.pl.type}.pdf`));
   $('btnSvgMenBodice').addEventListener('click', () => dlSVG(cur.menBodSvg, `men_bodice_C${cur.mb.C}.svg`));
   $('btnPdfMenBodice').addEventListener('click', () => dlOnePdf(cur.menBodSvg, `men_bodice_C${cur.mb.C}.pdf`));
   $('btnSvgMenSleeve').addEventListener('click', () => dlSVG(cur.menSlvSvg, `men_sleeve_C${cur.mb.C}.svg`));
   $('btnPdfMenSleeve').addEventListener('click', () => dlOnePdf(cur.menSlvSvg, `men_sleeve_C${cur.mb.C}.pdf`));
-  $('btnSvgMenPants').addEventListener('click', () => dlSVG(cur.menPntSvg, `men_pants_W${cur.mp.W}_H${cur.mp.H}.svg`));
-  $('btnPdfMenPants').addEventListener('click', () => dlOnePdf(cur.menPntSvg, `men_pants_W${cur.mp.W}_H${cur.mp.H}.pdf`));
+  $('btnSvgWomenPants').addEventListener('click', () => dlSVG(cur.wpSvg, `pants_W${cur.wp.W}_H${cur.wp.H}.svg`));
+  $('btnPdfWomenPants').addEventListener('click', () => dlOnePdf(cur.wpSvg, `pants_W${cur.wp.W}_H${cur.wp.H}.pdf`));
   $('btnPdf').addEventListener('click', () => {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });
@@ -836,7 +815,7 @@ if (typeof document !== 'undefined') {
   }
   document.querySelectorAll('.tabbtn').forEach(btn =>
     btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
-  const hashMap = { '#top': 'tabTop', '#tight': 'tabTight', '#circle': 'tabCircle', '#pants': 'tabPants', '#pleat': 'tabPleat', '#mtop': 'tabMenTop', '#mpants': 'tabMenPants' };
+  const hashMap = { '#top': 'tabTop', '#tight': 'tabTight', '#circle': 'tabCircle', '#pants': 'tabWPants', '#pleat': 'tabPleat', '#mtop': 'tabMenTop', '#wpants': 'tabWPants' };
   activateTab(hashMap[location.hash] || 'tabTop');
   window.addEventListener('hashchange', () => {
     if (hashMap[location.hash]) activateTab(hashMap[location.hash]);
