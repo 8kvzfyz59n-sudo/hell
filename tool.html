@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>新文化式原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v9</span></p>
+  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v17</span></p>
 </header>
 
 <main>
@@ -79,9 +79,81 @@
         <option value="elastic">鬆緊帶</option>
       </select>
     </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plWaist">淨腰圍(實際量到的腰圍)</label>
+      <input type="number" id="plWaist" value="64" min="50" max="105" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plEase">鬆份(想多留的寬鬆量)</label>
+      <input type="number" id="plEase" value="2" min="0" max="10" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plYang">陽摺寬(表面看得到的摺寬)</label>
+      <input type="number" id="plYang" value="3" min="1" max="10" step="0.1">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plYin">陰摺深(摺進去藏在下面的深度)</label>
+      <input type="number" id="plYin" value="2" min="0.5" max="10" step="0.1">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plLen">裙長(腰下到裙襬)</label>
+      <input type="number" id="plLen" value="45" min="20" max="100" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plBelt">腰頭寬(腰帶那一圈的寬度)</label>
+      <input type="number" id="plBelt" value="4" min="0" max="10" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plHem">下擺縫份(裙襬折邊要留的布)</label>
+      <input type="number" id="plHem" value="3" min="0" max="8" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plFabricW">布幅寬(買的布本身有多寬)</label>
+      <input type="number" id="plFabricW" value="150" min="90" max="300" step="1">
+    </div>
+    <div class="field" data-tabs="tabPleat">
+      <label for="plType">摺型</label>
+      <select id="plType">
+        <option value="knife" selected>刀褶(摺痕都往同一邊)</option>
+        <option value="box">箱褶(兩摺相對,像禮盒摺)</option>
+        <option value="accordion">手風琴褶(一凸一凹交錯)</option>
+      </select>
+    </div>
+    <div class="field" data-tabs="tabMenTop">
+      <label for="mC">男・胸圍 C</label>
+      <input type="number" id="mC" value="92" min="76" max="120" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenTop">
+      <label for="mW">男・腰圍 W</label>
+      <input type="number" id="mW" value="74" min="56" max="110" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenTop">
+      <label for="mBackLen">男・背長</label>
+      <input type="number" id="mBackLen" value="45" min="38" max="52" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenTop">
+      <label for="mSleeveLen">男・袖長</label>
+      <input type="number" id="mSleeveLen" value="60" min="40" max="70" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenPants">
+      <label for="mpW">男・淨腰圍(實際量到的腰圍)</label>
+      <input type="number" id="mpW" value="76" min="55" max="120" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenPants">
+      <label for="mpH">男・淨臀圍(實際量到的臀圍)</label>
+      <input type="number" id="mpH" value="94" min="75" max="130" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenPants">
+      <label for="mpRise">男・股上長(腰到胯下,含腰頭3cm)</label>
+      <input type="number" id="mpRise" value="27" min="22" max="35" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabMenPants">
+      <label for="mpInseam">男・股下長(胯下到褲腳)</label>
+      <input type="number" id="mpInseam" value="75" min="55" max="95" step="0.5">
+    </div>
     <button id="btnDraw" class="primary">產生版型</button>
     <div class="dl-group">
-      <button id="btnPdf" disabled>下載全部 PDF(4頁,1:1)</button>
+      <button id="btnPdf" disabled>下載全部 PDF(1:1)</button>
     </div>
     <p class="note" id="msg"></p>
   </section>
@@ -91,6 +163,9 @@
     <button class="tabbtn" data-tab="tabTight">2|直筒裙</button>
     <button class="tabbtn" data-tab="tabCircle">3|圓裙</button>
     <button class="tabbtn" data-tab="tabPants">4|褲子</button>
+    <button class="tabbtn" data-tab="tabPleat">5|百褶裙用布量</button>
+    <button class="tabbtn" data-tab="tabMenTop">6|男裝上衣</button>
+    <button class="tabbtn" data-tab="tabMenPants">7|男裝褲子</button>
   </nav>
 
   <div class="tab active" id="tabTop">
@@ -250,26 +325,141 @@
     </section>
   </div>
 
-  <section class="panel refs">
-    <h2>製圖法來源</h2>
-    <ul>
-      <li>文化服裝學院《文化ファッション大系 服飾造形講座① 服飾造形の基礎》(文化出版局)—新文化式原型官方教材</li>
-      <li>文化學園購買事業部原型解說:<a href="https://www.bunka-koubai.com/shop/useinfomore.php?d=153" target="_blank" rel="noopener">bunka-koubai.com</a></li>
-      <li>原型:<a href="https://maisondeas.com/pattern-block-new-bunka/" target="_blank" rel="noopener">MAISON DE AS-レディース原型作り(新文化式)</a></li>
-      <li>直筒裙:<a href="https://maisondeas.com/pencil-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-タイトスカートの製図方法</a></li>
-      <li>圓裙:<a href="https://maisondeas.com/circle-skirt-pattern/" target="_blank" rel="noopener">MAISON DE AS-円周率を使ったフレアスカートの製図方法</a></li>
-      <li>褲子:<a href="https://maisondeas.com/straight-pants-pattern/" target="_blank" rel="noopener">MAISON DE AS-ストレートパンツの製図方法</a></li>
-      <li>鬆緊帶腰:<a href="https://maisondeas.com/an-elastic-waistband/" target="_blank" rel="noopener">MAISON DE AS-ウエストがゴムのパンツ、スカート等の縫い方</a></li>
-    </ul>
-    <p class="note">弧線之導引點依教材標準值繪製;實際縫製前建議先做胚布(トワル)確認並補正。</p>
-  </section>
+  <div class="tab" id="tabPleat">
+    <section class="panel">
+      <h2>A4 試摺紙型(印出來先摺摺看)</h2>
+      <p class="note">紙型上的線條:<b style="color:#c0392b">紅色一點一劃的線=山摺(凸起來,摺痕朝自己)</b>;<b style="color:#2467a8">藍色虛線=谷摺(凹下去,往內摺)</b>。英文對照見下方教學。</p>
+      <div id="pleatSheetBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgPleatSheet" disabled>下載 SVG</button>
+        <button id="btnPdfPleatSheet" disabled>下載 PDF(A4,1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>計算結果</h2>
+      <div id="valuesPleat" class="values"></div>
+    </section>
+
+    <section class="panel">
+      <h2>教學</h2>
+      <details>
+        <summary>這個計算機在算什麼?(白話版)</summary>
+        <ol>
+          <li>百摺裙就是把一塊「比腰圍寬很多」的長方形布,一摺一摺收到剛好圍住腰。這裡幫你算:那塊布到底要多寬。</li>
+          <li>兩個關鍵名詞:<b>陽摺</b>=摺好後表面看得到的那一段寬度;<b>陰摺</b>=摺進去、藏在下面看不到的深度。</li>
+          <li>做一個摺要吃掉的布,依摺法不同:<b>刀褶</b>(摺痕都往同一邊)=陽摺+2×陰摺;<b>箱褶</b>(兩摺相對,像禮盒包裝的摺法)=陽摺+4×陰摺;<b>手風琴褶</b>(一凸一凹交錯)=陽摺+陰摺。</li>
+          <li>要摺幾個?用(腰圍+鬆份)除以「一個摺在腰上佔的寬度」,小數無條件進位——寧可多一點,不能圍不住。</li>
+          <li>布的總寬=摺數×每摺吃掉的布,再加後面開口的縫份。這就是「整塊裙子布料需要多寬」的答案。</li>
+          <li>上下方向:裙長+腰頭+摺邊縫份,如果小於買來的布幅寬,布橫著擺就能一整片裁完,不用接布。</li>
+          <li>陽摺越窄、陰摺越深=皺摺越密越澎;陽摺越寬、陰摺越淺=越平順。拿不定主意就先印試摺紙型摺摺看。</li>
+        </ol>
+      </details>
+      <details>
+        <summary>A4 試摺紙型:怎麼印、怎麼摺(含英文對照)</summary>
+        <ol>
+          <li>按「下載 PDF」印出來。<b>列印時一定要選「實際大小」或「100%」</b>,不要選「符合頁面大小」,不然尺寸會跑掉。</li>
+          <li>印好先量最下面那條尺:上面寫 PRINT CHECK 的線段應該剛好 10 公分。不是 10 公分就是印表機縮放了,回去改設定重印。</li>
+          <li>紙上英文對照:<b>MOUNTAIN(紅色一點一劃線)=山摺</b>,摺起來凸向自己、摺痕在表面;<b>VALLEY(藍色虛線)=谷摺</b>,往內凹摺;<b>CUT ALONG FRAME=沿黑框剪下</b>;<b>FOLDED WIDTH=全部摺完應該剛好這麼寬</b>(拿摺好的紙對上去驗證);數字 1、2、3 是摺的順序;小箭頭是摺份要壓過去的方向。</li>
+          <li>箱褶印出來是「工字褶」(兩條摺線在表面相接);想要外凸盒子那種一般箱褶,把紙翻面照摺就是了。</li>
+          <li>摺完覺得太密、太淺、不夠澎——回來改「陽摺寬」「陰摺深」的數字,重印再摺,滿意了再去裁布。紙很便宜,布不便宜。</li>
+        </ol>
+      </details>
+    </section>
+  </div>
+
+  <div class="tab" id="tabMenTop">
+    <section class="panel">
+      <h2>男裝上衣原型(身片)</h2>
+      <div id="menBodiceBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgMenBodice" disabled>下載 SVG</button>
+        <button id="btnPdfMenBodice" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>男裝袖原型</h2>
+      <div id="menSleeveBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgMenSleeve" disabled>下載 SVG</button>
+        <button id="btnPdfMenSleeve" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>計算結果</h2>
+      <div id="valuesMenTop" class="values"></div>
+    </section>
+
+    <section class="panel">
+      <h2>教學</h2>
+      <details>
+        <summary>男裝上衣原型:製圖邏輯</summary>
+        <ol>
+          <li>男子原型採「胸度式」:大部分尺寸由胸圍 C 與背長兩個數字決定;後中心長=背長+0.5。</li>
+          <li>基礎長方形:寬=衣寬(C/2+6.7);從上端 A 往下 C/6+8.5 畫胸圍線 BL。</li>
+          <li>BL 上取背幅(C/6+5.8)與胸幅(C/6+2.9),兩幅線中點垂直向下為脇線。</li>
+          <li>領口:前領寬=C/16+1.9、前領深=領寬+0.5、後領寬=前領寬+0.3;肩斜前 22°、後 21°。</li>
+          <li>男子原型無胸省;後肩褶=C/32,指向背幅中段的 I 點。</li>
+          <li>總腰省=(C/2+6.7)−(W/2+4),按 a16%/b16%/c36%/d24%/e8% 分配(e 為後中心縮份)。</li>
+          <li>製作前先以胚布試穿,依體型補正後再作為打版母型。</li>
+        </ol>
+      </details>
+      <details>
+        <summary>男裝袖原型:製圖邏輯</summary>
+        <ol>
+          <li>袖山高=(前後肩點平均高度到 BL 距離)×5/6。</li>
+          <li>前袖斜線=前AH、後袖斜線=後AH+1,由此定出袖幅;肘線=袖長/2+2.5。</li>
+          <li>袖山縮縫份(いせ)縫製時用兩道疏縫抽縮、以熨斗歸攏。</li>
+        </ol>
+      </details>
+    </section>
+  </div>
+
+  <div class="tab" id="tabMenPants">
+    <section class="panel">
+      <h2>男裝西裝褲(前片+後片)</h2>
+      <div id="menPantsBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgMenPants" disabled>下載 SVG</button>
+        <button id="btnPdfMenPants" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>計算結果</h2>
+      <div id="valuesMenPants" class="values"></div>
+    </section>
+
+    <section class="panel">
+      <h2>教學</h2>
+      <details>
+        <summary>男裝西裝褲(單褶):怎麼畫出來的(白話版)</summary>
+        <ol>
+          <li>輸入都填實際量到的尺寸就好:公式裡已經幫你加了活動需要的鬆量(例如臀圍那條 H/4+2.5,那個 2.5 就是鬆量)。</li>
+          <li>長度:股上長=腰到胯下(含 3cm 腰頭,身片實際畫股上長−3);股下長=胯下到褲腳;褲長=兩者相加。膝蓋位置(中檔線)取股下的一半再往上 5cm。</li>
+          <li>整套圖用一個基準值 ☆=臀圍÷12:臀圍線在橫檔線(胯下那條水平線)上方 ☆;前片褲襠尖端往外伸 ☆×2/3;後片再多伸 ☆/2,並往下落 1cm(坐下才有空間)。</li>
+          <li>前片有一個「褶」壓在挺縫線(褲管燙出來那條直線)上:褶寬不是固定值,是腰口剩多少收多少(前片寬−前中心收 0.7−側縫收 1.5−腰圍÷4)。</li>
+          <li>後片腰口多出來的量改用兩個「省」收掉(一大一小差 0.6),省尖指向後口袋;後中心腰點往上翹 1cm(后翘),彎腰坐下才不會扯。</li>
+          <li>褲腳:前片=前片寬−3.5、後片比前片寬 1;膝蓋處各再寬 1,自然直筒(H 型)。</li>
+          <li>腰頭另外裁:寬 3cm,左片=腰圍/2+3、右片=腰圍/2+6(多的 3cm 是扣子搭份),圖下方兩條就是。</li>
+          <li>紅線是記號不是裁切線:PLEAT=褶、DART=省、POCKET=口袋位置、FLY=前門襟(拉鍊開口)、CREASE=挺縫線。</li>
+        </ol>
+      </details>
+    </section>
+  </div>
+
 </main>
 
 <footer>
-  <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考。</p>
+  <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考,實際縫製前建議先做胚布(トワル)確認並補正。</p>
 </footer>
 
-<script src="pants.js?v=9"></script>
-<script src="app.js?v=9"></script>
+<script src="pants.js?v=17"></script>
+<script src="pleat.js?v=17"></script>
+<script src="men.js?v=17"></script>
+<script src="menpants.js?v=17"></script>
+<script src="app.js?v=17"></script>
 </body>
 </html>

@@ -81,7 +81,7 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
 
 <div class="cta">
   <a href="tool.html">進入打版工具</a>
-  <p>上半身原型・袖・直筒裙・圓裙・褲子|SVG / 1:1 PDF</p>
+  <p>女裝・男裝原型|上半身・袖・裙・褲|SVG / 1:1 PDF</p>
 </div>
 
 <footer>依日本文化服裝學院製圖法|僅供打版參考</footer>
@@ -101,7 +101,7 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(32, W / H, 0.1, 50);
-  camera.position.set(0, 1.05, 3.6);
+  camera.position.set(0, 1.05, 4.4);
   camera.lookAt(0, 0.55, 0);
 
   // 燈光:柔和攝影棚
@@ -115,7 +115,7 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
 
   // ---- 陶瓷人台軀幹:橢圓斷面堆疊 ----
   // 每列:[y, 半寬, 後半深, 前半深]
-  const rows = [
+  const FEMALE_ROWS = [
     [1.52, 0.115, 0.115, 0.115],
     [1.44, 0.135, 0.125, 0.125],
     [1.30, 0.375, 0.205, 0.205],
@@ -129,6 +129,21 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
     [0.06, 0.330, 0.245, 0.215],
     [0.00, 0.310, 0.230, 0.205]
   ];
+  // 男性:肩寬、無胸凸、腰粗、臀窄
+  const MALE_ROWS = [
+    [1.55, 0.125, 0.125, 0.125],
+    [1.46, 0.150, 0.135, 0.135],
+    [1.30, 0.430, 0.220, 0.220],
+    [1.16, 0.440, 0.245, 0.260],
+    [1.04, 0.420, 0.240, 0.265],
+    [0.94, 0.370, 0.230, 0.240],
+    [0.78, 0.330, 0.215, 0.215],
+    [0.62, 0.345, 0.235, 0.220],
+    [0.44, 0.375, 0.270, 0.235],
+    [0.26, 0.360, 0.260, 0.230],
+    [0.06, 0.310, 0.235, 0.210],
+    [0.00, 0.290, 0.220, 0.200]
+  ];
   // Catmull-Rom 平滑取樣
   function cr(vals, t) {
     const n = vals.length - 1, f = t * n, i = Math.floor(f), u = f - i;
@@ -137,58 +152,66 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
     return 0.5 * ((2 * p1) + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u +
            (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
   }
-  const col = k => rows.map(r => r[k]);
-  const V = 64, R = 56;                     // 縱向/環向解析度
-  const pos = [], idx = [];
-  for (let i = 0; i <= V; i++) {
-    const t = i / V;
-    const y = cr(col(0), t), w = cr(col(1), t),
-          db = cr(col(2), t), df = cr(col(3), t);
-    for (let j = 0; j <= R; j++) {
-      const a = j / R * Math.PI * 2;
-      const s = Math.sin(a);
-      const d = s > 0 ? df : db;            // 前/後深度(胸型)
-      pos.push(w * Math.cos(a), y, d * s);
-    }
-  }
-  for (let i = 0; i < V; i++)
-    for (let j = 0; j < R; j++) {
-      const a = i * (R + 1) + j, b = a + R + 1;
-      idx.push(a, b, a + 1, b, b + 1, a + 1);
-    }
-  const geo = new THREE.BufferGeometry();
-  geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  geo.setIndex(idx);
-  geo.computeVertexNormals();
 
   const ceramic = new THREE.MeshPhysicalMaterial({
     color: 0xfdfdfd, roughness: 0.16, metalness: 0.0,
     clearcoat: 0.65, clearcoatRoughness: 0.22
   });
-  const figure = new THREE.Group();
-  figure.add(new THREE.Mesh(geo, ceramic));
-
-  // 頸頂圓鈕
-  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.115, 24, 16), ceramic);
-  knob.position.y = 1.54;
-  figure.add(knob);
-  // 底蓋
-  const cap = new THREE.Mesh(new THREE.CircleGeometry(0.31, 48), ceramic);
-  cap.rotation.x = Math.PI / 2;
-  cap.scale.set(1, 0.68, 1);
-  figure.add(cap);
-
-  // 立座:金屬桿+圓盤底
   const metal = new THREE.MeshStandardMaterial({ color: 0x7a6a58, roughness: 0.35, metalness: 0.8 });
-  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.85, 20), metal);
-  pole.position.y = -0.43;
-  figure.add(pole);
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 0.05, 48), metal);
-  base.position.y = -0.86;
-  figure.add(base);
 
-  figure.position.y = -0.28;
-  scene.add(figure);
+  function buildFigure(rows, knobY) {
+    const col = k => rows.map(r => r[k]);
+    const V = 64, R = 56;                   // 縱向/環向解析度
+    const pos = [], idx = [];
+    for (let i = 0; i <= V; i++) {
+      const t = i / V;
+      const y = cr(col(0), t), w = cr(col(1), t),
+            db = cr(col(2), t), df = cr(col(3), t);
+      for (let j = 0; j <= R; j++) {
+        const a = j / R * Math.PI * 2;
+        const s = Math.sin(a);
+        const d = s > 0 ? df : db;          // 前/後深度(胸型)
+        pos.push(w * Math.cos(a), y, d * s);
+      }
+    }
+    for (let i = 0; i < V; i++)
+      for (let j = 0; j < R; j++) {
+        const a = i * (R + 1) + j, b = a + R + 1;
+        idx.push(a, b, a + 1, b, b + 1, a + 1);
+      }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setIndex(idx);
+    geo.computeVertexNormals();
+
+    const group = new THREE.Group();
+    const torso = new THREE.Mesh(geo, ceramic);
+    group.add(torso);
+    // 頸頂圓鈕
+    const knob = new THREE.Mesh(new THREE.SphereGeometry(0.115, 24, 16), ceramic);
+    knob.position.y = knobY;
+    group.add(knob);
+    // 底蓋
+    const cap = new THREE.Mesh(new THREE.CircleGeometry(0.31, 48), ceramic);
+    cap.rotation.x = Math.PI / 2;
+    cap.scale.set(1, 0.68, 1);
+    group.add(cap);
+    // 立座:金屬桿+圓盤底
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.85, 20), metal);
+    pole.position.y = -0.43;
+    group.add(pole);
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 0.05, 48), metal);
+    base.position.y = -0.86;
+    group.add(base);
+    return { group, torso, knob };
+  }
+
+  const female = buildFigure(FEMALE_ROWS, 1.54);
+  female.group.position.set(-0.62, -0.28, 0);
+  const male = buildFigure(MALE_ROWS, 1.57);
+  male.group.position.set(0.62, -0.28, 0);
+  scene.add(female.group);
+  scene.add(male.group);
 
   // 地面柔影
   const shCanvas = document.createElement('canvas');
@@ -200,7 +223,7 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
   g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
   const shadow = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.6, 1.6),
+    new THREE.PlaneGeometry(3.0, 1.8),
     new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(shCanvas), transparent: true, depthWrite: false })
   );
   shadow.rotation.x = -Math.PI / 2;
@@ -220,12 +243,15 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
   const pickerTitle = document.getElementById('pickerTitle');
   const pickerLinks = document.getElementById('pickerLinks');
   const OPTIONS = {
-    upper: { title: '上半身', links: [['上半身原型(身片+袖)', 'tool.html#top']] },
-    lower: { title: '下半身', links: [
+    upper:  { title: '女裝・上半身', links: [['上半身原型(身片+袖)', 'tool.html#top']] },
+    lower:  { title: '女裝・下半身', links: [
       ['直筒裙', 'tool.html#tight'],
       ['圓裙', 'tool.html#circle'],
-      ['褲子', 'tool.html#pants']
-    ] }
+      ['褲子', 'tool.html#pants'],
+      ['百褶裙用布量', 'tool.html#pleat']
+    ] },
+    upperM: { title: '男裝・上半身', links: [['男裝上衣原型(身片+袖)', 'tool.html#mtop']] },
+    lowerM: { title: '男裝・下半身', links: [['男裝西裝褲', 'tool.html#mpants']] }
   };
   let curZone = '', overPicker = false, hideTimer = null;
   picker.addEventListener('pointerenter', () => { overPicker = true; });
@@ -246,7 +272,7 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
   }
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
-  const bodyMeshes = [figure.children[0], knob];
+  const bodyMeshes = [female.torso, female.knob, male.torso, male.knob];
   const WAIST_LOCAL_Y = 0.72;
   renderer.domElement.addEventListener('pointermove', e => {
     const r = renderer.domElement.getBoundingClientRect();
@@ -255,8 +281,10 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
     raycaster.setFromCamera(mouse, camera);
     const hit = raycaster.intersectObjects(bodyMeshes, false)[0];
     if (hit) {
-      const localY = hit.point.y - figure.position.y;
-      showZone(localY >= WAIST_LOCAL_Y ? 'upper' : 'lower');
+      const isMale = hit.object === male.torso || hit.object === male.knob;
+      const grp = isMale ? male.group : female.group;
+      const localY = hit.point.y - grp.position.y;
+      showZone((localY >= WAIST_LOCAL_Y ? 'upper' : 'lower') + (isMale ? 'M' : ''));
       renderer.domElement.style.cursor = 'pointer';
     } else {
       renderer.domElement.style.cursor = '';
@@ -267,14 +295,17 @@ footer{margin-top:auto;padding:18px;color:#b3a897;font-size:.72rem;letter-spacin
   // 點擊人台直接前往(上半身→原型;下半身→保留讓使用者選)
   renderer.domElement.addEventListener('click', () => {
     if (curZone === 'upper') location.href = 'tool.html#top';
+    else if (curZone === 'upperM') location.href = 'tool.html#mtop';
   });
 
   (function loop() {
     requestAnimationFrame(loop);
-    figure.rotation.y += 0.0045;
+    female.group.rotation.y += 0.0045;
+    male.group.rotation.y += 0.0045;
     renderer.render(scene, camera);
   })();
 })();
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
