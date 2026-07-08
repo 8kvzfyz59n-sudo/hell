@@ -607,10 +607,12 @@ if (typeof document !== 'undefined') {
       ['全部摺份攤平的布寬', p.flatWidth],
       ['全部摺好後的實際腰圍', p.finishedWaist],
       ['比目標腰圍多出來的(進位造成)', r1(p.waistDiff)],
-      ['整塊裙布需要的總寬(含開口縫份)', p.totalWidth],
-      ['上下方向需要的布(裙長+腰頭+縫份)', p.lengthNeeded],
-      ['布的寬度夠不夠一整片裁', !p.waistOK ? '—' : p.fitsOneWidth ? '夠(布幅' + p.fabricWidth + 'cm)' : '不夠,要接布或改直裁'],
-      ['建議購買布長', p.fabricLengthM + ' m']
+      ['裙子攤平的總寬(含開口縫份)', p.totalWidth],
+      ['每片布的長度(裙長+腰頭+縫份)', p.lengthNeeded],
+      ['要接幾片布(總寬÷布幅,接縫每邊留1)', !p.waistOK ? '—'
+        : p.fitsOneWidth ? '1 片就夠(布幅' + p.fabricWidth + 'cm)'
+        : p.panels + ' 片(接縫請藏在陰摺裡)'],
+      ['建議購買布長(片數×每片長度)', p.fabricLengthM + ' m']
     ]);
   }
 
@@ -747,16 +749,17 @@ if (typeof document !== 'undefined') {
 
     const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
           tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk),
-          plSheetSvg = pleatSheetSVG(pl),
+          plSheetSvg = pleatSheetSVG(pl), plFullSvg = pleatFullSVG(pl),
           menBodSvg = menBodiceSVG(mb), menSlvSvg = sleeveSVG(msl),
           wpSvg = womenPantsSVG(wp);
     cur = { b, sl, t, sk, pl, mb, msl, wp,
-            bodSvg, slvSvg, tgtSvg, sktSvg, plSheetSvg, menBodSvg, menSlvSvg, wpSvg };
+            bodSvg, slvSvg, tgtSvg, sktSvg, plSheetSvg, plFullSvg, menBodSvg, menSlvSvg, wpSvg };
     $('bodiceBox').innerHTML = bodSvg;
     $('sleeveBox').innerHTML = slvSvg;
     $('tightBox').innerHTML = tgtSvg;
     $('skirtBox').innerHTML = sktSvg;
     $('pleatSheetBox').innerHTML = plSheetSvg || '<p class="note">褶單元太寬,無法放入 A4(直式19cm/橫式27.7cm),請縮小陽折或陰折。</p>';
+    $('pleatFullBox').innerHTML = plFullSvg || '<p class="note">此組合摺完圍不住腰(見上方提示),不產生原寸版型。</p>';
     $('menBodiceBox').innerHTML = menBodSvg;
     $('menSleeveBox').innerHTML = menSlvSvg;
     $('womenPantsBox').innerHTML = wpSvg;
@@ -765,11 +768,12 @@ if (typeof document !== 'undefined') {
     renderValuesMenTop(mb, msl);
     renderValuesWomenPants(wp);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,建議手動修順袖窿線。';
-    if (pl.waistOK && !pl.fitsOneWidth) msg.textContent += (msg.textContent ? ' ' : '') + '百褶裙:裙長方向超過布幅,需接布或改直裁方向。';
+    if (pl.waistOK && pl.panels > 1) msg.textContent += (msg.textContent ? ' ' : '') + '百褶裙:裙子總寬超過布幅,需接 ' + pl.panels + ' 片布(直布紋);接縫位置請藏在陰摺(往內摺的深度)裡面。';
     if (!pl.waistOK) msg.textContent += (msg.textContent ? ' ' : '') + '手風琴褶「表面看得到的摺寬(陽)」必須大於「藏起來的深度(陰)」,不然摺完圍不住腰;兩者一樣寬就是純手風琴褶,要靠鬆緊帶或讓裙襬自然張開。';
     if (wp.pleatTotal < 0.3) msg.textContent += (msg.textContent ? ' ' : '') + '褲子:腰圍相對臀圍偏大,腰口收不出褶,此版型不適用(可考慮增加臀圍)。';
     ['btnSvgBodice', 'btnSvgSleeve', 'btnSvgTight', 'btnSvgSkirt', 'btnSvgPleatSheet', 'btnPdf',
      'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt', 'btnPdfPleatSheet',
+     'btnSvgPleatFull', 'btnPdfPleatFull',
      'btnSvgMenBodice', 'btnPdfMenBodice', 'btnSvgMenSleeve', 'btnPdfMenSleeve',
      'btnSvgWomenPants', 'btnPdfWomenPants'].forEach(id => $(id).disabled = false);
   }
@@ -792,7 +796,7 @@ if (typeof document !== 'undefined') {
   function dlPDF() {
     if (!cur) return;
     const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg, cur.wpSvg, cur.plSheetSvg,
-                   cur.menBodSvg, cur.menSlvSvg].filter(Boolean).map(svgToPdfPage);
+                   cur.plFullSvg, cur.menBodSvg, cur.menSlvSvg].filter(Boolean).map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
@@ -815,6 +819,8 @@ if (typeof document !== 'undefined') {
   $('btnPdfSkirt').addEventListener('click', () => dlOnePdf(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.pdf`));
   $('btnSvgPleatSheet').addEventListener('click', () => dlSVG(cur.plSheetSvg, `pleat_test_sheet_${cur.pl.type}.svg`));
   $('btnPdfPleatSheet').addEventListener('click', () => dlOnePdf(cur.plSheetSvg, `pleat_test_sheet_${cur.pl.type}.pdf`));
+  $('btnSvgPleatFull').addEventListener('click', () => dlSVG(cur.plFullSvg, `pleat_full_${cur.pl.type}_W${cur.pl.waist}.svg`));
+  $('btnPdfPleatFull').addEventListener('click', () => dlOnePdf(cur.plFullSvg, `pleat_full_${cur.pl.type}_W${cur.pl.waist}.pdf`));
   $('btnSvgMenBodice').addEventListener('click', () => dlSVG(cur.menBodSvg, `men_bodice_C${cur.mb.C}.svg`));
   $('btnPdfMenBodice').addEventListener('click', () => dlOnePdf(cur.menBodSvg, `men_bodice_C${cur.mb.C}.pdf`));
   $('btnSvgMenSleeve').addEventListener('click', () => dlSVG(cur.menSlvSvg, `men_sleeve_C${cur.mb.C}.svg`));
