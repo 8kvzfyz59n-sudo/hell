@@ -597,19 +597,27 @@ if (typeof document !== 'undefined') {
 
   function renderValuesMenTop(b, sl) {
     $('valuesMenTop').innerHTML = rowsTable([
-      ['衣寬 C/2+6.7', b.bw], ['A~BL C/6+8.5', b.blY],
-      ['背幅 C/6+5.8', b.backW], ['胸幅 C/6+2.9', b.chestW],
+      ['衣寬 C/2+6.7', b.bw], ['袖襱深 A~CL C/6+8.5', b.blY],
+      ['背寬 C/6+5.8', b.backW], ['胸寬 C/6+2.9', b.chestW],
       ['後中心長 背長+0.5', b.wlY],
-      ['前領寬 C/16+1.9', b.neckW], ['前領深 領寬+0.5', b.fNeckD],
-      ['後領寬 前領寬+0.3', b.bNeckW],
-      ['後肩褶 C/32', b.shDart],
-      ['總腰省 (C/2+6.7)-(W/2+4)', b.totalDart],
-      ['腰省 a(16%)', b.dartW.a], ['腰省 b(16%)', b.dartW.b],
-      ['腰省 c(36%)', b.dartW.c], ['腰省 d(24%)', b.dartW.d], ['腰省 e(8%)', b.dartW.e],
-      ['前AH(實測)', b.ahF], ['後AH(實測)', b.ahB],
-      ['袖山高 (SP平均高~BL)×5/6', sl.capH],
+      ['前身上端 CL往上 C/4+2.5', b.blY - b.frontTopY],
+      ['一等份 φ(袖襱深/6)', b.phi],
+      ['前領寬 ◎=C/16+1.9', b.neckW], ['前領深 ◎+0.5', b.fNeckD],
+      ['後領寬 ◎+0.3', b.bNeckW], ['後領高 ●−0.3(●=後領寬/3)', b.bNeckD],
+      ['前肩線 ★(22°,胸寬線外⊗+0.5)', b.shLenF],
+      ['後肩線 ★+C/32(21°)', b.shLenB],
+      ['肩褶寬 C/32', b.shDart],
+      ['胸褶半徑 H-G(實測)', b.rHG],
+      ['袖襱 ▲=(C~SS)/3,45°斜取▲+0.5', b.tri],
+      ['總腰褶 (C/2+6.7)-(W/2+4)', b.totalDart],
+      ['腰褶 a(16%)', b.dartW.a], ['腰褶 b(16%)', b.dartW.b],
+      ['腰褶 c(36%)', b.dartW.c], ['腰褶 d(24%)', b.dartW.d], ['腰褶 e(8%)', b.dartW.e],
+      ['前AH(胸褶合併實測)', b.ahF], ['後AH(實測)', b.ahB],
+      ['袖山高 (肩點平均高~CL)×5/6', sl.capH],
       ['前袖斜線 前AH', sl.slantF], ['後袖斜線 後AH+1', sl.slantB],
-      ['袖幅', sl.wf + sl.wb], ['袖山縮縫份(いせ)', sl.ease]
+      ['●=前AH/4(前凸2.1/後凸2.2)', sl.dot4],
+      ['袖幅', sl.wf + sl.wb], ['袖山縮縫份(いせ)', sl.ease],
+      ['肘線 EL 袖長/2+2.5', sl.elY]
     ]);
   }
 
@@ -627,6 +635,7 @@ if (typeof document !== 'undefined') {
       ['腰口剩餘量(=褶份合計)', p.pleatTotal],
       ['褶寬◎ ' + (p.single ? '×1(剩餘<3cm 打一根)' : '×2(等寬,褶長9)'), p.pleatW],
       ['褲口全寬 前/後(後片每側+1)', r1(p.hemHalf * 2) + ' / ' + r1(p.hemHalf * 2 + 2) + ' cm'],
+      ['縫份(外框往外平行加放)', p.seam ? r1(p.seam) + ' cm' : '無(淨版)'],
       ['口袋(HL上15,裝飾0.5)/ 拉鍊(止點HL下1,寬3)', '—'],
       ['後中斜線(W→W1=2.5取中點W2連a,超過WL 2)', '後翹頂點高 ' + r1(-p.bkWt[1]) + ' cm'],
       ['後臀圍寬(H1垂直後中斜線量H/4+1)', p.w],
@@ -706,14 +715,15 @@ if (typeof document !== 'undefined') {
     const msl = draftMenSleeve(mb, mSL);
 
     const wpW = +$('wpW').value, wpH = +$('wpH').value, wpHL = +$('wpHL').value,
-          wpBR = +$('wpBR').value, wpTL = +$('wpTL').value, wpHem = +$('wpHem').value;
+          wpBR = +$('wpBR').value, wpTL = +$('wpTL').value, wpHem = +$('wpHem').value,
+          wpSeam = +$('wpSeam').value;
     if (!(wpW >= 50 && wpW <= 105) || !(wpH >= 70 && wpH <= 130) ||
         !(wpHL >= 15 && wpHL <= 25) || !(wpBR >= 20 && wpBR <= 35) ||
         !(wpTL >= 60 && wpTL <= 120) || !(wpHem >= 7 && wpHem <= 20)) {
       msg.textContent = '請確認女裝褲子輸入範圍:腰 50–105、臀 70–130、腰長 15–25、股上 20–35、褲長 60–120、褲口半寬 7–20 cm。';
       return;
     }
-    const wp = draftWomenPants(wpW, wpH, wpHL, wpBR, wpTL, wpHem);
+    const wp = draftWomenPants(wpW, wpH, wpHL, wpBR, wpTL, wpHem, wpSeam);
 
     const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
           tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk),

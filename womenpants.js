@@ -48,6 +48,69 @@ function wpBezYatX(p1, c1, c2, p2, x, n = 200) {
   }
   return best;
 }
+/* ---- 縫份外推工具 ---- */
+/* 把輪廓段列(2點=直線、4點=貝茲)取樣成封閉點列 */
+function wpSampleLoop(segs) {
+  const pts = [];
+  for (const sg of segs) {
+    if (sg.length === 2) {
+      const [p1, p2] = sg;
+      const n = Math.max(2, Math.ceil(Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / 1.2));
+      for (let i = 0; i < n; i++) pts.push([p1[0] + (p2[0] - p1[0]) * i / n, p1[1] + (p2[1] - p1[1]) * i / n]);
+    } else {
+      for (let i = 0; i < 24; i++) pts.push(wpBezPt(sg[0], sg[1], sg[2], sg[3], i / 24));
+    }
+  }
+  return pts;
+}
+function wpArea(pts) {
+  let a = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i], q = pts[(i + 1) % pts.length];
+    a += p[0] * q[1] - q[0] * p[1];
+  }
+  return a / 2;
+}
+/* 封閉點列往外平行偏移 d 公分(轉角用斜接、上限3d) */
+function wpOffsetLoop(pts, d) {
+  const n = pts.length;
+  const mk = s => {
+    const out = [];
+    for (let i = 0; i < n; i++) {
+      const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n];
+      let e1 = [p1[0] - p0[0], p1[1] - p0[1]], e2 = [p2[0] - p1[0], p2[1] - p1[1]];
+      const l1 = Math.hypot(e1[0], e1[1]) || 1, l2 = Math.hypot(e2[0], e2[1]) || 1;
+      e1 = [e1[0] / l1, e1[1] / l1]; e2 = [e2[0] / l2, e2[1] / l2];
+      const n1 = [e1[1] * s, -e1[0] * s], n2 = [e2[1] * s, -e2[0] * s];
+      let m = [n1[0] + n2[0], n1[1] + n2[1]], k = d;
+      const lm = Math.hypot(m[0], m[1]);
+      if (lm < 1e-4) m = n1;
+      else {
+        m = [m[0] / lm, m[1] / lm];
+        const cosHalf = Math.sqrt(Math.max(0.05, (1 + n1[0] * n2[0] + n1[1] * n2[1]) / 2));
+        k = Math.min(d / cosHalf, d * 3);
+      }
+      out.push([p1[0] + m[0] * k, p1[1] + m[1] * k]);
+    }
+    return out;
+  };
+  const cand = mk(1);   // 取讓面積變大的方向=往外
+  return Math.abs(wpArea(cand)) >= Math.abs(wpArea(pts)) ? cand : mk(-1);
+}
+/* 封閉點列轉 path(直線小段以退化貝茲輸出,PDF 安全);map=座標轉畫布 */
+function wpLoopPath(pts, map) {
+  const f = v => +v.toFixed(2);
+  const m0 = map(pts[0]);
+  let d = `M ${f(m0[0])} ${f(m0[1])}`;
+  for (let i = 1; i <= pts.length; i++) {
+    const a = map(pts[i - 1]), b = map(pts[i % pts.length]);
+    const c1 = [a[0] + (b[0] - a[0]) / 3, a[1] + (b[1] - a[1]) / 3];
+    const c2 = [a[0] + (b[0] - a[0]) * 2 / 3, a[1] + (b[1] - a[1]) * 2 / 3];
+    d += ` C ${f(c1[0])} ${f(c1[1])}, ${f(c2[0])} ${f(c2[1])}, ${f(b[0])} ${f(b[1])}`;
+  }
+  return d;
+}
+
 /* 沿貝茲曲線走 s 公分處的點與單位切線 */
 function wpBezAtLen(p1, c1, c2, p2, s, n = 300) {
   let L = 0, prev = p1;
@@ -63,7 +126,8 @@ function wpBezAtLen(p1, c1, c2, p2, s, n = 300) {
   return { p: p2, t: [1, 0] };
 }
 
-function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
+function draftWomenPants(W, H, HL, BR, TL, hemHalf, seam) {
+  seam = seam || 0;                       // 縫份(0=淨版、1、1.5)
   /* ---------- 前片(脇邊x=0、前中x=w、裆尖x=bX) ---------- */
   const w = H / 4 + 1;                    // 前片寬(例24)
   const q = w / 4;                        // 等份(例6)
@@ -123,7 +187,7 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
   const dartLen1 = 11, dartLen2 = 9.5;     // 褶長(11、9~10)
   const dartTip = 0.6;                     // 褶尖偏向脇邊(0.5~0.7)
 
-  return { W, H, HL, BR, TL, hemHalf,
+  return { W, H, HL, BR, TL, hemHalf, seam,
     w, q, bX, crease, inseam, klY, kIn, hemIn, hemOut, xInsKL, dia, sideKLx,
     sideIn, sideRaise, cfIn, cfW, sideW, a, b, c, a1,
     wc1, wc2, waistLen, target, pleatTotal, single, pleatW, pleat2x,
@@ -133,15 +197,16 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
 }
 
 function womenPantsSVG(p) {
-  const m = 2.5, gap = 6;
-  const OB = 4.5;                                   // 後片位移(容納b1的−4)
+  const m = 2.5, gap = 6, sm = p.seam;
+  const OB = 4.5 + sm;                              // 後片位移(容納b1的−4與縫份)
   const B = pt => [pt[0] + OB, pt[1]];              // 後片→畫布
   const oxF = OB + p.bkH2[0] + 2 + gap;             // 前片畫布起點
   const F = pt => [pt[0] + oxF, pt[1]];             // 前片→畫布
-  const minX = -m, minY = -m - 2.2;
-  const wTot = oxF + p.bX + 2 * m, hTot = p.TL + 1.5 + m - minY;
+  const minX = -m, minY = -m - 2.2 - sm;
+  const wTot = oxF + p.bX + 2 * m + sm, hTot = p.TL + sm + 1.5 + m - minY;
   let s = svgOpen(minX, minY, wTot, hTot);
   const yH = p.HL, yB = p.BR, yK = p.klY, yL = p.TL;
+  const SEAM = 'fill="none" stroke="#111111" stroke-width="0.05"';
 
   /* ================= 後片(B,左;後中/裆尖朝左) ================= */
   {
@@ -184,7 +249,23 @@ function womenPantsSVG(p) {
       }
       s += text(B([p.bX - p.crease, minY + 1.2]), 'DART x2', S.small, 'middle');
     }
-    s += text(B([p.bX - p.crease, yL + 1.2]), 'B', S.small, 'middle');
+    // 縫份外框(裁切線,外框往外平行加放)
+    if (sm > 0) {
+      const bSegs = [
+        [p.bkWt, p.bwc1, p.bwc2, p.bkSideW],
+        [p.bkSideW, [p.bkSideW[0] + 0.4, p.bkSideW[1] + 5], [p.bkH2[0], p.bkH2[1] - 6], p.bkH2],
+        [p.bkH2, [p.bkH2[0], p.bkH2[1] + 7], [p.bkSideKL[0] + 0.4, yK - 8], p.bkSideKL],
+        [p.bkSideKL, p.bkHemOut],
+        [p.bkHemOut, p.bkHemIn],
+        [p.bkHemIn, p.bkInsKL],
+        [p.bkInsKL, [p.bkInsKL[0] - 0.4, yK - 8], [p.bkB1[0] + 0.8, p.bkB1[1] + 9], p.bkB1],
+        [p.bkB1, [p.bkB1[0] + 2.2, p.bkB1[1] - 0.35], [p.bkA1[0] - 0.98, p.bkA1[1] + 1.14], p.bkA1],
+        [p.bkA1, [p.bkA1[0] + 0.98, p.bkA1[1] - 1.14], [p.bkH1[0] - 0.15, p.bkH1[1] + 3], p.bkH1],
+        [p.bkH1, p.bkWt]
+      ];
+      s += path(wpLoopPath(wpOffsetLoop(wpSampleLoop(bSegs), sm), B), SEAM);
+    }
+    s += text(B([p.bX - p.crease, yL + sm + 1.2]), 'B' + (sm > 0 ? ' +' + sm + 'CM SEAM' : ''), S.small, 'middle');
     s += text(B([p.bX - p.crease + 0.3, (yB + yL) / 2]), 'CREASE', S.small);
   }
 
@@ -232,7 +313,23 @@ function womenPantsSVG(p) {
     s += line(F([fx, 0.35]), F([fx, yH - 2.5]), S.dart);
     s += path(wpCub(F([fx, yH - 2.5]), F([fx, yH + 0.2]), F([p.w - 1.2, yH + 1]), F([p.w - 0.1, yH + 1])), S.dart);
     s += text(F([fx - 3.4, 3]), 'FLY', S.small);
-    s += text(F([p.crease, yL + 1.2]), 'F', S.small, 'middle');
+    // 縫份外框(裁切線,外框往外平行加放)
+    if (sm > 0) {
+      const fSegs = [
+        [p.sideW, p.wc1, p.wc2, p.cfW],
+        [p.cfW, p.c],
+        [p.c, [p.c[0] + 0.15, p.c[1] + 2.2], [p.a1[0] - 1.0, p.a1[1] - 1.1], p.a1],
+        [p.a1, [p.a1[0] + 1.0, p.a1[1] + 1.1], [p.b[0] - 1.8, p.b[1] - 0.45], p.b],
+        [p.b, [p.b[0] - 0.7, p.b[1] + 9], [p.xInsKL - p.kIn + 0.4, yK - 8], [p.xInsKL - p.kIn, yK]],
+        [[p.xInsKL - p.kIn, yK], [p.hemIn, yL]],
+        [[p.hemIn, yL], [p.hemOut, yL]],
+        [[p.hemOut, yL], [p.sideKLx, yK]],
+        [[p.sideKLx, yK], [p.sideKLx - 0.4, yK - 8], [0, yH + 8], [0, yH]],
+        [[0, yH], [0, yH - 6], [p.sideW[0] - 1.2, p.sideW[1] + 5], p.sideW]
+      ];
+      s += path(wpLoopPath(wpOffsetLoop(wpSampleLoop(fSegs), sm), F), SEAM);
+    }
+    s += text(F([p.crease, yL + sm + 1.2]), 'F' + (sm > 0 ? ' +' + sm + 'CM SEAM' : ''), S.small, 'middle');
     s += text(F([p.crease + 0.3, (yB + yL) / 2]), 'CREASE', S.small);
   }
 
