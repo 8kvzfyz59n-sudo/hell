@@ -383,88 +383,210 @@ function skirtSVG(sk) {
   return s;
 }
 
-/* ---------- 直筒裙製圖 ----------
- * H鬆份+4、W鬆份+2(整圈)、前後差2
- * 脇線=HL中點往後移1cm;脇收D/2、其餘2省各D/4
- * 後中心隱形拉鍊(開口=腰長+1)、後開衩=裙長/3、腰頭W+3×3cm  */
-function draftTightSkirt(W, H, waistLen, L) {
-  const width = H / 2 + 2;            // 半身寬(前+後)
-  const sideX = width / 2 - 1;        // 脇線(2等分往後1cm)
-  const backHipW = sideX, frontHipW = width - sideX;
-  const backWT = W / 4, frontWT = W / 4 + 1;      // 腰目標(含鬆份與前後差)
-  const Db = backHipW - backWT, Df = frontHipW - frontWT;
-  const xb = sideX - Db / 2;          // 後腰脇點 x
-  const xf = sideX + Df / 2;          // 前腰脇點 x
-  const dartB = Db / 4, dartF = Df / 4;
-  const zipLen = waistLen + 1;
-  const ventLen = Math.round(L / 3);
-  const beltL = W + 3, beltW = 3;
-  return { W, H, waistLen, L, width, sideX, backHipW, frontHipW, backWT, frontWT,
-           Db, Df, xb, xf, dartB, dartF, zipLen, ventLen, beltL, beltW };
+/* ---------- 直筒裙(窄裙)製圖 ----------
+ * 版寬 H/2+2(臀圍整圈鬆份4)、脇邊前後差1、後中心下降1(使用者定值,2026-07-08)
+ * 腰目標:後 (W+1)/4−2、前 (W+1)/4+2((W+1)=鬆份、±2=前後差)
+ * ○=前腰餘量/3(側縫前後各收○);後褶●=(後腰餘量−○)/2 ×2根
+ * 前褶=○+0.5(靠脇)、○−0.5(靠前中);脇邊起翹1.2、H2=HL上4
+ * 褶位:前後臀圍寬各三等分垂直線(後1/3處往後中移0.5)
+ * 前褶尖至MHL(腰長/2);後褶尖:靠後中=HL上5右移0.5,另一根=輔助線交點右移0.5
+ * 拉鍊止點=HL下1(後中普通拉鍊);腰帶=長(W+1)+3搭份、完成寬2(裁片對摺寬4)
+ * 縫份:'book'=腰1/脇1.5/後中2/下擺4.5/腰帶1;數字=統一;前中一律摺雙(0)  */
+function draftTightSkirt(W, H, waistLen, L, seamMode) {
+  const ease = 2, fbDiff = 1, cbDrop = 1, rise = 1.2;
+  const width = H / 2 + ease;
+  const backHipW = width / 2 - fbDiff, frontHipW = width / 2 + fbDiff;
+  const backWT = (W + 1) / 4 - 2, frontWT = (W + 1) / 4 + 2;
+  const circ = (frontHipW - frontWT) / 3;             // ○
+  const bDart = (backHipW - backWT - circ) / 2;       // ●
+  const fDartS = circ + 0.5, fDartC = circ - 0.5;     // 前褶 靠脇/靠前中
+  const hl = waistLen, mhl = waistLen / 2, h2 = waistLen - 4;
+  // 後片(x 自後中心)
+  const bSideTopX = backHipW - circ;
+  const bd1x = backHipW / 3 - 0.5;                    // W6:褶1靠後中腳
+  const bd1c = bd1x + bDart / 2;                      // 褶1中線(W15 直線)
+  const bd2c = backHipW * 2 / 3;                      // W7:褶2中線
+  const bd1Tip = [bd1c + 0.5, hl - 5];                // W17
+  // 前片(x 自前中心)
+  const fSideTopX = frontHipW - circ;
+  const fd1x = frontHipW / 3;                         // W4:靠前中褶,寬○−0.5 往脇取
+  const fd2x = frontHipW * 2 / 3;                     // W5:靠脇褶,寬○+0.5 往前中取
+  const fd1c = fd1x + fDartC / 2;                     // W13 中線
+  const fd2c = fd2x - fDartS / 2;                     // W14 中線
+  // 後褶2尖:W15 連前片 W14(合併座標)之輔助線交 W7 垂直線,右移0.5(W18)
+  const w14comb = backHipW + (frontHipW - fd2c);
+  const tAux = (bd2c - bd1c) / (w14comb - bd1c);
+  const bd2Tip = [bd2c + 0.5, (hl - 5) + tAux * (mhl - (hl - 5))];
+  const zipY = hl + 1;                                // 拉鍊止點(後中)
+  const beltL = (W + 1) + 3, beltW = 2;               // 搭份3、完成寬2
+  const beltA = (W + 1) / 4 - 2, beltB = (W + 1) / 4 + 2; // 腰帶記號 a[後]/b[前]
+  const sm = seamMode === 'book' ? 'book' : (+seamMode || 0);
+  const seam = sm === 'book'
+    ? { waist: 1, side: 1.5, cb: 2, hem: 4.5, belt: 1 }
+    : sm > 0 ? { waist: sm, side: sm, cb: sm, hem: sm, belt: sm } : null;
+  return { W, H, waistLen, L, width, ease, fbDiff, cbDrop, rise,
+           backHipW, frontHipW, backWT, frontWT, circ, bDart, fDartS, fDartC,
+           hl, mhl, h2, bSideTopX, fSideTopX,
+           bd1x, bd1c, bd2c, bd1Tip, bd2Tip, fd1x, fd2x, fd1c, fd2c,
+           zipY, beltL, beltW, beltA, beltB, seamMode: sm, seam };
+}
+
+/* 兩端水平切線的過渡曲線(腰線用) */
+function tsBlend(p0, p1, n) {
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const tt = i / n, e = (1 - Math.cos(Math.PI * tt)) / 2;
+    pts.push([p0[0] + (p1[0] - p0[0]) * tt, p0[1] + (p1[1] - p0[1]) * e]);
+  }
+  return pts;
+}
+/* 脇邊曲線:自腰側點收於 H2(切線轉垂直) */
+function tsHip(xw, yw, xh, yh, n) {
+  const pts = [];
+  for (let i = 0; i <= n; i++) {
+    const tt = i / n;
+    pts.push([xh + (xw - xh) * Math.pow(1 - tt, 1.8), yw + (yh - yw) * tt]);
+  }
+  return pts;
+}
+/* 折線在 x 處的 y(腰線取褶腳高度用) */
+function tsYatX(pts, x) {
+  for (let i = 0; i < pts.length - 1; i++) {
+    const a = pts[i], b = pts[i + 1];
+    if ((x >= a[0] && x <= b[0]) || (x >= b[0] && x <= a[0])) {
+      const f = (x - a[0]) / ((b[0] - a[0]) || 1);
+      return a[1] + f * (b[1] - a[1]);
+    }
+  }
+  return pts[pts.length - 1][1];
+}
+/* 依每邊縫份外推(順時針點列,法線=(dy,−dx)) */
+function tsOffsetEdge(pts, d) {
+  const out = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[Math.max(0, i - 1)], b = pts[Math.min(pts.length - 1, i + 1)];
+    const dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1;
+    out.push([pts[i][0] + (dy / L) * d, pts[i][1] - (dx / L) * d]);
+  }
+  return out;
+}
+function tsSeamPath(loopPts) {
+  let d = `M ${(+loopPts[0][0].toFixed(3))} ${(+loopPts[0][1].toFixed(3))}`;
+  for (let i = 1; i < loopPts.length; i++) d += lineC(loopPts[i - 1], loopPts[i]).replace(/^ /, ' ');
+  d += lineC(loopPts[loopPts.length - 1], loopPts[0]);
+  return d;
 }
 
 function tightSkirtSVG(t) {
-  const m = 2.5;
-  const xmax = Math.max(t.width, t.beltL);
-  const minX = -m, minY = -m - 1.5;
-  const w = xmax + 2 * m, h = t.L + t.beltW + 4 + m - minY;
+  const m = 2.5, gap = 4;
+  const hem = t.L, hl = t.hl;
+  const sa = t.seam;
+  const exL = sa ? sa.cb : 0, exR = sa ? sa.side : 0, exB = sa ? sa.hem : 0;
+  const ox = t.backHipW + gap + (sa ? sa.side * 2 : 0);      // 前片原點(前中心在右端)
+  const beltH = t.beltW * 2;
+  const by = hem + exB + 4;                                   // 腰帶上緣 y
+  const xmax = Math.max(ox + t.frontHipW, t.beltL + (sa ? sa.belt : 0));
+  const minX = -m - exL, minY = -m - t.rise - (sa ? sa.waist : 0);
+  const w = xmax + 2 * m + exL, h = by + beltH + (sa ? sa.belt : 0) + m - minY;
   let s = svgOpen(minX, minY, w, h);
-  const wl = 0, hl = t.waistLen, hem = t.L;
 
-  // 導引線
-  s += line([0, wl], [t.width, wl], S.guide);                    // WL
-  s += line([0, hl], [t.width, hl], S.guide);                    // HL
-  s += line([t.sideX, wl - 1.2], [t.sideX, hem], S.guide);       // 脇基準
-  s += line([t.xb / 2, hl + 4], [t.xb / 2, hem - 4], S.guide);   // 後布紋
-  s += line([(t.xf + t.width) / 2, hl + 4], [(t.xf + t.width) / 2, hem - 4], S.guide); // 前布紋
+  // ---- 基準曲線 ----
+  const bWaist = tsBlend([0, t.cbDrop], [t.bSideTopX, -t.rise], 8);       // 後腰線
+  const bSide  = tsHip(t.bSideTopX, -t.rise, t.backHipW, t.h2, 8);        // 後脇曲線
+  const fx = x => ox + t.frontHipW - x;                                   // 前片座標(x自前中心)
+  const fWaistL = tsBlend([0, 0], [t.fSideTopX, -t.rise], 8);             // 前腰線(local)
+  const fWaist = fWaistL.map(p => [fx(p[0]), p[1]]);
+  const fSideL = tsHip(t.fSideTopX, -t.rise, t.frontHipW, t.h2, 8);
+  const fSide = fSideL.map(p => [fx(p[0]), p[1]]);
 
-  // 後片輪廓(左=後中心)
-  s += line([0, 0.5], [0, hem], S.outline);                      // 後中心
-  s += line([0, hem], [t.sideX, hem], S.outline);                // 後裾
-  s += path(crPathD([[0, 0.5], [t.xb * 0.55, 0], [t.xb, -1]]), S.outline);          // 後腰線
-  s += path(crPathD([[t.xb, -1], [t.sideX - (t.sideX - t.xb) * 0.3, hl * 0.45], [t.sideX, hl]]), S.outline); // 後脇曲線
-  s += line([t.sideX, hl], [t.sideX, hem], S.outline);           // 脇直線(HL以下)
-
-  // 前片輪廓(右=前中心)
-  s += line([t.width, 0], [t.width, hem], S.outline);            // 前中心
-  s += line([t.width, hem], [t.sideX, hem], S.outline);          // 前裾
-  s += path(crPathD([[t.width, 0], [t.width - (t.width - t.xf) * 0.45, -0.6], [t.xf, -1]]), S.outline); // 前腰線
-  s += path(crPathD([[t.xf, -1], [t.sideX + (t.xf - t.sideX) * 0.3, hl * 0.45], [t.sideX, hl]]), S.outline); // 前脇曲線
-
-  // 腰省:WL三等分,後13/12、前9/10
-  const yTopB = x => 0.5 + (-1 - 0.5) * (x / t.xb);
-  const yTopF = x => 0 + (-1 - 0) * ((t.width - x) / (t.width - t.xf));
-  const dartsT = [
-    { cx: t.xb / 3,                          w: t.dartB, len: 13, yf: yTopB },
-    { cx: t.xb * 2 / 3,                      w: t.dartB, len: 12, yf: yTopB },
-    { cx: t.xf + (t.width - t.xf) / 3,       w: t.dartF, len: 10, yf: yTopF },
-    { cx: t.xf + (t.width - t.xf) * 2 / 3,   w: t.dartF, len: 9,  yf: yTopF }
-  ];
-  for (const d of dartsT) {
-    const y0 = d.yf(d.cx), len = Math.min(d.len, hl - 3);
-    s += line([d.cx - d.w / 2, y0], [d.cx, y0 + len], S.dart);
-    s += line([d.cx + d.w / 2, y0], [d.cx, y0 + len], S.dart);
+  // ---- 導引線 ----
+  s += line([0, 0], [t.backHipW, 0], S.guide) + line([fx(t.frontHipW), 0], [fx(0), 0], S.guide);   // WL
+  s += line([0, hl], [t.backHipW, hl], S.guide) + line([fx(t.frontHipW), hl], [fx(0), hl], S.guide); // HL
+  s += line([fx(t.frontHipW), t.mhl], [fx(0), t.mhl], S.guide);                                    // MHL(腹圍)
+  // 直布紋記號(箭頭)
+  for (const gx of [t.backHipW / 2, fx(t.frontHipW / 2)]) {
+    s += line([gx, hl + 4], [gx, hem - 4], S.guide);
+    s += line([gx, hl + 4], [gx - 0.35, hl + 5], S.guide) + line([gx, hl + 4], [gx + 0.35, hl + 5], S.guide);
   }
 
-  // 隱形拉鍊記號(後中心)與開衩
-  s += line([0.3, 0.6], [0.3, t.zipLen], S.dart);
-  s += text([0.6, t.zipLen - 0.5], 'ZIP ' + (Math.round(t.zipLen * 10) / 10), S.small);
-  s += line([0, hem - t.ventLen], [4, hem - t.ventLen], S.dart);
-  s += line([4, hem - t.ventLen], [4, hem], S.dart);
-  s += text([0.6, hem - t.ventLen - 0.5], 'VENT ' + t.ventLen, S.small);
+  // ---- 後片輪廓 ----
+  s += path(crPathD(bWaist), S.outline);                                  // 後腰線
+  s += path(crPathD(bSide), S.outline);                                   // 後脇曲線
+  s += line([t.backHipW, t.h2], [t.backHipW, hem], S.outline);            // 脇直段
+  s += line([t.backHipW, hem], [0, hem], S.outline);                      // 下擺
+  s += line([0, hem], [0, t.cbDrop], S.outline);                          // 後中心
+  // ---- 前片輪廓(前中心=右端,摺雙) ----
+  s += path(crPathD(fWaist), S.outline);
+  s += path(crPathD(fSide), S.outline);
+  s += line([fx(t.frontHipW), t.h2], [fx(t.frontHipW), hem], S.outline);
+  s += line([fx(t.frontHipW), hem], [fx(0), hem], S.outline);
+  s += line([fx(0), hem], [fx(0), 0], S.outline);                         // 前中心(摺雙)
 
-  // 腰頭版片
-  const by = hem + 4;
-  s += line([0, by], [t.beltL, by], S.outline) + line([t.beltL, by], [t.beltL, by + t.beltW], S.outline);
-  s += line([t.beltL, by + t.beltW], [0, by + t.beltW], S.outline) + line([0, by + t.beltW], [0, by], S.outline);
-  s += text([t.beltL / 2, by - 0.6], 'BELT ' + (Math.round(t.beltL * 10) / 10) + ' x ' + t.beltW + ' (x2)', S.small, 'middle');
+  // ---- 褶子 ----
+  function dart(x1, x2, tip, waistPts) {
+    return line([x1, tsYatX(waistPts, x1)], tip, S.dart) +
+           line([x2, tsYatX(waistPts, x2)], tip, S.dart);
+  }
+  s += dart(t.bd1x, t.bd1x + t.bDart, t.bd1Tip, bWaist);                              // 後褶1(靠後中)
+  s += dart(t.bd2c - t.bDart / 2, t.bd2c + t.bDart / 2, t.bd2Tip, bWaist);            // 後褶2
+  s += dart(fx(t.fd1x), fx(t.fd1x + t.fDartC), [fx(t.fd1c), t.mhl], fWaist);          // 前褶(靠前中)
+  s += dart(fx(t.fd2x), fx(t.fd2x - t.fDartS), [fx(t.fd2c), t.mhl], fWaist);          // 前褶(靠脇)
 
-  // 記號
-  s += text([-1.9, 0.3], 'WL') + text([-1.9, hl + 0.3], 'HL') + text([-1.9, hem + 0.3], 'HEM');
-  s += text([t.xb / 2, hl - 1], 'BACK', S.small, 'middle');
-  s += text([(t.xf + t.width) / 2, hl - 1], 'FRONT', S.small, 'middle');
-  s += text([t.xb / 2, hem - 2], 'GRAIN', S.small, 'middle');
-  s += text([(t.xf + t.width) / 2, hem - 2], 'GRAIN', S.small, 'middle');
+  // ---- 拉鍊止點(後中)與對合記號(脇邊) ----
+  s += line([0, t.zipY], [0.8, t.zipY], S.dart) + text([1.1, t.zipY + 0.2], 'ZIP', S.small);
+  for (const ny of [t.h2, (hl + hem) / 2]) {
+    s += line([t.backHipW - 0.6, ny], [t.backHipW, ny], S.dart);
+    s += line([fx(t.frontHipW), ny], [fx(t.frontHipW) + 0.6, ny], S.dart);
+  }
+
+  // ---- 縫份外框(裁切線) ----
+  const SEAM = 'fill="none" stroke="#111111" stroke-width="0.05"';
+  if (sa) {
+    // 後片(順時針):腰(上推)→脇(右推)→下擺直角外角→下擺(下推)→後中心(左推)
+    const bWaistOff = tsOffsetEdge(bWaist, sa.waist);
+    const bLoop = [
+      [-sa.cb, bWaistOff[0][1]],
+      ...bWaistOff,
+      ...tsOffsetEdge(bSide, sa.side),
+      [t.backHipW + sa.side, hem], [t.backHipW + sa.side, hem + sa.hem],
+      [-sa.cb, hem + sa.hem]
+    ];
+    s += path(tsSeamPath(bLoop), SEAM);
+    // 前片(順時針,自腰側點起):腰(側→前中,上推)→前中心摺雙貼淨版→下擺→脇(左推,向上)
+    const fWaistOff = tsOffsetEdge(fWaist.slice().reverse(), sa.waist);   // 側→前中
+    const fSideUp = [[fx(t.frontHipW), hem], [fx(t.frontHipW), t.h2], ...fSide.slice().reverse().slice(1)];
+    const fLoop = [
+      ...fWaistOff,
+      [fx(0), fWaistOff[fWaistOff.length - 1][1]],
+      [fx(0), hem + sa.hem],
+      [fx(t.frontHipW) - sa.side, hem + sa.hem],
+      [fx(t.frontHipW) - sa.side, hem],
+      ...tsOffsetEdge(fSideUp, sa.side)
+    ];
+    s += path(tsSeamPath(fLoop), SEAM);
+  }
+
+  // ---- 腰帶(裁片:對摺,完成寬×2;記號 CB|a|SS|b|CF|b|SS|a|CB|+搭份3) ----
+  s += line([0, by], [t.beltL, by], S.outline) + line([t.beltL, by], [t.beltL, by + beltH], S.outline);
+  s += line([t.beltL, by + beltH], [0, by + beltH], S.outline) + line([0, by + beltH], [0, by], S.outline);
+  s += line([0, by + beltH / 2], [t.beltL, by + beltH / 2], S.guide);     // 對摺線
+  const marks = [[0, 'CB'], [t.beltA, 'SS'], [t.beltA + t.beltB, 'CF'],
+                 [t.beltA + 2 * t.beltB, 'SS'], [2 * t.beltA + 2 * t.beltB, 'CB']];
+  for (const [mx, ml] of marks) {
+    s += line([mx, by], [mx, by + 0.6], S.dart) + line([mx, by + beltH], [mx, by + beltH - 0.6], S.dart);
+    s += text([mx, by - 0.35], ml, S.small, 'middle');
+  }
+  if (sa) {
+    const k = sa.belt;
+    s += path(tsSeamPath([[-k, by - k], [t.beltL + k, by - k], [t.beltL + k, by + beltH + k], [-k, by + beltH + k]]), SEAM);
+  }
+
+  // ---- 標籤(ASCII) ----
+  s += text([-1.9 - exL, 0.3], 'WL') + text([-1.9 - exL, hl + 0.3], 'HL') + text([-1.9 - exL, hem + 0.3], 'HEM');
+  s += text([t.backHipW / 2, hl - 1.2], 'B x2', S.small, 'middle');
+  s += text([fx(t.frontHipW / 2), hl - 1.2], 'F x1 FOLD', S.small, 'middle');
+  s += text([fx(0) + 0.3, t.mhl + 0.2], 'MHL', S.small);
+  s += text([t.beltL / 2, by + beltH + 1.2], 'BELT ' + (Math.round(t.beltL * 10) / 10) + ' x ' + beltH + ' (FOLD ' + t.beltW + ')', S.small, 'middle');
   s += `</svg>`;
   return s;
 }
@@ -682,12 +804,19 @@ if (typeof document !== 'undefined') {
       ['袖山縮縫份(いせ)', sl.ease]
     ]);
     $('valuesTight').innerHTML = rowsTable([
-      ['半身寬 H/2+2', t.width], ['後片寬/前片寬', r1(t.backHipW) + ' / ' + r1(t.frontHipW) + ' cm'],
-      ['後腰目標 W/4 / 前腰目標 W/4+1', r1(t.backWT) + ' / ' + r1(t.frontWT) + ' cm'],
-      ['後縮減量D / 前縮減量D', r1(t.Db) + ' / ' + r1(t.Df) + ' cm'],
-      ['後省×2 / 前省×2(各)', r1(t.dartB) + ' / ' + r1(t.dartF) + ' cm'],
-      ['隱形拉鍊開口(腰長+1)', t.zipLen], ['後開衩長(裙長/3)', t.ventLen],
-      ['腰頭 W+3 × 3cm(對摺)', r1(t.beltL) + ' × ' + t.beltW + ' cm']
+      ['版寬 H/2+2(臀圍整圈鬆份4)', t.width],
+      ['後片寬/前片寬(脇邊前後差1)', r1(t.backHipW) + ' / ' + r1(t.frontHipW) + ' cm'],
+      ['後腰目標 (W+1)/4−2', t.backWT], ['前腰目標 (W+1)/4+2', t.frontWT],
+      ['一等份○(前腰餘量/3;脇邊前後各收○)', t.circ],
+      ['後褶●×2根(後腰餘量−○ 再對半)', t.bDart],
+      ['前褶 靠脇○+0.5 / 靠前中○−0.5', r1(t.fDartS) + ' / ' + r1(t.fDartC) + ' cm'],
+      ['脇邊起翹1.2、H2=臀圍線上4', '—'],
+      ['後中心下降(WL前高後低)', t.cbDrop],
+      ['腹圍線MHL(腰長/2;前褶尖到此)', t.mhl],
+      ['後褶長 靠後中(HL上5) / 另一根(輔助線交點)', r1(t.bd1Tip[1]) + ' / ' + r1(t.bd2Tip[1]) + ' cm(褶尖皆右移0.5)'],
+      ['拉鍊止點(後中,HL下1)', t.zipY],
+      ['腰帶 長(W+1)+3搭份 × 完成寬2(裁片對摺寬4)', r1(t.beltL) + ' × ' + t.beltW + ' cm'],
+      ['縫份', t.seamMode === 'book' ? '書式:腰1/脇1.5/後中2/下擺4.5/腰帶1(前中摺雙)' : t.seamMode > 0 ? t.seamMode + ' cm(前中摺雙不加)' : '無(淨版)']
     ]);
     $('valuesCircle').innerHTML = rowsTable([
       ['型式', sk.n + '/4 圓'],
@@ -715,7 +844,7 @@ if (typeof document !== 'undefined') {
     }
     const b = draftBodice(B, W, L);
     const sl = draftSleeve(b, SL);
-    const t = draftTightSkirt(W, Hip, WLen, TLen);
+    const t = draftTightSkirt(W, Hip, WLen, TLen, $('tightSeam').value);
     const sk = draftSkirt(W, CLen, CN, +$('circleSeam').value);
     const plWaist = +$('plWaist').value, plEase = +$('plEase').value,
           plYang = +$('plYang').value, plYin = +$('plYin').value,

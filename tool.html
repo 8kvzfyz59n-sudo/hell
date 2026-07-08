@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>服裝原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
-  <p class="sub">輸入尺寸即產生版型。<span id="ver">v27</span></p>
+  <p class="sub">輸入尺寸即產生版型。<span id="ver">v28</span></p>
 </header>
 
 <main>
@@ -33,15 +33,24 @@
     </div>
     <div class="field" data-tabs="tabTight">
       <label for="hip">臀圍 H</label>
-      <input type="number" id="hip" value="91" min="70" max="130" step="0.5">
+      <input type="number" id="hip" value="92" min="70" max="130" step="0.5">
     </div>
     <div class="field" data-tabs="tabTight">
       <label for="waistlen">腰長(WL~HL)</label>
-      <input type="number" id="waistlen" value="18" min="15" max="25" step="0.5">
+      <input type="number" id="waistlen" value="19" min="15" max="25" step="0.5">
     </div>
     <div class="field" data-tabs="tabTight">
       <label for="tightlen">直筒裙長</label>
       <input type="number" id="tightlen" value="60" min="30" max="100" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabTight">
+      <label for="tightSeam">縫份(裁布時外加的量)</label>
+      <select id="tightSeam">
+        <option value="0" selected>無縫份(淨版)</option>
+        <option value="1">縫份 1 公分</option>
+        <option value="1.5">縫份 1.5 公分</option>
+        <option value="book">部位縫份(腰1/脇1.5/後中2/下擺4.5)</option>
+      </select>
     </div>
     <div class="field" data-tabs="tabCircle">
       <label for="circlelen">圓裙長</label>
@@ -196,7 +205,8 @@
 
   <div class="tab" id="tabTight">
     <section class="panel">
-      <h2>直筒裙(含腰頭、隱形拉鍊與開衩記號)</h2>
+      <h2>直筒裙・窄裙(後片B裁2片+前片F摺雙裁1片+腰帶)</h2>
+      <p class="note">前後片各兩根尖褶;後中心開普通拉鍊(圖上 ZIP=拉鍊止點);中腰腰帶,長=腰圍+1+3cm搭份、完成寬2cm(裁片畫成對摺的兩倍寬)。前中心是摺雙(布對摺裁),所以不加縫份。脇邊的小紅線=前後片車縫時的對合記號。</p>
       <div id="tightBox" class="svgbox"></div>
       <div class="dl-group">
         <button id="btnSvgTight" disabled>下載 SVG</button>
@@ -307,9 +317,9 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考,實際縫製前建議先做胚布(トワル)確認並補正。</p>
 </footer>
 
-<script src="pleat.js?v=27"></script>
-<script src="men.js?v=27"></script>
-<script src="womenpants.js?v=27"></script>
-<script src="app.js?v=27"></script>
+<script src="pleat.js?v=28"></script>
+<script src="men.js?v=28"></script>
+<script src="womenpants.js?v=28"></script>
+<script src="app.js?v=28"></script>
 </body>
 </html>
