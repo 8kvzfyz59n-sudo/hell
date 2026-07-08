@@ -295,12 +295,12 @@ function sleeveSVG(sl) {
 /* ---------- 圓裙製圖(圓周率法) ----------
  * n/4 圓裙:腰圍半徑 r = 2W/(nπ),下襬半徑 R = r + 裙長
  * 版片畫半件(前/後各一片,對摺裁或裁2片),圓心角 = n×45°  */
-function draftSkirt(W, skirtLen, n) {
+function draftSkirt(W, skirtLen, n, seam) {
   const r = 2 * W / (n * Math.PI);
   const R = r + skirtLen;
   const thetaDeg = n * 45;                       // 半件圓心角
   const hemFull = (n / 4) * 2 * Math.PI * R;     // 整件下襬總長
-  return { W, skirtLen, n, r, R, thetaDeg, hemFull };
+  return { W, skirtLen, n, r, R, thetaDeg, hemFull, seam: seam || 0 };
 }
 
 // 圓弧(圓心o、半徑r、起訖角rad)轉三次貝茲 C 段(y向下座標直接適用)
@@ -352,6 +352,25 @@ function skirtSVG(sk) {
   d += arcC(O, sk.R, a2, a1);        // 下襬弧(反向)
   d += lineC(H1, P1);                // 側邊
   s += path(d, S.outline);
+
+  // 縫份外框(裁切線,外框往外平行加放;外推工具在 womenpants.js)
+  if (sk.seam > 0) {
+    const pts = [];
+    const arcSamp = (rr, aa1, aa2) => {
+      const n = Math.max(8, Math.ceil(Math.abs(aa2 - aa1) * rr / 1.2));
+      for (let i = 0; i < n; i++) pts.push(pt(rr, aa1 + (aa2 - aa1) * i / n));
+    };
+    const lineSamp = (p1, p2) => {
+      const n = Math.max(2, Math.ceil(Math.hypot(p2[0] - p1[0], p2[1] - p1[1]) / 1.2));
+      for (let i = 0; i < n; i++) pts.push([p1[0] + (p2[0] - p1[0]) * i / n, p1[1] + (p2[1] - p1[1]) * i / n]);
+    };
+    arcSamp(sk.r, a1, a2);        // 腰線弧
+    lineSamp(P2, H2);             // 側邊
+    arcSamp(sk.R, a2, a1);        // 下襬弧
+    lineSamp(H1, P1);             // 側邊
+    s += path(wpLoopPath(wpOffsetLoop(pts, sk.seam), q => q), 'fill="none" stroke="#111111" stroke-width="0.05"');
+    s += text([0, sk.R + sk.seam + 0.9], '+' + sk.seam + 'CM SEAM', S.small, 'middle');
+  }
 
   // 記號
   s += dot(O) + text([0.3, -0.4], 'O');
@@ -671,7 +690,8 @@ if (typeof document !== 'undefined') {
     $('valuesCircle').innerHTML = rowsTable([
       ['型式', sk.n + '/4 圓'],
       ['腰半徑 r=2W/(nπ)', sk.r], ['下襬半徑 r+裙長', sk.R],
-      ['半件圓心角', sk.thetaDeg + '°'], ['整件下襬總長', sk.hemFull]
+      ['半件圓心角', sk.thetaDeg + '°'], ['整件下襬總長', sk.hemFull],
+      ['縫份(外框往外平行加放)', sk.seam ? r1(sk.seam) + ' cm' : '無(淨版)']
     ]);
   }
 
@@ -694,7 +714,7 @@ if (typeof document !== 'undefined') {
     const b = draftBodice(B, W, L);
     const sl = draftSleeve(b, SL);
     const t = draftTightSkirt(W, Hip, WLen, TLen);
-    const sk = draftSkirt(W, CLen, CN);
+    const sk = draftSkirt(W, CLen, CN, +$('circleSeam').value);
     const plWaist = +$('plWaist').value, plEase = +$('plEase').value,
           plYang = +$('plYang').value, plYin = +$('plYin').value,
           plLen = +$('plLen').value, plBelt = +$('plBelt').value,
