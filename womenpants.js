@@ -1,22 +1,21 @@
 /* =========================================================
- * 女裝褲子(基本型長褲)— 依使用者提供實踐大學服裝教科書
- * 「版型製作 step by step」p.109–114 重製(2026-07-08)
+ * 褲子(基本型長褲)製圖
  * 輸入:W腰圍、H臀圍、HL腰長、BR股上、TL褲長、褲口半寬
- * 前片(p.110–111):寬=H/4+1;HL均分4等份,裆尖=前中角a外延一等份;
+ * 前片:寬=H/4+1;HL均分4等份,裆尖=前中角a外延一等份;
  *   折山線=b~d中點;KL=股上+股下/2−4;股下線KL內彎0.7~1(得◎);
  *   脇邊WL內縮2起翹1~1.2;前中WL內縮0.5連c;裆彎導引a1=a向bc垂線2/3處;
  *   腰目標(W+1)/4+1,餘量兩褶等寬(褶長9,褶1壓折山線、褶2在褶1左緣與
- *   脇邊腰點中點);餘量<3只打一根(書POINT);口袋HL上15;拉鍊止點HL下1寬3
- * 後片(p.112–113,描前片鏡射、股上線以上取直線):
- *   W=前中直線WL點、W1=W外移2.5、W2=中點(特寫照片判讀);
+ *   脇邊腰點中點);餘量<3只打一根;口袋HL上15;拉鍊止點HL下1寬3
+ * 後片(描前片鏡射、股上線以上取直線):
+ *   W=前中直線WL點、W1=W外移2.5、W2=中點;
  *   後中斜線=a連W2延伸超過WL 2(後翹);H=斜線交HL、H1=H沿斜線上2;
  *   後臀寬=H/4+1 自H1垂直於後中斜線量至H2,H2上下取垂直輔助線;
  *   裆尖b1=b外移4再下落0.5~1;後裆彎=H1經a1(借前片導引點)連b1;
- *   KL與褲口各比前片外放1;脇邊WL內縮2(與前片同,使用者確認)起翹1~1.2;
+ *   KL與褲口各比前片外放1;脇邊WL內縮2起翹1~1.2;
  *   腰目標(W+1)/4−1,餘量=兩褶等寬●;褶自後中1/3處長11、2/3處長9~10,
- *   褶尖偏向脇邊0.5~0.7(使用者確認方向)
- * 書上給範圍的常數取中值:起翹1.1、KL內彎0.85、後落裆0.75、
- *   後褶尖偏0.6、後褶2長9.5——對書挑錯後可調
+ *   褶尖偏向脇邊0.5~0.7
+ * 範圍常數取中值(可調):起翹1.1、KL內彎0.85、後落裆0.75、
+ *   後褶尖偏0.6、後褶2長9.5
  * ========================================================= */
 
 /* 單段貝茲(M+C,PDF 安全) */
@@ -72,12 +71,12 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
   const crease = bX / 2;                  // 折山線(例15)
   const inseam = TL - BR;
   const klY = BR + inseam / 2 - 4;        // KL(例56.5)
-  const kIn = 0.85;                       // KL內彎(書0.7~1)
+  const kIn = 0.85;                       // KL內彎(0.7~1)
   const hemIn = crease + hemHalf, hemOut = crease - hemHalf;
   const xInsKL = bX + (hemIn - bX) * (klY - BR) / (TL - BR);
   const dia = xInsKL - kIn - crease;      // ◎
   const sideKLx = crease - dia;
-  const sideIn = 2, sideRaise = 1.1;      // 脇邊內縮2、起翹(書1~1.2)
+  const sideIn = 2, sideRaise = 1.1;      // 脇邊內縮2、起翹(1~1.2)
   const cfIn = 0.5;
   const cfW = [w - cfIn, 0];
   const sideW = [sideIn, -sideRaise];
@@ -96,7 +95,7 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
   const pleat2x = (sideW[0] + (crease - pleatW / 2)) / 2;
 
   /* ---------- 後片(前片鏡射:x'=bX−x;裆尖朝左、脇邊x'=bX) ---------- */
-  const w2off = 2.5;                       // W→W1(p.112特寫)
+  const w2off = 2.5;                       // W→W1
   const bkW = [q, 0];                      // W=前中直線WL點(鏡射後 x'=q)
   const bkW2 = [q + w2off / 2, 0];         // W2=中點
   const su = (() => { const d = [bkW2[0] - q, -BR]; const l = Math.hypot(d[0], d[1]); return [d[0]/l, d[1]/l]; })(); // 後中斜線向上單位向量(a→W2)
@@ -105,7 +104,7 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
   const bkH1 = [bkH[0] + 2 * su[0], bkH[1] + 2 * su[1]];     // H1=H沿斜線上2
   const nrm = [-su[1], su[0]];                                // 垂直斜線、指向脇邊
   const bkH2 = [bkH1[0] + w * nrm[0], bkH1[1] + w * nrm[1]]; // 後臀寬H/4+1至H2
-  const drop = 0.75;                       // 後落裆(書0.5~1)
+  const drop = 0.75;                       // 後落裆(0.5~1)
   const bkB1 = [-4, BR + drop];            // 裆尖b1(b外移4再下落)
   const bkA1 = [bX - a1[0], a1[1]];        // 借前片裆彎導引點(鏡射)
   const insKLm = bX - (xInsKL - kIn);      // 前股下KL點(鏡射)
@@ -121,8 +120,8 @@ function draftWomenPants(W, H, HL, BR, TL, hemHalf) {
   const targetB = (W + 1) / 4 - 1;         // 後腰目標(例15.25)
   const dartTotal = waistLenB - targetB;
   const dartW = dartTotal / 2;             // 褶寬●(兩褶等寬)
-  const dartLen1 = 11, dartLen2 = 9.5;     // 褶長(書:11、9~10)
-  const dartTip = 0.6;                     // 褶尖偏向脇邊(書0.5~0.7)
+  const dartLen1 = 11, dartLen2 = 9.5;     // 褶長(11、9~10)
+  const dartTip = 0.6;                     // 褶尖偏向脇邊(0.5~0.7)
 
   return { W, H, HL, BR, TL, hemHalf,
     w, q, bX, crease, inseam, klY, kIn, hemIn, hemOut, xInsKL, dia, sideKLx,

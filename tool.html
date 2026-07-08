@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>新文化式原型產生器|Bunka Pattern Generator</title>
+<title>服裝原型產生器|Pattern Generator</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header>
-  <h1>新文化式原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
-  <p class="sub">依日本文化服裝學院製圖法,輸入尺寸即產生版型。<span id="ver">v20</span></p>
+  <h1>服裝原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
+  <p class="sub">輸入尺寸即產生版型。<span id="ver">v21</span></p>
 </header>
 
 <main>
@@ -133,7 +133,7 @@
       <input type="number" id="wpTL" value="95" min="60" max="120" step="0.5">
     </div>
     <div class="field" data-tabs="tabWPants">
-      <label for="wpHem">褲口半寬(褲腳寬的一半,書例10,可調)</label>
+      <label for="wpHem">褲口半寬(褲腳寬的一半,可調)</label>
       <input type="number" id="wpHem" value="10" min="7" max="20" step="0.5">
     </div>
     <button id="btnDraw" class="primary">產生版型</button>
@@ -176,29 +176,6 @@
       <div id="valuesTop" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>上半身原型:製圖邏輯</summary>
-        <ol>
-          <li>畫基礎長方形:寬=身幅(B/2+6)、高=背長;從上端(A點)往下 B/12+13.7 畫出胸圍線 BL。</li>
-          <li>BL 上取背幅(B/8+7.4)與胸幅(B/8+6.2),中間即袖窿範圍;F 與 C 的中點垂直向下為脇線。</li>
-          <li>領口:前領寬◎=B/24+3.4、前領深◎+0.5、後領寬◎+0.2;肩斜前22°、後18°。</li>
-          <li>胸省角度=(B/4−2.5)°,從 BP 往袖窿方向打開;後肩省=B/32−0.8,指向 E 點。</li>
-          <li>總腰省=身幅−(W/2+3),按 a14%/b15%/c11%/d35%/e18%/f7% 分配到六個位置。</li>
-          <li>製作前先以胚布試穿,依體型補正後再作為打版母型。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>袖原型:製圖邏輯</summary>
-        <ol>
-          <li>袖山高=(前後肩點平均高度到 BL 距離)×5/6,袖山越高袖越合身、活動量越小。</li>
-          <li>前袖斜線長=前AH、後袖斜線長=後AH+1(B≥85 再加 0.1~0.3),由此定出袖幅。</li>
-          <li>袖山弧線縮縫份(いせ)約為 AH 的 5~8%,縫製時用兩道疏縫抽縮、以熨斗歸攏。</li>
-          <li>合印:前袖對前身、後袖對後身,袖山點對肩線。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
   <div class="tab" id="tabTight">
@@ -216,24 +193,6 @@
       <div id="valuesTight" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>直筒裙:製圖邏輯與工法(隱形拉鍊+貼邊/腰頭)</summary>
-        <ol>
-          <li>基礎長方形:寬=H/2+2(臀鬆份整圈4cm)、長=裙長;WL 下腰長處畫 HL。</li>
-          <li>脇線取 HL 中點往後移 1cm(前片較寬,符合體型)。</li>
-          <li>腰目標:後=W/4、前=W/4+1(含鬆份與前後差);與臀寬的差=縮減量D。</li>
-          <li>D 的一半在脇邊收(脇腰點上抬1cm畫順),另一半做2個腰省(WL三等分處,後省13/12cm、前省9/10cm)。</li>
-          <li>隱形拉鍊:開在後中心,開口=腰長+1cm(過 HL 才穿得進去);先縫拉鍊再縫剩餘後中心線,齒務必燙開再車。</li>
-          <li>腰部收邊二選一:<br>
-              ①腰頭:版片 W+3 × 3cm(對摺+燙襯),3cm 是疊份鈕釦位。<br>
-              ②內貼邊:複製版型腰線下7cm、把腰省合併後的形狀,燙襯後與腰線正面相對車縫翻入。</li>
-          <li>後開衩=裙長/3(裙長60→衩20),走路才有活動量;衩持出約4cm。</li>
-          <li>縫份建議:腰1、脇/後中心1.5、下襬4(直筒裙下襬用千鳥縫或奇縫固定)。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
   <div class="tab" id="tabCircle">
@@ -251,19 +210,6 @@
       <div id="valuesCircle" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>圓裙:製圖邏輯</summary>
-        <ol>
-          <li>原理:讓腰線弧長=腰圍。n/4 圓裙的腰半徑 r=2W/(nπ);全圓 r≈W/6.28、半圓 r≈W/3.14。</li>
-          <li>下襬半徑=r+裙長,兩弧之間就是裙片;本站畫「半件」(圓心角=n×45°),對摺裁或裁2片。</li>
-          <li>圓越大裙襬越澎、用布越多;全圓裙下襬總長=2π(r+裙長)。</li>
-          <li>斜布方向會鬆垂:裁好先吊掛一天,再把下襬修齊。</li>
-          <li>腰部處理與直筒裙相同(腰頭或貼邊+隱形拉鍊);半圓以下也可改鬆緊帶腰。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
   <div class="tab" id="tabPleat">
@@ -282,31 +228,6 @@
       <div id="valuesPleat" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>這個計算機在算什麼?(白話版)</summary>
-        <ol>
-          <li>百摺裙就是把一塊「比腰圍寬很多」的長方形布,一摺一摺收到剛好圍住腰。這裡幫你算:那塊布到底要多寬。</li>
-          <li>兩個關鍵名詞:<b>陽摺</b>=摺好後表面看得到的那一段寬度;<b>陰摺</b>=摺進去、藏在下面看不到的深度。</li>
-          <li>做一個摺要吃掉的布,依摺法不同:<b>刀褶</b>(摺痕都往同一邊)=陽摺+2×陰摺;<b>箱褶</b>(兩摺相對,像禮盒包裝的摺法)=陽摺+4×陰摺;<b>手風琴褶</b>(一凸一凹交錯)=陽摺+陰摺。</li>
-          <li>要摺幾個?用(腰圍+鬆份)除以「一個摺在腰上佔的寬度」,小數無條件進位——寧可多一點,不能圍不住。</li>
-          <li>布的總寬=摺數×每摺吃掉的布,再加後面開口的縫份。這就是「整塊裙子布料需要多寬」的答案。</li>
-          <li>上下方向:裙長+腰頭+摺邊縫份,如果小於買來的布幅寬,布橫著擺就能一整片裁完,不用接布。</li>
-          <li>陽摺越窄、陰摺越深=皺摺越密越澎;陽摺越寬、陰摺越淺=越平順。拿不定主意就先印試摺紙型摺摺看。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>A4 試摺紙型:怎麼印、怎麼摺(含英文對照)</summary>
-        <ol>
-          <li>按「下載 PDF」印出來。<b>列印時一定要選「實際大小」或「100%」</b>,不要選「符合頁面大小」,不然尺寸會跑掉。</li>
-          <li>印好先量最下面那條尺:上面寫 PRINT CHECK 的線段應該剛好 10 公分。不是 10 公分就是印表機縮放了,回去改設定重印。</li>
-          <li>紙上英文對照:<b>MOUNTAIN(紅色一點一劃線)=山摺</b>,摺起來凸向自己、摺痕在表面;<b>VALLEY(藍色虛線)=谷摺</b>,往內凹摺;<b>CUT ALONG FRAME=沿黑框剪下</b>;<b>FOLDED WIDTH=全部摺完應該剛好這麼寬</b>(拿摺好的紙對上去驗證);數字 1、2、3 是摺的順序;小箭頭是摺份要壓過去的方向。</li>
-          <li>箱褶印出來是「工字褶」(兩條摺線在表面相接);想要外凸盒子那種一般箱褶,把紙翻面照摺就是了。</li>
-          <li>摺完覺得太密、太淺、不夠澎——回來改「陽摺寬」「陰摺深」的數字,重印再摺,滿意了再去裁布。紙很便宜,布不便宜。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
   <div class="tab" id="tabMenTop">
@@ -333,29 +254,6 @@
       <div id="valuesMenTop" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>男裝上衣原型:製圖邏輯</summary>
-        <ol>
-          <li>男子原型採「胸度式」:大部分尺寸由胸圍 C 與背長兩個數字決定;後中心長=背長+0.5。</li>
-          <li>基礎長方形:寬=衣寬(C/2+6.7);從上端 A 往下 C/6+8.5 畫胸圍線 BL。</li>
-          <li>BL 上取背幅(C/6+5.8)與胸幅(C/6+2.9),兩幅線中點垂直向下為脇線。</li>
-          <li>領口:前領寬=C/16+1.9、前領深=領寬+0.5、後領寬=前領寬+0.3;肩斜前 22°、後 21°。</li>
-          <li>男子原型無胸省;後肩褶=C/32,指向背幅中段的 I 點。</li>
-          <li>總腰省=(C/2+6.7)−(W/2+4),按 a16%/b16%/c36%/d24%/e8% 分配(e 為後中心縮份)。</li>
-          <li>製作前先以胚布試穿,依體型補正後再作為打版母型。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>男裝袖原型:製圖邏輯</summary>
-        <ol>
-          <li>袖山高=(前後肩點平均高度到 BL 距離)×5/6。</li>
-          <li>前袖斜線=前AH、後袖斜線=後AH+1,由此定出袖幅;肘線=袖長/2+2.5。</li>
-          <li>袖山縮縫份(いせ)縫製時用兩道疏縫抽縮、以熨斗歸攏。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
   <div class="tab" id="tabWPants">
@@ -373,35 +271,6 @@
       <div id="valuesWomenPants" class="values"></div>
     </section>
 
-    <section class="panel">
-      <h2>教學</h2>
-      <details>
-        <summary>基本型長褲・前片:怎麼畫出來的(白話版,照教科書步驟)</summary>
-        <ol>
-          <li>先畫骨架長方形:寬=臀圍÷4+1(那個 +1 是前片鬆份)、往下量腰長(臀圍線 HL)和股上(股上線 BR,胯下高度)。</li>
-          <li>把臀圍線均分成 4 等份;褲襠尖端=前中心底角再往外延伸一等份。</li>
-          <li>折山線(褲管正中央燙出來的那條直線):取「褲襠尖端到脇邊底角」的正中間,從腰往下量褲長。</li>
-          <li>膝線 KL=股下的一半再往上 4 公分;褲口以折山線左右各取 10 公分(可調)。</li>
-          <li>股下線:褲襠尖端直線連到褲口內側,在膝線處往內彎 0.7~1 公分,得到的寬度◎再對稱畫出脇邊那一側。</li>
-          <li>腰口:脇邊往內收 2 公分並往上翹 1~1.2 公分;前中心往內收 0.5 公分直線連到臀圍線。</li>
-          <li>褲襠彎:從前中底角往「襠尖~臀圍線點」的斜線畫垂直線,取 2/3 處當導引點,弧線畫順。</li>
-          <li>腰圍目標=(腰圍+1)÷4+1;腰線多出來的量均分成兩根褶(第一根壓在折山線上、第二根在它與脇邊的正中間),褶長都是 9 公分。剩餘量不到 3 公分時,書上說打一根就好(程式會自動判斷)。</li>
-          <li>紅線是記號不是裁切線:PLEAT=褶、POCKET=脇邊口袋(臀圍線往上 15 公分)、FLY=前開拉鍊(止點=臀圍線下 1 公分、裝飾寬 3 公分)。</li>
-        </ol>
-      </details>
-      <details>
-        <summary>基本型長褲・後片:怎麼畫出來的(白話版,照教科書步驟)</summary>
-        <ol>
-          <li>後片是「描一份前片」改出來的:股上線(胯下那條線)以上照直線骨架描,以下照前片完成線描。</li>
-          <li>後中心斜線:前中心腰點 W 往脇邊移 2.5 公分得 W1,取中點 W2;把 W2 和前中底角 a 連成直線、往上多畫 2 公分——這就是後翹(彎腰、坐下才不會扯)。</li>
-          <li>後臀圍:斜線和臀圍線的交點往上 2 公分(H1),從 H1「垂直於斜線」量臀圍÷4+1 到 H2,H2 處畫垂直輔助線。</li>
-          <li>褲襠尖端:比前片再往外 4 公分、往下落 0.5~1 公分(屁股比前面厚,後襠要更深)——後襠彎從 H1 經導引點連到這裡。</li>
-          <li>膝線和褲口都比前片每側寬 1 公分;脇邊腰點一樣內收 2、起翹 1~1.2。</li>
-          <li>腰圍目標=(腰圍+1)÷4−1;腰線多出來的量均分成兩根褶:第一根在腰線 1/3 處(靠後中心)褶長 11,第二根在 2/3 處褶長 9~10,褶尖都往脇邊偏 0.5~0.7 公分。</li>
-          <li>前後腰目標相加=(腰圍+1)÷2,剛好是半件褲子的腰;+1 是整圈腰的鬆份。</li>
-        </ol>
-      </details>
-    </section>
   </div>
 
 </main>
@@ -410,9 +279,9 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考,實際縫製前建議先做胚布(トワル)確認並補正。</p>
 </footer>
 
-<script src="pleat.js?v=20"></script>
-<script src="men.js?v=20"></script>
-<script src="womenpants.js?v=20"></script>
-<script src="app.js?v=20"></script>
+<script src="pleat.js?v=21"></script>
+<script src="men.js?v=21"></script>
+<script src="womenpants.js?v=21"></script>
+<script src="app.js?v=21"></script>
 </body>
 </html>

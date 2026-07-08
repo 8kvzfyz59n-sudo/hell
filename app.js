@@ -1,8 +1,6 @@
 /* =========================================================
- * 新文化式原型(文化服裝學院 2000年版 成人女子原型)
+ * 成人女子上半身原型製圖
  * 單位:cm。座標系:x 向右、y 向下,後中心頂點 A = (0,0)
- * 公式來源:文化ファッション大系 服飾造形講座①/
- * https://maisondeas.com/pattern-block-new-bunka/
  * ========================================================= */
 
 const DEG = d => d * Math.PI / 180;
@@ -151,7 +149,7 @@ function draftSleeve(bod, sleeveLen) {
   const top = [0, 0];
   const fEnd = [-wf, capH], bEnd = [wb, capH];
 
-  // 斜線上導引點(垂直斜線之外/內偏移,依教材標準值)
+  // 斜線上導引點(垂直斜線之外/內偏移,標準偏移值)
   function off(a, b, t, d) {
     const p = lerp(a, b, t);
     const ux = (b[0] - a[0]) / Math.hypot(b[0] - a[0], b[1] - a[1]);
@@ -296,8 +294,7 @@ function sleeveSVG(sl) {
 
 /* ---------- 圓裙製圖(圓周率法) ----------
  * n/4 圓裙:腰圍半徑 r = 2W/(nπ),下襬半徑 R = r + 裙長
- * 版片畫半件(前/後各一片,對摺裁或裁2片),圓心角 = n×45°
- * 來源:https://maisondeas.com/circle-skirt-pattern/           */
+ * 版片畫半件(前/後各一片,對摺裁或裁2片),圓心角 = n×45°  */
 function draftSkirt(W, skirtLen, n) {
   const r = 2 * W / (n * Math.PI);
   const R = r + skirtLen;
@@ -367,11 +364,10 @@ function skirtSVG(sk) {
   return s;
 }
 
-/* ---------- 直筒裙(タイトスカート)製圖 ----------
- * 簡化文化式:H鬆份+4、W鬆份+2(整圈)、前後差2
+/* ---------- 直筒裙製圖 ----------
+ * H鬆份+4、W鬆份+2(整圈)、前後差2
  * 脇線=HL中點往後移1cm;脇收D/2、其餘2省各D/4
- * 後中心隱形拉鍊(開口=腰長+1)、後開衩=裙長/3、腰頭W+3×3cm
- * 來源:https://maisondeas.com/pencil-skirt-pattern/            */
+ * 後中心隱形拉鍊(開口=腰長+1)、後開衩=裙長/3、腰頭W+3×3cm  */
 function draftTightSkirt(W, H, waistLen, L) {
   const width = H / 2 + 2;            // 半身寬(前+後)
   const sideX = width / 2 - 1;        // 脇線(2等分往後1cm)
@@ -623,18 +619,18 @@ if (typeof document !== 'undefined') {
       ['等份(前片寬/4)=前裆伸出', p.q],
       ['折山線位置(裆尖~脇邊的中點,自脇邊量)', p.crease],
       ['股下 / 膝線KL(股上+股下/2−4)', r1(p.inseam) + ' / ' + r1(p.klY) + ' cm'],
-      ['膝寬◎(距折山線;KL內彎取0.85,書0.7~1)', p.dia],
-      ['脇邊腰:內縮2、起翹1.1(書1~1.2)', '—'],
+      ['膝寬◎(距折山線;KL內彎0.85)', p.dia],
+      ['脇邊腰:內縮2、起翹1.1', '—'],
       ['前中腰:內縮0.5', '—'],
       ['前腰目標((W+1)/4+1)', p.target],
       ['前腰線長(實測)', p.waistLen],
       ['腰口剩餘量(=褶份合計)', p.pleatTotal],
-      ['褶寬◎ ' + (p.single ? '×1(剩餘<3cm,書POINT只打一根)' : '×2(等寬,褶長9)'), p.pleatW],
+      ['褶寬◎ ' + (p.single ? '×1(剩餘<3cm 打一根)' : '×2(等寬,褶長9)'), p.pleatW],
       ['褲口全寬 前/後(後片每側+1)', r1(p.hemHalf * 2) + ' / ' + r1(p.hemHalf * 2 + 2) + ' cm'],
       ['口袋(HL上15,裝飾0.5)/ 拉鍊(止點HL下1,寬3)', '—'],
       ['後中斜線(W→W1=2.5取中點W2連a,超過WL 2)', '後翹頂點高 ' + r1(-p.bkWt[1]) + ' cm'],
       ['後臀圍寬(H1垂直後中斜線量H/4+1)', p.w],
-      ['後裆尖(b外移4、下落0.75;書0.5~1)', '—'],
+      ['後裆尖(b外移4、下落0.75)', '—'],
       ['後腰目標((W+1)/4−1)', p.targetB],
       ['後腰線長(實測)/ 剩餘量', r1(p.waistLenB) + ' / ' + r1(p.dartTotal) + ' cm'],
       ['後褶寬● ×2(1/3處長11、2/3處長' + p.dartLen2 + ',尖偏脇邊0.6)', p.dartW]
@@ -738,7 +734,7 @@ if (typeof document !== 'undefined') {
     renderValuesPleat(pl);
     renderValuesMenTop(mb, msl);
     renderValuesWomenPants(wp);
-    if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,教材建議手動修順袖窿線。';
+    if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,建議手動修順袖窿線。';
     if (pl.waistOK && !pl.fitsOneWidth) msg.textContent += (msg.textContent ? ' ' : '') + '百褶裙:裙長方向超過布幅,需接布或改直裁方向。';
     if (!pl.waistOK) msg.textContent += (msg.textContent ? ' ' : '') + '手風琴褶「表面看得到的摺寬(陽)」必須大於「藏起來的深度(陰)」,不然摺完圍不住腰;兩者一樣寬就是純手風琴褶,要靠鬆緊帶或讓裙襬自然張開。';
     if (wp.pleatTotal < 0.3) msg.textContent += (msg.textContent ? ' ' : '') + '褲子:腰圍相對臀圍偏大,腰口收不出褶,此版型不適用(可考慮增加臀圍)。';
@@ -769,7 +765,7 @@ if (typeof document !== 'undefined') {
                    cur.menBodSvg, cur.menSlvSvg].filter(Boolean).map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
-      `bunka_pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
+      `pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
   }
 
   function dlOnePdf(svgStr, name) {
@@ -779,12 +775,12 @@ if (typeof document !== 'undefined') {
   }
 
   $('btnDraw').addEventListener('click', draw);
-  $('btnSvgBodice').addEventListener('click', () => dlSVG(cur.bodSvg, `bunka_bodice_B${cur.b.B}.svg`));
-  $('btnSvgSleeve').addEventListener('click', () => dlSVG(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.svg`));
+  $('btnSvgBodice').addEventListener('click', () => dlSVG(cur.bodSvg, `bodice_B${cur.b.B}.svg`));
+  $('btnSvgSleeve').addEventListener('click', () => dlSVG(cur.slvSvg, `sleeve_B${cur.b.B}.svg`));
   $('btnSvgTight').addEventListener('click', () => dlSVG(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.svg`));
   $('btnSvgSkirt').addEventListener('click', () => dlSVG(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.svg`));
-  $('btnPdfBodice').addEventListener('click', () => dlOnePdf(cur.bodSvg, `bunka_bodice_B${cur.b.B}.pdf`));
-  $('btnPdfSleeve').addEventListener('click', () => dlOnePdf(cur.slvSvg, `bunka_sleeve_B${cur.b.B}.pdf`));
+  $('btnPdfBodice').addEventListener('click', () => dlOnePdf(cur.bodSvg, `bodice_B${cur.b.B}.pdf`));
+  $('btnPdfSleeve').addEventListener('click', () => dlOnePdf(cur.slvSvg, `sleeve_B${cur.b.B}.pdf`));
   $('btnPdfTight').addEventListener('click', () => dlOnePdf(cur.tgtSvg, `tight_skirt_W${cur.t.W}_H${cur.t.H}.pdf`));
   $('btnPdfSkirt').addEventListener('click', () => dlOnePdf(cur.sktSvg, `circle_skirt_${cur.sk.n}q_W${cur.sk.W}.pdf`));
   $('btnSvgPleatSheet').addEventListener('click', () => dlSVG(cur.plSheetSvg, `pleat_test_sheet_${cur.pl.type}.svg`));
