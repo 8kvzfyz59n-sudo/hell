@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>服裝原型產生器 <a href="index.html" style="font-size:.75rem;color:#8a5a3b;text-decoration:none;border:1px solid #8a5a3b;border-radius:10px;padding:2px 10px;vertical-align:middle">← 首頁</a></h1>
-  <p class="sub">輸入尺寸即產生版型。<span id="ver">v28</span></p>
+  <p class="sub">輸入尺寸即產生版型。<span id="ver">v30</span></p>
 </header>
 
 <main>
@@ -129,6 +129,30 @@
       <label for="mSleeveLen">男・袖長</label>
       <input type="number" id="mSleeveLen" value="60" min="40" max="70" step="0.5">
     </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jB">胸圍 B</label>
+      <input type="number" id="jB" value="83" min="70" max="110" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jW">腰圍 W</label>
+      <input type="number" id="jW" value="64" min="50" max="105" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jH">臀圍 H</label>
+      <input type="number" id="jH" value="92" min="70" max="130" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jBackLen">背長</label>
+      <input type="number" id="jBackLen" value="38" min="30" max="46" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jLen">外套衣長(腰線以下)</label>
+      <input type="number" id="jLen" value="31" min="20" max="45" step="0.5">
+    </div>
+    <div class="field" data-tabs="tabJacket">
+      <label for="jSL">外套袖長</label>
+      <input type="number" id="jSL" value="54" min="40" max="70" step="0.5">
+    </div>
     <div class="field" data-tabs="tabWPants">
       <label for="wpW">女・腰圍 W(實際量到的腰圍)</label>
       <input type="number" id="wpW" value="64" min="50" max="105" step="0.5">
@@ -175,6 +199,7 @@
     <button class="tabbtn" data-tab="tabWPants">4|褲子</button>
     <button class="tabbtn" data-tab="tabPleat">5|百褶裙用布量</button>
     <button class="tabbtn" data-tab="tabMenTop">6|男裝上衣</button>
+    <button class="tabbtn" data-tab="tabJacket">7|西裝領外套</button>
   </nav>
 
   <div class="tab active" id="tabTop">
@@ -294,6 +319,34 @@
 
   </div>
 
+  <div class="tab" id="tabJacket">
+    <section class="panel">
+      <h2>西裝領外套・身片+領製圖</h2>
+      <p class="note">「製圖底稿」:左=後片、右=前片。黑實線=外套輪廓;灰虛線=原型參考線與基準線;<b style="color:#c0392b">紅線=剪接線、褶子與領子等完成線;紅虛線=翻領摺線、貼邊、記號線</b>。前片脇邊小三角(D13-R1-R2)是胸褶轉過來的份,車縫時併進剪接線。前片右上是西裝領:虛線=穿起來的樣子(畫在翻領線左邊),實線=攤平的版型(複製到右邊+後領長方形倒伏對合)。V1~V4=後腰帶夾縫位置、T=貼邊、Y=釦子、P=口袋位置。</p>
+      <div id="jacketBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgJacket" disabled>下載 SVG</button>
+        <button id="btnPdfJacket" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>兩片袖(紅=外袖、藍=內袖)</h2>
+      <p class="note">黑實線=袖山弧線,灰虛線=基礎線與「反拓」弧線(袖底照衣身袖襱形狀翻過來複製)。<b style="color:#c0392b">紅線=外袖完成線</b>、<b style="color:#2467a8">藍線=內袖完成線</b>:外袖跟內袖在前後縫互相借量(前±2.5、後上±2/肘±1.2),縫起來後接縫會藏在手臂內側看不到。S32=袖開叉頂點(開叉8公分),小圓=袖釦2顆。</p>
+      <div id="jacketSlvBox" class="svgbox"></div>
+      <div class="dl-group">
+        <button id="btnSvgJacketSlv" disabled>下載 SVG</button>
+        <button id="btnPdfJacketSlv" disabled>下載 PDF(1:1)</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>計算結果</h2>
+      <div id="valuesJacket" class="values"></div>
+    </section>
+
+  </div>
+
   <div class="tab" id="tabWPants">
     <section class="panel">
       <h2>褲子・基本型長褲(後片 B+前片 F)</h2>
@@ -317,9 +370,10 @@
   <p>SVG 內建實寸單位(cm),PDF 為 1:1 向量檔,可交付繪圖機或大圖輸出。僅供打版參考,實際縫製前建議先做胚布(トワル)確認並補正。</p>
 </footer>
 
-<script src="pleat.js?v=28"></script>
-<script src="men.js?v=28"></script>
-<script src="womenpants.js?v=28"></script>
-<script src="app.js?v=28"></script>
+<script src="pleat.js?v=30"></script>
+<script src="men.js?v=30"></script>
+<script src="womenpants.js?v=30"></script>
+<script src="jacket.js?v=30"></script>
+<script src="app.js?v=30"></script>
 </body>
 </html>

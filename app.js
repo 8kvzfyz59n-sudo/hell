@@ -816,7 +816,7 @@ if (typeof document !== 'undefined') {
       ['後褶長 靠後中(HL上5) / 另一根(輔助線交點)', r1(t.bd1Tip[1]) + ' / ' + r1(t.bd2Tip[1]) + ' cm(褶尖皆右移0.5)'],
       ['拉鍊止點(後中,HL下1)', t.zipY],
       ['腰帶 長(W+1)+3搭份 × 完成寬2(裁片對摺寬4)', r1(t.beltL) + ' × ' + t.beltW + ' cm'],
-      ['縫份', t.seamMode === 'book' ? '書式:腰1/脇1.5/後中2/下擺4.5/腰帶1(前中摺雙)' : t.seamMode > 0 ? t.seamMode + ' cm(前中摺雙不加)' : '無(淨版)']
+      ['縫份', t.seamMode === 'book' ? '部位縫份:腰1/脇1.5/後中2/下擺4.5/腰帶1(前中摺雙)' : t.seamMode > 0 ? t.seamMode + ' cm(前中摺雙不加)' : '無(淨版)']
     ]);
     $('valuesCircle').innerHTML = rowsTable([
       ['型式', sk.n + '/4 圓'],
@@ -876,13 +876,24 @@ if (typeof document !== 'undefined') {
     }
     const wp = draftWomenPants(wpW, wpH, wpHL, wpBR, wpTL, wpHem, wpSeam);
 
+    const jB = +$('jB').value, jW = +$('jW').value, jH = +$('jH').value,
+          jBL = +$('jBackLen').value, jLen = +$('jLen').value, jSL = +$('jSL').value;
+    if (!(jB >= 70 && jB <= 110) || !(jW >= 50 && jW <= 105) || !(jH >= 70 && jH <= 130) ||
+        !(jBL >= 30 && jBL <= 46) || !(jLen >= 20 && jLen <= 45) || !(jSL >= 40 && jSL <= 70)) {
+      msg.textContent = '請確認外套輸入範圍:B 70–110、W 50–105、H 70–130、背長 30–46、衣長 20–45、袖長 40–70 cm。';
+      return;
+    }
+    const jk = draftJacket(jB, jW, jH, jBL, jLen);
+    const jd = draftJacketDetail(jk);
+    const jsl = draftJacketSleeve(jk, jSL);
+
     const bodSvg = bodiceSVG(b), slvSvg = sleeveSVG(sl),
           tgtSvg = tightSkirtSVG(t), sktSvg = skirtSVG(sk),
           plSheetSvg = pleatSheetSVG(pl), plFullSvg = pleatFullSVG(pl),
           menBodSvg = menBodiceSVG(mb), menSlvSvg = sleeveSVG(msl),
-          wpSvg = womenPantsSVG(wp);
-    cur = { b, sl, t, sk, pl, mb, msl, wp,
-            bodSvg, slvSvg, tgtSvg, sktSvg, plSheetSvg, plFullSvg, menBodSvg, menSlvSvg, wpSvg };
+          wpSvg = womenPantsSVG(wp), jkSvg = jacketSVG(jk, jd), jkSlvSvg = jacketSleeveSVG(jsl);
+    cur = { b, sl, t, sk, pl, mb, msl, wp, jk, jd, jsl,
+            bodSvg, slvSvg, tgtSvg, sktSvg, plSheetSvg, plFullSvg, menBodSvg, menSlvSvg, wpSvg, jkSvg, jkSlvSvg };
     $('bodiceBox').innerHTML = bodSvg;
     $('sleeveBox').innerHTML = slvSvg;
     $('tightBox').innerHTML = tgtSvg;
@@ -892,10 +903,13 @@ if (typeof document !== 'undefined') {
     $('menBodiceBox').innerHTML = menBodSvg;
     $('menSleeveBox').innerHTML = menSlvSvg;
     $('womenPantsBox').innerHTML = wpSvg;
+    $('jacketBox').innerHTML = jkSvg;
+    $('jacketSlvBox').innerHTML = jkSlvSvg;
     renderValues0(b, sl, t, sk);
     renderValuesPleat(pl);
     renderValuesMenTop(mb, msl);
     renderValuesWomenPants(wp);
+    $('valuesJacket').innerHTML = jacketValuesHTML(jk, jd, jsl);
     if (B >= 90) msg.textContent = '注意:B≥90 時胸省閉合後前袖窿易出角,建議手動修順袖窿線。';
     if (pl.waistOK && pl.panels > 1) msg.textContent += (msg.textContent ? ' ' : '') + '百褶裙:裙子總寬超過布幅,需接 ' + pl.panels + ' 片布(直布紋);接縫位置請藏在陰摺(往內摺的深度)裡面。';
     if (!pl.waistOK) msg.textContent += (msg.textContent ? ' ' : '') + '手風琴褶「表面看得到的摺寬(陽)」必須大於「藏起來的深度(陰)」,不然摺完圍不住腰;兩者一樣寬就是純手風琴褶,要靠鬆緊帶或讓裙襬自然張開。';
@@ -904,7 +918,8 @@ if (typeof document !== 'undefined') {
      'btnPdfBodice', 'btnPdfSleeve', 'btnPdfTight', 'btnPdfSkirt', 'btnPdfPleatSheet',
      'btnSvgPleatFull', 'btnPdfPleatFull',
      'btnSvgMenBodice', 'btnPdfMenBodice', 'btnSvgMenSleeve', 'btnPdfMenSleeve',
-     'btnSvgWomenPants', 'btnPdfWomenPants'].forEach(id => $(id).disabled = false);
+     'btnSvgWomenPants', 'btnPdfWomenPants', 'btnSvgJacket', 'btnPdfJacket',
+     'btnSvgJacketSlv', 'btnPdfJacketSlv'].forEach(id => $(id).disabled = false);
   }
 
   function dlBlob(blob, name) {
@@ -925,7 +940,7 @@ if (typeof document !== 'undefined') {
   function dlPDF() {
     if (!cur) return;
     const pages = [cur.bodSvg, cur.slvSvg, cur.tgtSvg, cur.sktSvg, cur.wpSvg, cur.plSheetSvg,
-                   cur.plFullSvg, cur.menBodSvg, cur.menSlvSvg].filter(Boolean).map(svgToPdfPage);
+                   cur.plFullSvg, cur.menBodSvg, cur.menSlvSvg, cur.jkSvg, cur.jkSlvSvg].filter(Boolean).map(svgToPdfPage);
     const pdf = buildPdf(pages);
     dlBlob(new Blob([pdf], { type: 'application/pdf' }),
       `pattern_B${cur.b.B}_W${cur.b.W}.pdf`);
@@ -956,6 +971,10 @@ if (typeof document !== 'undefined') {
   $('btnPdfMenSleeve').addEventListener('click', () => dlOnePdf(cur.menSlvSvg, `men_sleeve_C${cur.mb.C}.pdf`));
   $('btnSvgWomenPants').addEventListener('click', () => dlSVG(cur.wpSvg, `pants_W${cur.wp.W}_H${cur.wp.H}.svg`));
   $('btnPdfWomenPants').addEventListener('click', () => dlOnePdf(cur.wpSvg, `pants_W${cur.wp.W}_H${cur.wp.H}.pdf`));
+  $('btnSvgJacket').addEventListener('click', () => dlSVG(cur.jkSvg, `jacket_body_B${cur.jk.B}.svg`));
+  $('btnPdfJacket').addEventListener('click', () => dlOnePdf(cur.jkSvg, `jacket_body_B${cur.jk.B}.pdf`));
+  $('btnSvgJacketSlv').addEventListener('click', () => dlSVG(cur.jkSlvSvg, `jacket_sleeve_B${cur.jk.B}.svg`));
+  $('btnPdfJacketSlv').addEventListener('click', () => dlOnePdf(cur.jkSlvSvg, `jacket_sleeve_B${cur.jk.B}.pdf`));
   $('btnPdf').addEventListener('click', () => {
     try { dlPDF(); } catch (e) { $('msg').textContent = 'PDF 產生失敗:' + e.message; }
   });
@@ -976,7 +995,7 @@ if (typeof document !== 'undefined') {
   }
   document.querySelectorAll('.tabbtn').forEach(btn =>
     btn.addEventListener('click', () => activateTab(btn.dataset.tab)));
-  const hashMap = { '#top': 'tabTop', '#tight': 'tabTight', '#circle': 'tabCircle', '#pants': 'tabWPants', '#pleat': 'tabPleat', '#mtop': 'tabMenTop', '#wpants': 'tabWPants' };
+  const hashMap = { '#top': 'tabTop', '#tight': 'tabTight', '#circle': 'tabCircle', '#pants': 'tabWPants', '#pleat': 'tabPleat', '#mtop': 'tabMenTop', '#wpants': 'tabWPants', '#jacket': 'tabJacket' };
   activateTab(hashMap[location.hash] || 'tabTop');
   window.addEventListener('hashchange', () => {
     if (hashMap[location.hash]) activateTab(hashMap[location.hash]);
