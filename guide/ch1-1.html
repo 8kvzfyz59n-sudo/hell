@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>講義第一章第一節|滿紙紅線，是不是哪裡錯了？</title>
+<style>
+  /* ===== 列印設定:A4 直式 ===== */
+  @page { size: A4; margin: 22mm 20mm 24mm 20mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color-scheme: light only; }
+  body {
+    background: #fff;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PMingLiU", sans-serif;
+    font-size: 11.5pt; line-height: 1.9; color: #2b2b2b;
+    max-width: 170mm; margin: 0 auto; padding: 24px 16px;
+  }
+  .site-nav {
+    display: flex; gap: 18px; align-items: center;
+    font-size: 10.5pt; letter-spacing: .08em;
+    margin-bottom: 30px; padding-bottom: 10px;
+    border-bottom: 1px solid #e5d5cd;
+  }
+  .site-nav a { color: #8a5a3b; text-decoration: none; }
+  .site-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .site-nav .spacer { flex: 1; }
+  .site-nav .pdf { font-size: 9.5pt; color: #a89c8d; }
+  @media print { .site-nav { display: none; } }
+  .keep { break-inside: avoid; page-break-inside: avoid; }
+  h1 { font-size: 22pt; letter-spacing: 0.08em; border-bottom: 3px solid #8b5e4f; padding-bottom: 10px; margin: 0 0 6px 0; }
+  .chapter-sub { color: #8b5e4f; font-size: 10.5pt; letter-spacing: 0.25em; margin-bottom: 36px; }
+  h2 { font-size: 15pt; color: #6d4437; margin: 40px 0 12px 0; padding-left: 10px; border-left: 5px solid #c9a294; page-break-after: avoid; }
+  h3 { font-size: 12.5pt; color: #8b5e4f; margin: 26px 0 8px 0; page-break-after: avoid; }
+  .keep h2, .keep h3 { margin-top: 0; }
+  p { margin: 0 0 14px 0; text-align: justify; }
+  .preface { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; }
+  .preface .who { font-weight: bold; color: #6d4437; margin-bottom: 8px; }
+  .keybox { background: #f3ede9; border-left: 4px solid #8b5e4f; padding: 12px 16px; margin: 16px 0; page-break-inside: avoid; }
+  .keybox .kb-title { font-weight: bold; color: #6d4437; margin-bottom: 4px; }
+  .todo { background: #fff3c4; border: 2px dashed #d4a017; border-radius: 4px; padding: 10px 14px; margin: 14px 0; color: #7a5c00; font-size: 10.5pt; }
+  .todo::before { content: "【待補】 "; font-weight: bold; }
+  .figure { text-align: center; margin: 20px 0; page-break-inside: avoid; break-inside: avoid; }
+  .figure figcaption { font-size: 9.5pt; color: #777; margin-top: 6px; text-align: left; }
+  .figure img { width: 100%; height: auto; display: block; }
+  .figure.small img { max-width: 125mm; margin: 0 auto; }
+  .figure.xs img { max-width: 80mm; margin: 0 auto; }
+  .figure .duo { display: flex; align-items: center; gap: 10px; }
+  .figure .duo .pattern, .figure .duo .form { flex: 1; min-width: 0; }
+  .figure .duo img { width: 100%; height: auto; display: block; }
+  /* ===== 本章目錄 ===== */
+  .toc { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 16px 22px; margin: 26px 0; }
+  .toc .toc-title { font-weight: bold; color: #6d4437; margin-bottom: 6px; }
+  .toc ol { margin: 0; padding-left: 1.6em; }
+  .toc a { color: #8a5a3b; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* ===== 下一節按鈕 ===== */
+  .next-btn {
+    display: block; margin: 46px 0 10px 0; padding: 14px 20px;
+    background: #8b5e4f; color: #fff; text-decoration: none;
+    border-radius: 8px; text-align: center; font-size: 12pt; letter-spacing: .06em;
+    box-shadow: 0 4px 14px rgba(90,70,50,.25); transition: all .15s;
+  }
+  .next-btn:hover { background: #6d4437; transform: translateY(-1px); }
+  @media print { .next-btn, .toc { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html">← 回首頁</a>
+  <a href="index.html">講義目錄</a>
+  <a href="ch1.html">第一章首頁</a>
+  <span class="spacer"></span>
+</nav>
+
+<h1>第一節　滿紙紅線，是不是哪裡錯了？</h1>
+<div class="chapter-sub">第一章　女性上衣原型版</div>
+
+<p>台灣主流的打版教育，源自日本「新文化式」製圖體系。它以穩定的公式著稱——版型完成的那一刻，褶子的位置便已各就各位。</p>
+<p>然而初次面對這張版型的人，多半會在同一個地方停下腳步：滿紙紅線，究竟哪些該用、哪些該捨？就算把每一道褶子都車起來，成品與市面上的衣服之間，仍隔著一段說不清的距離。</p>
+<p>這段距離從何而來，正是本章要談的事——每一道褶子各自的任務，以及「原型版」的真正身分。</p>
+
+<!-- ============ 原型版是什麼 ============ -->
+
+<h2>原型版是什麼</h2>
+<p>原型版，是以<strong>胸圍（B）、腰圍（W）與背長</strong>三個尺寸，經計算繪出的一張「貼近身形」的紙型。</p>
+<p>正因為貼近身形，只需稍加修改，它幾乎就是一件馬甲的版型。但也正因為如此貼身——日常所穿的每一件衣服，其實都比這張紙型寬大。沒有人以這樣貼身的姿態出門，市售的衣服自然也不是這個樣子。</p>
+<div class="keybox">
+  <div class="kb-title">原型版真正考驗的，是「概念」</div>
+  <p>褶子在哪裡、長度取多少、該加寬的位置在何處——動手之前，心裡要先有答案。至於答案從何而來，這一章只能給你一個起點；剩下的，要在一次次大膽修版之中親手取得。</p>
+</div>
+<figure class="figure">
+  <img src="fig-bodice.svg" alt="女性上衣原型版全圖">
+  <figcaption>圖 1-1　女性上衣原型版（示範尺寸：胸圍 B83／腰圍 W64／背長 38）。BL＝胸圍線、WL＝腰圍線，左側藍色線段＝背長。只要這三個數字，便能繪出這張貼近身形的紙型。紅色的線，正是本章的主角——褶子。</figcaption>
+</figure>
+
+<!-- ============ 為什麼需要褶子 ============ -->
+
+<a class="next-btn" href="ch1-2.html">下一節　第二節：為什麼需要褶子——先從胸褶說起 →</a>
+
+<script src="../promo.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 132 48" font-family="'Noto Sans TC', 'Microsoft JhengHei', sans-serif">
+  <!-- 三個開口位置不同的扇形 -->
+  <path d="M 16 20 L 19.40 9.54 A 11 11 0 1 1 12.60 9.54 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.35"/>
+  <line x1="16" y1="20" x2="19.40" y2="9.54" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <line x1="16" y1="20" x2="12.60" y2="9.54" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <path d="M 48 20 L 55.36 28.17 A 11 11 0 1 1 58.76 22.29 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.35"/>
+  <line x1="48" y1="20" x2="55.36" y2="28.17" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <line x1="48" y1="20" x2="58.76" y2="22.29" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <path d="M 80 20 L 70.20 24.99 A 11 11 0 1 1 75.01 29.80 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.35"/>
+  <line x1="80" y1="20" x2="70.20" y2="24.99" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <line x1="80" y1="20" x2="75.01" y2="29.80" stroke="#c0392b" stroke-width="0.3" stroke-dasharray="0.9 0.6"/>
+  <text x="48" y="41.5" fill="#555" font-size="2.8" text-anchor="middle">開口剪在哪裡都可以</text>
+  <!-- 箭頭 -->
+  <line x1="93" y1="20" x2="99" y2="20" stroke="#8b5e4f" stroke-width="0.6"/>
+  <polygon points="99,18.5 102,20 99,21.5" fill="#8b5e4f"/>
+  <!-- 同一頂帽子 -->
+  <path d="M 103 32 L 113 5 L 123 32 A 10 2.8 0 0 1 103 32 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.35"/>
+  <path d="M 103 32 A 10 2.8 0 0 1 123 32" fill="none" stroke="#8b5e4f" stroke-width="0.25" stroke-dasharray="0.8 0.6"/>
+  <circle cx="113" cy="4.5" r="1.5" fill="#c9a294"/>
+  <text x="113" y="41.5" fill="#555" font-size="2.8" text-anchor="middle">都是同一頂帽子</text>
+</svg>

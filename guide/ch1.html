@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>講義第一章|女性上衣原型版</title>
+<style>
+  /* ===== 列印設定:A4 直式 ===== */
+  @page { size: A4; margin: 22mm 20mm 24mm 20mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color-scheme: light only; }
+  body {
+    background: #fff;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PMingLiU", sans-serif;
+    font-size: 11.5pt; line-height: 1.9; color: #2b2b2b;
+    max-width: 170mm; margin: 0 auto; padding: 24px 16px;
+  }
+  .site-nav {
+    display: flex; gap: 18px; align-items: center;
+    font-size: 10.5pt; letter-spacing: .08em;
+    margin-bottom: 30px; padding-bottom: 10px;
+    border-bottom: 1px solid #e5d5cd;
+  }
+  .site-nav a { color: #8a5a3b; text-decoration: none; }
+  .site-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .site-nav .spacer { flex: 1; }
+  .site-nav .pdf { font-size: 9.5pt; color: #a89c8d; }
+  @media print { .site-nav { display: none; } }
+  .keep { break-inside: avoid; page-break-inside: avoid; }
+  h1 { font-size: 22pt; letter-spacing: 0.08em; border-bottom: 3px solid #8b5e4f; padding-bottom: 10px; margin: 0 0 6px 0; }
+  .chapter-sub { color: #8b5e4f; font-size: 10.5pt; letter-spacing: 0.25em; margin-bottom: 36px; }
+  h2 { font-size: 15pt; color: #6d4437; margin: 40px 0 12px 0; padding-left: 10px; border-left: 5px solid #c9a294; page-break-after: avoid; }
+  h3 { font-size: 12.5pt; color: #8b5e4f; margin: 26px 0 8px 0; page-break-after: avoid; }
+  .keep h2, .keep h3 { margin-top: 0; }
+  p { margin: 0 0 14px 0; text-align: justify; }
+  .preface { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; }
+  .preface .who { font-weight: bold; color: #6d4437; margin-bottom: 8px; }
+  .keybox { background: #f3ede9; border-left: 4px solid #8b5e4f; padding: 12px 16px; margin: 16px 0; page-break-inside: avoid; }
+  .keybox .kb-title { font-weight: bold; color: #6d4437; margin-bottom: 4px; }
+  .todo { background: #fff3c4; border: 2px dashed #d4a017; border-radius: 4px; padding: 10px 14px; margin: 14px 0; color: #7a5c00; font-size: 10.5pt; }
+  .todo::before { content: "【待補】 "; font-weight: bold; }
+  .figure { text-align: center; margin: 20px 0; page-break-inside: avoid; break-inside: avoid; }
+  .figure figcaption { font-size: 9.5pt; color: #777; margin-top: 6px; text-align: left; }
+  .figure img { width: 100%; height: auto; display: block; }
+  .figure.small img { max-width: 125mm; margin: 0 auto; }
+  .figure.xs img { max-width: 80mm; margin: 0 auto; }
+  .figure .duo { display: flex; align-items: center; gap: 10px; }
+  .figure .duo .pattern, .figure .duo .form { flex: 1; min-width: 0; }
+  .figure .duo img { width: 100%; height: auto; display: block; }
+  /* ===== 本章目錄 ===== */
+  .toc { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 16px 22px; margin: 26px 0; }
+  .toc .toc-title { font-weight: bold; color: #6d4437; margin-bottom: 6px; }
+  .toc ol { margin: 0; padding-left: 1.6em; }
+  .toc a { color: #8a5a3b; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* ===== 下一節按鈕 ===== */
+  .next-btn {
+    display: block; margin: 46px 0 10px 0; padding: 14px 20px;
+    background: #8b5e4f; color: #fff; text-decoration: none;
+    border-radius: 8px; text-align: center; font-size: 12pt; letter-spacing: .06em;
+    box-shadow: 0 4px 14px rgba(90,70,50,.25); transition: all .15s;
+  }
+  .next-btn:hover { background: #6d4437; transform: translateY(-1px); }
+  @media print { .next-btn, .toc { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html">← 回首頁</a>
+  <a href="index.html">講義目錄</a>
+  <span class="spacer"></span>
+</nav>
+
+<h1>第一章　女性上衣原型版</h1>
+<div class="chapter-sub">褶子在做什麼？原型版到底是什麼？</div>
+
+<h2>寫在前面</h2>
+<div class="preface">
+  <div class="who">關於作者</div>
+  <p>大家好，我是牙牙。我從自己摸索製作開始，後來進入大學的服裝相關科系，也在校外上過打版進修課程；畢業後一直在服裝相關產業工作，累積了多年的訂製經驗。</p>
+  <p>這本書並不是教科書，而是我多年製作下來的個人心得，想協助有興趣的人更快入手，理解版型背後的相關原理。</p>
+  <p>如果你需要的是非常正規的訓練，還是建議報名相關的職能訓練或教學班——這份講解可能無法直接帶給你進入接案或業界的戰力。但如果你只是想自己做衣服，這本書應該可以幫你釐清不少概念。</p>
+  <p>要做出成衣，我也還是建議去上相關的課程。服裝是一個非常精緻的工藝、也是一個很古老的藝術——不是只有打版就構成了服裝，還有車縫，而車縫有非常多的技巧需要學。</p>
+  <p>這本書的用意，其實是：一個人沒有相關的概念、可是大概會車，那要怎麼土炮出一件還能看的 cos 服？這也是這個網站比較大宗的用意。就是——我在家，大概知道怎麼車鬆緊帶、知道怎麼裁車起來不會太怪，可是對自己的版型一直很擔心。所以我才會做這個網站：讓大家輸入數字之後，就得到一個差不多對應的版型，差不多能擋一個場次；或是有些衣服真的買不到的時候，可以自己稍微土炮一下、改一下。</p>
+</div>
+
+<h3>你正在看什麼？</h3>
+<p>在開始之前，想先讓你知道：你正在看的東西，<strong>不是學校的正式課程講解每一個細節</strong>。學校教的比較接近對每一個褶子、每一張原型版做非常仔細的講解——以裙子為例，裙子要講的地方不會像我這麼說的這麼少，版型也比直接生成的要注意的地方還多很多，學校會講解很細節的作法，跟怎麼做才會更美更漂亮、前後片也有一些很細節的修改、還有開衩的做法……那些才是學校教的。也是這個網站不會寫的——真的有興趣鑽研的人，請直接選擇系統性的課程、或是進修服裝相關課程。</p>
+<p>會做這個網站，是因為在我學習經驗中，光前面這些版型對一個剛入門的人來說，就已經非常難懂——我根本不知道為什麼版子會長這樣，然後我有好多的公式要看，我可能哪邊會看錯寫錯。所以我才會想寫這個網站：想告訴大家對於每個部份我的見解，也想讓初次嘗試做衣服的人可以更有信心——<strong>做衣服沒有大家想的那麼恐怖</strong>。</p>
+<p>很多人熬不過的，是一開始學習時的那種感覺：「我好像少了 1 公分，這件衣服就會毀滅。」——對，如果你在做很精緻的東西，少 1 公分確實會很誇張地錯誤：像馬甲這種東西，褶子少收了、縫份多了 0.5 公分，整件車起來就會差非常多，很嚴重。<strong>但剛開始學習的時候，不需要這樣自己嚇自己。</strong>你可以留一些犯錯的空間給自己、給自己一些嘗試的地方：去做一些寬鬆的東西、做一些沒有那麼急著要用的東西。你不能明天要出 COS，今天才開始嘗試做褲子——這樣非常容易開天窗。但你可以在有興趣的時候，開始去理解為什麼上衣是這麼做、為什麼褲子是這麼做，然後慢慢累積：「哦，我大概做得出來一些簡單的衣服。」下一次東西來不及的時候，你就多了一個備案的選擇：我可以自己動手做一件。</p>
+<p>這就是這整個網站的用意。它的東西沒有到非常非常精確，可是我覺得，它可以幫助很多人<strong>跨過一開始的那個恐懼感</strong>。</p>
+<p>那當有一天，你看著這個網站，發現「哎，這個東西漏洞百出」、「這裡寫得不夠精緻」——<strong>很恭喜你：你已經跨過了最一開始的那個階段</strong>，走上往細節、往藝術、往更好的衣服、更美的打版，甚至布料剪裁那些相關的路上了。你已經鑽研得非常透徹，不需要這個網站——我覺得這很好。又多一個對服裝有更深入了解的人。</p>
+
+<!-- ============ 開場 ============ -->
+
+
+<div class="toc">
+  <div class="toc-title">本章目錄</div>
+  <ol>
+    <li><a href="ch1-1.html">第一節　滿紙紅線，是不是哪裡錯了？</a></li>
+    <li><a href="ch1-2.html">第二節　為什麼需要褶子——先從胸褶說起</a></li>
+    <li><a href="ch1-3.html">第三節　每個褶子的用途</a></li>
+    <li><a href="ch1-4.html">第四節　回到派對帽：轉褶</a></li>
+    <li><a href="ch1-5.html">第五節　原型版到成衣的距離</a></li>
+  </ol>
+</div>
+
+<a class="next-btn" href="ch1-1.html">開始閱讀　第一節：滿紙紅線，是不是哪裡錯了？ →</a>
+
+<script src="../promo.js"></script>
+</body>
+</html>

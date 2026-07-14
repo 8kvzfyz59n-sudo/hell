@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打版講義|服裝原型產生器</title>
+<style>
+:root{--ink:#2b2622;--accent:#8a5a3b;--bg:#faf7f2}
+*{box-sizing:border-box;margin:0;padding:0}
+html{color-scheme:light only;background:var(--bg)}
+body{
+  font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif;
+  color:var(--ink);
+  background:radial-gradient(ellipse 90% 70% at 50% 20%, #ffffff 0%, var(--bg) 55%, #efe7db 100%);
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+}
+header{text-align:center;padding:56px 20px 10px}
+h1{font-size:1.7rem;font-weight:600;letter-spacing:.14em}
+.sub{margin-top:10px;color:#8d8377;font-size:.9rem;letter-spacing:.2em}
+main{width:min(92vw,640px);margin:34px 0 40px}
+.chapter{
+  display:block;
+  background:rgba(255,255,255,.8);
+  border:1px solid #e2d8c9;border-radius:14px;
+  padding:22px 26px;margin-bottom:18px;
+  color:var(--ink);
+  box-shadow:0 6px 22px rgba(90,70,50,.08);
+  transition:all .2s;
+}
+.chapter:hover{border-color:var(--accent);box-shadow:0 10px 28px rgba(90,70,50,.15);transform:translateY(-2px)}
+.chapter .no{color:var(--accent);font-size:.8rem;letter-spacing:.2em;margin-bottom:6px}
+.chapter .title{font-size:1.15rem;font-weight:600;letter-spacing:.06em}
+.chapter .desc{margin-top:8px;color:#8d8377;font-size:.88rem;line-height:1.7}
+.chapter .head{display:block;text-decoration:none;color:var(--ink)}
+.chapter .secs{margin:12px 0 0 0;padding:10px 0 0 1.7em;border-top:1px dashed #e2d8c9;font-size:.9rem;line-height:2}
+.chapter .secs a{color:#8a5a3b;text-decoration:none}
+.chapter .secs a:hover{text-decoration:underline;text-underline-offset:4px}
+.coming{
+  border-style:dashed;background:rgba(255,255,255,.45);
+  color:#b3a897;text-align:center;padding:26px;
+  box-shadow:none;cursor:default;
+}
+.coming:hover{border-color:#e2d8c9;box-shadow:none;transform:none}
+.back{margin:6px 0 46px}
+.back a{color:var(--accent);font-size:.88rem;letter-spacing:.12em;text-decoration:none}
+.back a:hover{text-decoration:underline;text-underline-offset:4px}
+</style>
+</head>
+<body>
+<header>
+  <h1>打版講義</h1>
+  <p class="sub">看得懂版型，才敢放手改</p>
+</header>
+
+<main>
+  <div class="chapter">
+    <a class="head" href="ch1.html">
+      <div class="no">第一章</div>
+      <div class="title">女性上衣原型版</div>
+      <div class="desc">褶子在做什麼？原型版到底是什麼？——胸褶與派對帽、每一根褶子的用途、轉褶，以及從原型版到成衣的距離。</div>
+    </a>
+    <ol class="secs">
+      <li><a href="ch1-1.html">第一節　滿紙紅線，是不是哪裡錯了？</a></li>
+      <li><a href="ch1-2.html">第二節　為什麼需要褶子——先從胸褶說起</a></li>
+      <li><a href="ch1-3.html">第三節　每個褶子的用途</a></li>
+      <li><a href="ch1-4.html">第四節　回到派對帽：轉褶</a></li>
+      <li><a href="ch1-5.html">第五節　原型版到成衣的距離</a></li>
+    </ol>
+  </div>
+  <div class="chapter coming">更多章節製作中……</div>
+</main>
+
+<div class="back"><a href="../index.html">← 回首頁</a></div>
+<script src="../promo.js"></script>
+</body>
+</html>

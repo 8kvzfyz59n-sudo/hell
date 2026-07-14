@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>講義第一章第三節|每個褶子的用途</title>
+<style>
+  /* ===== 列印設定:A4 直式 ===== */
+  @page { size: A4; margin: 22mm 20mm 24mm 20mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color-scheme: light only; }
+  body {
+    background: #fff;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PMingLiU", sans-serif;
+    font-size: 11.5pt; line-height: 1.9; color: #2b2b2b;
+    max-width: 170mm; margin: 0 auto; padding: 24px 16px;
+  }
+  .site-nav {
+    display: flex; gap: 18px; align-items: center;
+    font-size: 10.5pt; letter-spacing: .08em;
+    margin-bottom: 30px; padding-bottom: 10px;
+    border-bottom: 1px solid #e5d5cd;
+  }
+  .site-nav a { color: #8a5a3b; text-decoration: none; }
+  .site-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .site-nav .spacer { flex: 1; }
+  .site-nav .pdf { font-size: 9.5pt; color: #a89c8d; }
+  @media print { .site-nav { display: none; } }
+  .keep { break-inside: avoid; page-break-inside: avoid; }
+  h1 { font-size: 22pt; letter-spacing: 0.08em; border-bottom: 3px solid #8b5e4f; padding-bottom: 10px; margin: 0 0 6px 0; }
+  .chapter-sub { color: #8b5e4f; font-size: 10.5pt; letter-spacing: 0.25em; margin-bottom: 36px; }
+  h2 { font-size: 15pt; color: #6d4437; margin: 40px 0 12px 0; padding-left: 10px; border-left: 5px solid #c9a294; page-break-after: avoid; }
+  h3 { font-size: 12.5pt; color: #8b5e4f; margin: 26px 0 8px 0; page-break-after: avoid; }
+  .keep h2, .keep h3 { margin-top: 0; }
+  p { margin: 0 0 14px 0; text-align: justify; }
+  .preface { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; }
+  .preface .who { font-weight: bold; color: #6d4437; margin-bottom: 8px; }
+  .keybox { background: #f3ede9; border-left: 4px solid #8b5e4f; padding: 12px 16px; margin: 16px 0; page-break-inside: avoid; }
+  .keybox .kb-title { font-weight: bold; color: #6d4437; margin-bottom: 4px; }
+  .todo { background: #fff3c4; border: 2px dashed #d4a017; border-radius: 4px; padding: 10px 14px; margin: 14px 0; color: #7a5c00; font-size: 10.5pt; }
+  .todo::before { content: "【待補】 "; font-weight: bold; }
+  .figure { text-align: center; margin: 20px 0; page-break-inside: avoid; break-inside: avoid; }
+  .figure figcaption { font-size: 9.5pt; color: #777; margin-top: 6px; text-align: left; }
+  .figure img { width: 100%; height: auto; display: block; }
+  .figure.small img { max-width: 125mm; margin: 0 auto; }
+  .figure.xs img { max-width: 80mm; margin: 0 auto; }
+  .figure .duo { display: flex; align-items: center; gap: 10px; }
+  .figure .duo .pattern, .figure .duo .form { flex: 1; min-width: 0; }
+  .figure .duo img { width: 100%; height: auto; display: block; }
+  /* ===== 本章目錄 ===== */
+  .toc { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 16px 22px; margin: 26px 0; }
+  .toc .toc-title { font-weight: bold; color: #6d4437; margin-bottom: 6px; }
+  .toc ol { margin: 0; padding-left: 1.6em; }
+  .toc a { color: #8a5a3b; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* ===== 下一節按鈕 ===== */
+  .next-btn {
+    display: block; margin: 46px 0 10px 0; padding: 14px 20px;
+    background: #8b5e4f; color: #fff; text-decoration: none;
+    border-radius: 8px; text-align: center; font-size: 12pt; letter-spacing: .06em;
+    box-shadow: 0 4px 14px rgba(90,70,50,.25); transition: all .15s;
+  }
+  .next-btn:hover { background: #6d4437; transform: translateY(-1px); }
+  @media print { .next-btn, .toc { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html">← 回首頁</a>
+  <a href="index.html">講義目錄</a>
+  <a href="ch1.html">第一章首頁</a>
+  <span class="spacer"></span>
+</nav>
+
+<h1>第三節　每個褶子的用途</h1>
+<div class="chapter-sub">第一章　女性上衣原型版</div>
+
+<figure class="figure">
+  <img src="fig-bodice.svg" alt="原型上所有褶子的位置總覽">
+  <figcaption>圖 1-4　原型上所有的褶子（紅線）。左半是後片（BACK）、右半是前片（FRONT）。前片：G→BP 那兩條＝胸褶，其下還有 a、b；側邊：c（前後片共有）；後片：E 附近那一小根＝肩褶，另有 d、e、f——其中 e 往上正對著肩褶。本節就一根一根來看。</figcaption>
+</figure>
+
+<h3>胸褶之下：腰褶，以及「公主線」</h3>
+<figure class="figure small">
+  <img src="fig-where-a.svg" alt="指示圖:紅色箭頭指向腰褶 a">
+  <figcaption>圖 1-5　現在看這一根：腰褶 a（BP 正下方）。</figcaption>
+</figure>
+<p>常見胸褶的地方，其下多半還有一根褶子（圖中標示 <strong>a</strong> 的那根）——那是<strong>腰褶</strong>。把上方的胸褶與下方的腰褶連為一體，便是<strong>公主線</strong>。馬甲、洋裝上那條熟悉的縱線，正是這樣連出來的。</p>
+<p>前身的立體，主要便由這兩根褶子塑造；成衣正面的基本形狀，大抵也出自它們之手。</p>
+<figure class="figure small">
+  <img src="fig-princess.svg" alt="胸褶與腰褶連成公主線示意">
+  <figcaption>圖 1-6　把胸褶與腰褶 a 連在一起，便是一條公主線；前片因此分成「中前片」與「前脇片」兩片。馬甲、洋裝上常見的那條線就是它。</figcaption>
+</figure>
+
+<h3>一旁的那一根：把腰身「分散」的腰褶</h3>
+<figure class="figure small">
+  <img src="fig-where-b.svg" alt="指示圖:紅色箭頭指向腰褶 b">
+  <figcaption>圖 1-7　現在看這一根：腰褶 b。</figcaption>
+</figure>
+<p>一旁還有另一根褶子（圖中的 <strong>b</strong>），收的是腹側——肚腹正面與側腰之間、斜前方的那一段腰身。</p>
+<p>那麼，為何不乾脆用一根褶子把腰全部收完？因為褶子是極細膩的東西，份量必須<strong>分散</strong>。所有褶份集中於同一根，那根褶子便會過大、過於顯眼，版型的線條就毀了。把腰身分散到幾根褶子上——這便是這根褶子的任務。</p>
+
+<h3>前片與後片之間的小三角形：側邊的量</h3>
+<figure class="figure small">
+  <img src="fig-where-c.svg" alt="指示圖:紅色箭頭指向側邊的量 c">
+  <figcaption>圖 1-8　現在看這一塊：側邊的量 c（前後片中間的小三角形）。</figcaption>
+</figure>
+<p>接著可以看到，前片與後片之間有一個相連的小三角形（圖上紅色的那一塊，標示 <strong>c</strong>）——那是<strong>側邊的量</strong>，前後片在側腰「共同持有」的一根褶子，指的就是側腰可以收進去的份量。這一塊無須另外車褶——裁版時直接裁去，前後片沿脇邊線車合，它便自然收掉了。</p>
+<p>可以留意：這根褶子並不大。緣由在於——若粗暴地只從這一根去改，整件衣服的版型會失去平衡。漂亮的版型，向來是許多地方各修一點、細細累積而成，所以 c 從不貪多。</p>
+<p>初學時常有一種直覺：知道有胸褶、也知道有側邊，便習慣把腰圍直接從側邊收進去——「看著側邊，把它收進來，這就是我要的腰圍了。」<strong>事實並非如此。</strong>版型要好看，份量必須分散到每一根褶子上，收得才勻稱；否則成品便會「咦，這一塊怎麼特別小？」「這裡看起來怎麼怪怪的？」——處處透著說不出的彆扭。</p>
+<p>說個題外話：我們對服裝的印象，其實是<strong>前人建構</strong>出來的。眼前的服裝之所以好看，來自以往品味的累積——那是一代代版師對版型的見解、對材質應用的成果。你看過的衣服長那個樣子，所以你認定衣服「應該」長那樣。當份量全數從側邊收掉、成品看起來不對勁的時候，原因無他——你的做法，偏離了前人累積出來的那條路。</p>
+
+<h3>後片肩上的那一根：肩褶</h3>
+<figure class="figure small">
+  <img src="fig-where-shoulder.svg" alt="指示圖:紅色箭頭指向後片肩褶">
+  <figcaption>圖 1-9　現在看這一根：後片的肩褶（E 那一小根）。</figcaption>
+</figure>
+<p>接著看後片，先從肩膀談起。肩上有一根<strong>肩褶</strong>——許多人學習服裝時，最感陌生的就是這一根。首先要知道：肩褶收起之後，前片與後片的肩膀寬度才會相等。</p>
+<p>這根褶子從何而來？以手撫過肩頭、一路往後背滑下——人體在這裡，是帶著弧度的。這意味著：一塊布披在背後、越過肩膀往前倒的時候，布與身體之間存在一段<strong>空間差</strong>。肩褶的用意，便是把這段空間差收起來。正如前身的胸挺起時有空間差，後身的肩也有相對應的一段——肩褶因此而存在。</p>
+
+<h3>後片的兩根腰褶：e 與 d</h3>
+<figure class="figure small">
+  <img src="fig-where-ed.svg" alt="指示圖:紅色箭頭指向後片腰褶 e 跟 d">
+  <figcaption>圖 1-10　現在看這兩根：後片的腰褶 e 與 d。</figcaption>
+</figure>
+<p>談過肩褶，再看後片的腰褶。背部的裁片上其實有兩根，圖中分別標示為 <strong>e</strong> 與 <strong>d</strong>。</p>
+<p><strong>e</strong> 那根褶子，可以往上連到肩褶，一路化成一整條線——這件事，留待「轉褶」一節再談。</p>
+<p><strong>d</strong> 同為腰褶，卻會一路延伸到接近腋下的地方。它的任務，是把背收得服貼漂亮。見過那種很漂亮的馬甲嗎？背部、腰線都非常美——那正是這根褶子的功勞。</p>
+<p>人的背部是一道內凹的曲線，需要許多根褶子，細細地、慢慢地把它收攏——<strong>這便是背褶最初的使命。</strong></p>
+
+<h3>後中心的 f：毫釐之間的微調</h3>
+<figure class="figure small">
+  <img src="fig-where-f.svg" alt="指示圖:紅色箭頭指向後中心的 f">
+  <figcaption>圖 1-11　現在看這一根：後中心的 f。</figcaption>
+</figure>
+<p>最後是 <strong>f</strong>，位於後中心。它同樣不大——圖上可見，中間僅是一段極小的距離。它的用途是：當後中不是對稱裁雙的時候（例如馬甲），它也能收去一點點的腰褶。</p>
+
+<!-- ============ 轉褶 ============ -->
+
+<a class="next-btn" href="ch1-4.html">下一節　第四節：回到派對帽：轉褶 →</a>
+
+<script src="../promo.js"></script>
+</body>
+</html>

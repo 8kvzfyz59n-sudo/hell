@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 52" font-family="'Noto Sans TC', 'Microsoft JhengHei', sans-serif">
+  <!-- 左:平面紙(缺一角的圓) -->
+  <path d="M 25 26 L 30.47 10.96 A 16 16 0 1 1 19.53 10.96 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.4"/>
+  <line x1="25" y1="26" x2="30.47" y2="10.96" stroke="#c0392b" stroke-width="0.35" stroke-dasharray="1 0.7"/>
+  <line x1="25" y1="26" x2="19.53" y2="10.96" stroke="#c0392b" stroke-width="0.35" stroke-dasharray="1 0.7"/>
+  <text x="25" y="7.5" fill="#c0392b" font-size="3" text-anchor="middle">缺口＝褶子</text>
+  <text x="25" y="48" fill="#555" font-size="3.2" text-anchor="middle">平面的紙</text>
+  <!-- 中:箭頭 -->
+  <line x1="47" y1="26" x2="59" y2="26" stroke="#8b5e4f" stroke-width="0.6"/>
+  <polygon points="59,24.4 62.5,26 59,27.6" fill="#8b5e4f"/>
+  <text x="54.5" y="21.5" fill="#8b5e4f" font-size="3" text-anchor="middle">把缺口收合</text>
+  <!-- 右:派對帽(錐形) -->
+  <path d="M 72 38 L 85 8 L 98 38 A 13 3.5 0 0 1 72 38 Z" fill="#f3ede9" stroke="#8b5e4f" stroke-width="0.4"/>
+  <path d="M 72 38 A 13 3.5 0 0 1 98 38" fill="none" stroke="#8b5e4f" stroke-width="0.3" stroke-dasharray="0.8 0.6"/>
+  <line x1="85" y1="8" x2="91" y2="38.6" stroke="#c0392b" stroke-width="0.35"/>
+  <circle cx="85" cy="7" r="1.8" fill="#c9a294"/>
+  <text x="85" y="48" fill="#555" font-size="3.2" text-anchor="middle">立體的凸起</text>
+  <text x="95" y="24" fill="#c0392b" font-size="2.6">車合線</text>
+</svg>
