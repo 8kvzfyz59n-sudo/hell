@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>講義第二章第七節|側邊——c 那條斜線</title>
+<style>
+  /* ===== 列印設定:A4 直式 ===== */
+  @page { size: A4; margin: 22mm 20mm 24mm 20mm; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #fff; color-scheme: light only; }
+  body {
+    background: #fff;
+    font-family: "Noto Sans TC", "Microsoft JhengHei", "PMingLiU", sans-serif;
+    font-size: 11.5pt; line-height: 1.9; color: #2b2b2b;
+    max-width: 170mm; margin: 0 auto; padding: 24px 16px;
+  }
+  .site-nav {
+    display: flex; gap: 18px; align-items: center;
+    font-size: 10.5pt; letter-spacing: .08em;
+    margin-bottom: 30px; padding-bottom: 10px;
+    border-bottom: 1px solid #e5d5cd;
+  }
+  .site-nav a { color: #8a5a3b; text-decoration: none; }
+  .site-nav a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  .site-nav .spacer { flex: 1; }
+  .site-nav .pdf { font-size: 9.5pt; color: #a89c8d; }
+  @media print { .site-nav { display: none; } }
+  .keep { break-inside: avoid; page-break-inside: avoid; }
+  h1 { font-size: 22pt; letter-spacing: 0.08em; border-bottom: 3px solid #8b5e4f; padding-bottom: 10px; margin: 0 0 6px 0; }
+  .chapter-sub { color: #8b5e4f; font-size: 10.5pt; letter-spacing: 0.25em; margin-bottom: 36px; }
+  h2 { font-size: 15pt; color: #6d4437; margin: 40px 0 12px 0; padding-left: 10px; border-left: 5px solid #c9a294; page-break-after: avoid; }
+  h3 { font-size: 12.5pt; color: #8b5e4f; margin: 26px 0 8px 0; page-break-after: avoid; }
+  .keep h2, .keep h3 { margin-top: 0; }
+  p { margin: 0 0 14px 0; text-align: justify; }
+  .preface { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 18px 22px; margin-bottom: 8px; }
+  .preface .who { font-weight: bold; color: #6d4437; margin-bottom: 8px; }
+  .keybox { background: #f3ede9; border-left: 4px solid #8b5e4f; padding: 12px 16px; margin: 16px 0; page-break-inside: avoid; }
+  .keybox .kb-title { font-weight: bold; color: #6d4437; margin-bottom: 4px; }
+  .todo { background: #fff3c4; border: 2px dashed #d4a017; border-radius: 4px; padding: 10px 14px; margin: 14px 0; color: #7a5c00; font-size: 10.5pt; }
+  .todo::before { content: "【待補】 "; font-weight: bold; }
+  .figure { text-align: center; margin: 20px 0; page-break-inside: avoid; break-inside: avoid; }
+  .figure figcaption { font-size: 9.5pt; color: #777; margin-top: 6px; text-align: left; }
+  .figure img { width: 100%; height: auto; display: block; }
+  .figure.small img { max-width: 125mm; margin: 0 auto; }
+  .figure.xs img { max-width: 80mm; margin: 0 auto; }
+  .figure .duo { display: flex; align-items: center; gap: 10px; }
+  .figure .duo .pattern, .figure .duo .form { flex: 1; min-width: 0; }
+  .figure .duo img { width: 100%; height: auto; display: block; }
+  /* ===== 本章目錄 ===== */
+  .toc { background: #faf6f3; border: 1px solid #e5d5cd; border-radius: 6px; padding: 16px 22px; margin: 26px 0; }
+  .toc .toc-title { font-weight: bold; color: #6d4437; margin-bottom: 6px; }
+  .toc ol { margin: 0; padding-left: 1.6em; }
+  .toc a { color: #8a5a3b; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* ===== 下一節按鈕 ===== */
+  .next-btn {
+    display: block; margin: 46px 0 10px 0; padding: 14px 20px;
+    background: #8b5e4f; color: #fff; text-decoration: none;
+    border-radius: 8px; text-align: center; font-size: 12pt; letter-spacing: .06em;
+    box-shadow: 0 4px 14px rgba(90,70,50,.25); transition: all .15s;
+  }
+  .next-btn:hover { background: #6d4437; transform: translateY(-1px); }
+  @media print { .next-btn, .toc { display: none; } }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="../index.html">← 回首頁</a>
+  <a href="index.html">講義目錄</a>
+  <a href="ch2.html">第二章首頁</a>
+  <span class="spacer"></span>
+</nav>
+
+<h1>第七節　側邊——c 那條斜線</h1>
+<div class="chapter-sub">第二章　修改版型</div>
+
+<!-- ============ 開場:為什麼單獨講c ============ -->
+<p>這一節，我們單獨談 <strong>c</strong>——側邊那根斜斜的褶子。特別把 c 拉出來講的原因是：<strong>c 不只是腰線的事</strong>，它還牽動袖子的袖襱那一圈（手臂根部的洞）。</p>
+<p>袖襱是可以往下、再往下開的——因為人需要<strong>活動度</strong>。一件非常合身的衣服，活動度必然受限。這也是我一再叮嚀「剛開始做衣服，要很習慣做樣品來測試」的原因。</p>
+
+<div class="keybox">
+  <div class="kb-title">岔題：為什麼老是要你做樣品？</div>
+  <p>直接從版型一步做成成品，是非常、非常資深的設計師或版師才辦得到的事——因為他們背後有大量的支撐：<strong>他們已經做錯過非常多東西了</strong>，所以才能一步到位，畫出正確的東西。正如我們常看繪師，不曉得為什麼他就是不用打草稿，但眼睛、嘴巴都長在該長的位置上——那是大量練習的結果。服裝，也是同樣的道理。</p>
+  <p>所以無論做什麼，都一定要先做樣品、嘗試，然後<strong>大膽地去修改</strong>——照你看到的邏輯去修：不夠就挖大一點點、前片看起來太胖就稍微修一點腰身、再慢慢把形狀縮小。這才是學習原型版需要的方式跟理由。</p>
+</div>
+
+<!-- ============ 擴版後:腋下太大 ============ -->
+
+<h2>擴版之後：腋下太大了怎麼辦？</h2>
+<p>回來講 c。擴版擴到一個大小，你會發現——<strong>腋下太大了</strong>，風會從袖襱的洞灌進來。沒有人想要這樣。這時候要修的，可能不只是側腰身，而是<strong>連袖襱都要稍微修掉一點點</strong>。</p>
+<p>那反過來，如果挖太深了呢？一口氣往下挖了 3 公分，發現挖過頭了——無妨，<strong>補片</strong>。</p>
+
+<h3>版型是可以修修補補的</h3>
+<p>做版的時候紙已經剪掉了，有沒有關係？<strong>沒有關係。</strong>在底下再墊一張紙，用膠帶把那張紙跟裁片貼起來，然後把線照原樣重畫、把它補回來。版型本就可以修修補補，沒有什麼非一步到位不可。剛開始學習的時候，修版子是再正常不過的事：加一點、再減一點；剪完之後發現還是錯，就再加、繼續貼紙就好。<strong>不要害怕去修改它。</strong></p>
+
+<figure class="figure small">
+  <img src="fig-side-patch.svg" alt="補片示意圖:袖襱挖太深,底下墊一張紙用膠帶貼住,紅線為照原樣重畫的袖襱">
+  <figcaption>圖 2-11　挖太深就補片：底下墊一張紙（黃色）、用膠帶跟裁片貼起來，再把線照原樣重畫（紅線）就補回來了。版型可以修修補補，不要害怕改它。</figcaption>
+</figure>
+
+<!-- ============ c 的斜線 ============ -->
+
+<h2>c 是一條很明顯的斜線：不要一口氣扣太多</h2>
+<p>然後 c 的部分，有一個很要緊的提醒——<strong>不要一口氣扣太多</strong>。c 的褶子收起來之後，側縫是一條非常明顯的<strong>斜線</strong>，而這條斜線，直接左右你<strong>正面看衣服的輪廓</strong>。</p>
+<p>如果你的 c 收得非常斜——譬如一口氣扣個 5 公分——那會變成：腋下是往外推的，到了腰的部分，卻突然直直地往內收 5 公分，側面的輪廓<strong>整個凹進去</strong>。這可能正是你要的效果，也可能你會嫌它不好看——個人評斷、動手測試。我自己不太推薦這麼做，但有一些非常誇張的造型，或許會這麼用。</p>
+<p>所以沒有絕對值，只能說：做嘗試的時候，稍微留意一下這個部分。這便是我們把側邊這根斜線的褶子，單獨挑出來講的原因。</p>
+
+<figure class="figure">
+  <img src="fig-side-slant.svg" alt="c斜線對比圖:左為收一點點側縫溫和,右為一口氣扣5公分腋下外推腰部凹進去">
+  <figcaption>圖 2-12　c 的斜線直接決定正面輪廓：①收一點點，側縫斜得很溫和 → ②一口氣扣 5 公分，腋下往外推、到腰猛收，輪廓整個凹進去（淡紅色＝扣掉的量）。要不要這麼做是個人評斷，但做嘗試時要留意。</figcaption>
+</figure>
+
+<a class="next-btn" href="index.html">回講義目錄 →</a>
+
+<script src="../promo.js"></script>
+</body>
+</html>

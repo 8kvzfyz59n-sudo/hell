@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-3 -8 62 51" font-family="'Noto Sans TC', 'Microsoft JhengHei', sans-serif">
+  <!-- ① 後片:肩褶轉移到袖襱(綠色楔形) -->
+  <path d="M 7.058 -2.353 C 6.411 -1.969, 4.353 -0.442, 3.176 -0.05 C 2 0.342, 0.529 -0.008, 0 0" fill="none" stroke="#111" stroke-width="0.12"/>
+  <line x1="0" y1="0" x2="0" y2="20.62" stroke="#111" stroke-width="0.12"/>
+  <line x1="0" y1="20.62" x2="0.88" y2="38" stroke="#111" stroke-width="0.12"/>
+  <line x1="0.88" y1="38" x2="23.05" y2="38" stroke="#111" stroke-width="0.12"/>
+  <line x1="7.06" y1="-2.35" x2="20.44" y2="2" stroke="#111" stroke-width="0.12"/>
+  <path d="M 20.443 1.996 C 19.998 3.231, 18.22 7.267, 17.775 9.402 C 17.33 11.538, 17.473 13.241, 17.775 14.808 C 18.077 16.376, 18.705 17.839, 19.585 18.807 C 20.464 19.775, 22.475 20.315, 23.053 20.617" fill="none" stroke="#111" stroke-width="0.12"/>
+  <line x1="23.05" y1="20.62" x2="23.05" y2="38" stroke="#111" stroke-width="0.12"/>
+  <!-- 原本的肩褶(紅) -->
+  <line x1="11.31" y1="-0.97" x2="9.89" y2="8" stroke="#c0392b" stroke-width="0.1"/>
+  <line x1="13.02" y1="-0.42" x2="9.89" y2="8" stroke="#c0392b" stroke-width="0.1"/>
+  <text x="12.9" y="-1.2" fill="#c0392b" font-size="1.4">肩褶</text>
+  <!-- 轉移到袖襱的綠色楔形 -->
+  <polygon points="9.89,8 18.35,6.55 17.7,9.15" fill="#3cae3c" fill-opacity="0.85"/>
+  <circle cx="9.89" cy="8" r="0.28" fill="#111"/>
+  <text x="9.1" y="7.3" fill="#333" font-size="1.3" text-anchor="end">E</text>
+  <text x="12.5" y="12.2" fill="#2f8f2f" font-size="1.4">肩褶轉移到這裡（袖襱）</text>
+  <text x="12.5" y="14.4" fill="#2f8f2f" font-size="1.4">→ 沿這條線把上半切開</text>
+  <text x="11.5" y="42" fill="#555" font-size="1.7" text-anchor="middle">① 肩褶轉到袖襱、沿線切開</text>
+  <!-- 箭頭 -->
+  <line x1="25.5" y1="14" x2="28" y2="14" stroke="#8b5e4f" stroke-width="0.4"/>
+  <polygon points="28,12.9 30,14 28,15.1" fill="#8b5e4f"/>
+  <!-- ② 上半 -->
+  <path d="M 50.44 2 L 37.06 -2.35 C 36.41 -1.97, 34.35 -0.44, 33.18 -0.05 C 32 0.34, 30.53 -0.01, 30 0 L 30 8.3 L 47.9 8.6 C 48.15 7.3, 49.7 3.6, 50.44 2 Z" fill="none" stroke="#111" stroke-width="0.12"/>
+  <text x="38.5" y="-4.2" fill="#555" font-size="1.5" text-anchor="middle">上半（通常兩層，夾車下片）</text>
+  <!-- ② 下半+後中活褶份 -->
+  <polygon points="28,10.6 30,10.6 30.88,38 28.9,38" fill="#f7de6b" stroke="#d8b830" stroke-width="0.1"/>
+  <line x1="29" y1="10.6" x2="29.9" y2="38" stroke="#b8860b" stroke-width="0.08" stroke-dasharray="0.5 0.35"/>
+  <path d="M 30 10.6 L 47.8 10.9 C 47.45 13.1, 47.6 15.6, 48.3 17.3 C 49.2 19.1, 51.3 20.2, 53.05 20.62 L 53.05 38 L 30.88 38 L 30 20.62 Z" fill="none" stroke="#111" stroke-width="0.12"/>
+  <text x="41.5" y="25" fill="#555" font-size="1.5" text-anchor="middle">下半</text>
+  <text x="27.6" y="9.7" fill="#b8860b" font-size="1.3" text-anchor="end">活褶份</text>
+  <line x1="27.7" y1="10" x2="28.9" y2="11.4" stroke="#b8860b" stroke-width="0.1"/>
+  <text x="41.5" y="42" fill="#555" font-size="1.7" text-anchor="middle">② 後背變成兩片：上半＋下半（後中加活褶份）</text>
+</svg>

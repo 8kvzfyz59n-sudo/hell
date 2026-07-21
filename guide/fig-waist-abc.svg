@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 30 46" font-family="'Noto Sans TC', 'Microsoft JhengHei', sans-serif">
+  <!-- 前片(簡化,同第一章圖1-6) -->
+  <path d="M 23.5 11 L 23.5 36 L 6 36 L 6 23.5 C 9 22.8, 11.5 21.5, 12 18 C 12.5 15, 11.5 12, 10 9 L 18 5.5 C 18.7 8.8, 20.5 10.7, 23.5 11 Z" fill="none" stroke="#111" stroke-width="0.25"/>
+  <!-- 胸褶 -->
+  <line x1="11.97" y1="14.55" x2="17.5" y2="23" stroke="#e60000" stroke-width="0.2"/>
+  <line x1="11.5" y1="19.9" x2="17.5" y2="23" stroke="#e60000" stroke-width="0.2"/>
+  <text x="10.4" y="13.8" fill="#e60000" font-size="2" text-anchor="end">胸褶</text>
+  <!-- a -->
+  <line x1="17.5" y1="25.2" x2="16.8" y2="36" stroke="#e60000" stroke-width="0.2"/>
+  <line x1="17.5" y1="25.2" x2="18.2" y2="36" stroke="#e60000" stroke-width="0.2"/>
+  <!-- b(褶尖剛好碰到BP那條線,不超過) -->
+  <line x1="14" y1="21.4" x2="13.4" y2="36" stroke="#e60000" stroke-width="0.2"/>
+  <line x1="14" y1="21.4" x2="14.6" y2="36" stroke="#e60000" stroke-width="0.2"/>
+  <!-- c(側邊的小三角) -->
+  <polygon points="6,25 6,36 8.2,36" fill="#e60000" fill-opacity="0.15" stroke="#e60000" stroke-width="0.12"/>
+  <!-- BP -->
+  <circle cx="17.5" cy="23" r="0.4" fill="#111"/>
+  <text x="18.4" y="22.2" fill="#333" font-size="1.9">BP</text>
+  <!-- 字母標示 -->
+  <text x="17.5" y="39.3" fill="#e60000" font-size="2.4" font-weight="bold" text-anchor="middle">a</text>
+  <text x="14" y="39.3" fill="#e60000" font-size="2.4" font-weight="bold" text-anchor="middle">b</text>
+  <text x="7.4" y="39.3" fill="#e60000" font-size="2.4" font-weight="bold" text-anchor="middle">c</text>
+  <text x="14.75" y="43.8" fill="#555" font-size="2.4" text-anchor="middle">前片的三根腰褶</text>
+</svg>

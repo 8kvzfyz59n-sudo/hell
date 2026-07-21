@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 2 47 40" font-family="'Noto Sans TC', 'Microsoft JhengHei', sans-serif">
+  <!-- 墊在下面的紙(黃色,先畫在最底層) -->
+  <polygon points="6.2,15.5 13.6,14 14.4,24 6.6,27.2" fill="#f7de6b" stroke="#d8b830" stroke-width="0.12"/>
+  <!-- 裁片輪廓:袖襱挖太深的版本 -->
+  <path d="M 23.5 11 L 23.5 36 L 6 36 L 6 26.5 C 7.5 26, 9.5 25.5, 11 22.5 C 12.5 19, 11.5 13, 10 9 L 18 5.5 C 18.7 8.8, 20.5 10.7, 23.5 11 Z" fill="none" stroke="#111" stroke-width="0.25"/>
+  <!-- 照原樣重畫的袖襱(紅,畫在紙上) -->
+  <path d="M 6 23.5 C 9 22.8, 11.5 21.5, 12 18 C 12.5 15, 11.5 12, 10 9" fill="none" stroke="#e60000" stroke-width="0.3"/>
+  <!-- 膠帶 -->
+  <polygon points="8.2,23.2 10.2,22.2 10.6,23.2 8.6,24.2" fill="#aaaaaa" fill-opacity="0.55"/>
+  <polygon points="10.9,18.2 12.9,17.8 13.1,18.9 11.1,19.3" fill="#aaaaaa" fill-opacity="0.55"/>
+  <polygon points="6.3,24.8 8.1,24.4 8.3,25.5 6.5,25.9" fill="#aaaaaa" fill-opacity="0.55"/>
+  <!-- 標字與指線 -->
+  <text x="25.5" y="13.9" fill="#b8860b" font-size="1.9">墊在下面的紙</text>
+  <line x1="25.2" y1="13.5" x2="13.8" y2="14.8" stroke="#b8860b" stroke-width="0.12"/>
+  <text x="25.5" y="17.9" fill="#e60000" font-size="1.9">照原樣重畫的線</text>
+  <line x1="25.2" y1="17.5" x2="12.2" y2="16.5" stroke="#e60000" stroke-width="0.12"/>
+  <text x="25.5" y="21.9" fill="#777" font-size="1.9">膠帶</text>
+  <line x1="25.2" y1="21.5" x2="12.9" y2="18.7" stroke="#777" stroke-width="0.12"/>
+  <text x="25.5" y="25.9" fill="#333" font-size="1.9">挖太深的邊</text>
+  <line x1="25.2" y1="25.5" x2="9.8" y2="25.3" stroke="#333" stroke-width="0.12"/>
+</svg>
